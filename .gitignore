@@ -1,0 +1,20 @@
+# --- Quarto Outputs and Caches ---
+/.quarto/
+/_site/
+/site_libs/
+/.jupyter/
+/*_cache/
+html_env/
+
+# --- Obsidian Specifics ---
+.obsidian/workspace
+.obsidian/workspace.json
+.obsidian/graph.json
+.obsidian/appearance.json
+.obsidian/
+
+# --- System and OS Files ---
+.DS_Store
+Thumbs.db
+ehthumbs.db
+*.tmp

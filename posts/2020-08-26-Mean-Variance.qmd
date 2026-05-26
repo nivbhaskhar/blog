@@ -54,7 +54,7 @@ Lists:
 
 
 
-### One dimensional data
+## One dimensional data
 
 Let's assume we are working with a dataset whose data-points $x_1, x_2, \ldots, x_N$  are one dimensional.
 
@@ -91,7 +91,7 @@ The variance is 7.5
 The variance is also given by 7.5
 ```
 
-### Higher dimensional data
+## Higher dimensional data
 Say now we are working with a dataset whose data-points $x_1, x_2, \ldots, x_N$  are $d$ dimensional, i.e. each $x_i$ is a $d\times 1$ column vector.
 
 
@@ -112,7 +112,7 @@ Note that since $x_i, \mu$ have shape $d\times 1$, $(x_i-\mu)(x_i-\mu)^T$ has sh
 
 
 
-### A more compact formula
+## A more compact formula
 To make the definition of the variance neater, let's assemble our data-points into a $d\times N$ matrix $X$.
 
 $$
@@ -144,7 +144,7 @@ $$
 By some matrix manipulation [^1], the covariance matrix turns out to be nothing but $S = \frac{1}{N}\tilde{X}\tilde{X}^T$
 
 
-### Computation
+## Computation
 
 Say we have 3 data-points, each of which is two-dimensional. Then we can represent the dataset as 
 
@@ -197,7 +197,7 @@ The covariance matrix is
 :::
 
 
-### Symmetry
+## Symmetry
 
 Notice that the covariance matrix in the previous example is symmetric. This is in fact true for every covariance matrix. Why ?
 

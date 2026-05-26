@@ -52,10 +52,10 @@ Lists:
 ======================================================================
 -->
 
-### Prerequisites
+## Prerequisites
 We'll assume you that you have read [this introductory post](2020-07-27-SVD.qmd) on singular value decomposition a.k.a SVD.
 
-### The theorem 
+## The theorem 
 
 In this post, we'll get our hands dirty and examine how and why SVD works. But let's first recall what it is.
 
@@ -74,7 +74,7 @@ We saw in the introductory post that the columns of $V$ (let's call them $v_1, v
 
 Further $\{A(v_i)\}$ still remain perpendicular to each other in $\mathbb{R}^n$. The length of the vectors $\{A(v_i)\}$ are encoded by the diagonal entries of $\Sigma$. The unit vectors along $\{A(v_i)\}$ can be completed to an orthonormal basis of $\mathbb{R}^n$, which are precisely given by the columns of $U$. 
 
-### A blackbox
+## A blackbox
 Before jumping to the proof, let's reveal our secret weapon, the _spectral theorem_. This theorem, applied to real matrices states the following:
 
 ::: {.callout-note icon=false}
@@ -92,7 +92,7 @@ More precisely, we can find unit mutually perpendicular vectors $w_1, w_2, \ldot
 
 
 
-### A running example and a proof
+## A running example and a proof
 
 > _If only I had the theorems! Then I should find the proofs easily enough_ - Riemann"
 
@@ -194,7 +194,7 @@ If $v_1, v_2$ are perpendicular eigenvectors of $B=A^TA$ for eigenvalues $\lambd
 Thus, the orthonormal eigenbasis of $B=A^TA$ given by the spectral theorem is exactly $V$ in the SVD of $A = U\Sigma V^T$ !
 
 
-### Summary
+## Summary
 
 
 Given an $n\times m$ matrix A, here are the steps to find the SVD of $A$:

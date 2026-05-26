@@ -2,7 +2,7 @@
 layout: post
 title: "Karush–Kuhn–Tucker conditions"
 date: 2021-09-10
-categories: [Optimization, Notes]
+categories: [Convex-optimization, Notes]
 ---
 <!-- 
 ======================================================================
@@ -64,21 +64,21 @@ Lists:
 
 *Ref: Foundations of optimization by Bazaraa and Shetty ([link](https://www.springer.com/gp/book/9783540076803)), Chapter 5*
 
-### The optimization problem (A)
+## The optimization problem (A)
 
 Minimize $f(x)$ under the constraints $x\in X$ and $g_i(x) \leq 0$ for $1\leq i\leq m$, where
 
 - $X$ is a subset of $\mathbb{R}^n$
 - $f,g_i$ are functions $U\to\mathbb{R}$ for some open set $U\supset X$
 
-### Feasible set, feasible solutions and optimal solutions
+## Feasible set, feasible solutions and optimal solutions
 
 - The set of points in $\mathbb{R}^n$ which satisfy the constraints make up the *feasible set* $S$
 - Any $x\in S$ is called a *feasible solution* to (A)
 - Any $x^*\in S$ such that $f(x^*)$ is minimum among $\{f(x)\mid x\in S\}$ is called an *optimal solution* to (A)
 
 
-### Rephrasing optimality
+## Rephrasing optimality
 In general, one would like to find optimal solutions to (A). Let's rephrase what it means for $x_0\in S$ to be optimal. 
 
 Set $B = B(x_0)=\{x\in S \mid f(x)-f(x_0) < 0\}$. Clearly $x_0$ is optimal exactly when $B=\emptyset$. The idea then is to express $B$ as an intersection $F\cap G\cap X$ where:
@@ -90,7 +90,7 @@ Set $B = B(x_0)=\{x\in S \mid f(x)-f(x_0) < 0\}$. Clearly $x_0$ is optimal exact
 It is an easy check to see indeed that $B=F\cap G\cap X$. Thus $x_0\in S$ is optimal exactly when $F\cap G\cap X$ is empty.
 
 
-### Necessary conditions for optimality
+## Necessary conditions for optimality
 Since it is in general harder to find optimal solutions, let us focus on *necessary* conditions for optimality instead. Assuming $x_0\in S$ is optimal, can we make some useful statements on $F, G$ and $X$ (apart from the fact that they exist)?
 
 
@@ -112,7 +112,7 @@ Then $F'\cap G' (\cap X') = \emptyset$^[Intuitively, the theorem tells us there 
 
 We'll take this theorem for granted and instead, focus on what it gives us.
 
-### Hyperplanes, half-spaces and convex cones
+## Hyperplanes, half-spaces and convex cones
 
 Let us investigate the geometry of $F'$ and $G'$. In particular can we deduce any connections between $\nabla f(x_0)$ and $\nabla g_i(x_0)$s?
 
@@ -125,7 +125,8 @@ As an exercise, check that any positive linear combination of vectors in $F'$ al
 $G'$ is the intersection of such half spaces and also forms a convex cone.
 
 
-### Hyperplane separation
+## Hyperplane separation
+
 Since we have these non-intersecting convex sets $F'$ and $G'$, we can invoke the [separation theorem](https://en.wikipedia.org/wiki/Hyperplane_separation_theorem) to get a hyperplane which separates these two.
 Further since $F'$ and $G'$ are cones, the hyperplane must pass through the origin, i.e. are just vectors perpendicular to some $v$^[If the hyperplane looks like $\{x \mid \langle x, v \rangle = c\}$ for some $c$, and $F'$ lies on one side of it, so say $\langle f', v\rangle \geq c$ for all $f'\in F'$. You can positively scale $f'$ to make it break this inequality unless $c$ is $0$].
 
@@ -138,7 +139,7 @@ Thus $H$ is indeed the hyperplane separating $F'$ and $G'$ with $G'$ above and $
 
 ![Hyperplane separation](../assets/2021-09-10-hyperplane-separation.png){width=50%}
 
-### Hyperplane separation after a linear transformation
+## Hyperplane separation after a linear transformation
 
 Translating back to algebra, this means the equation $Ax < \bar{0}$^[i.e. every coordinate is $<0$] has no solution $x\in \mathbb{R}^n$ where
 $$A = \begin{bmatrix}  \nabla f(x_0) \\ \nabla g_{i_1}(x_0) \\ \vdots \\ \nabla g_{i_t}(x_0) \end{bmatrix} \in \mathrm{Mat}_{(|I|+1)\times n}(\mathbb{R})$$
@@ -147,7 +148,7 @@ That is, the image^[$\{Ax\mid x\in\mathbb{R}^n\}\subset\mathbb{R}^{|I|+1}$] of $
 We can once again play our hyperplane separation card and separate these convex sets $\mathrm{Img}(A)$ and $K$ in $\mathbb{R}^{|I|+1}$ by a hyperplane $H' = \{ x \mid \langle x, p \rangle = 0 \}$ for some non-zero vector $p$.
 
 
-### Reconstructing the Fritz John conditions for optimality 
+## Reconstructing the Fritz John conditions for optimality 
 
 Without loss of generality, assume $K$ lies "below" the hyperplane, i.e. $\langle k, p \rangle < 0$ for all $k\in K$. Convince yourselves^[Remember $K$ has all the vectors $k<\bar{0}$] that this means $p \geq \bar{0}$.
 And further the image of $A$ lies "above" the hyperplane, i.e. $\langle p, Ax \rangle \geq 0$^[The $\geq$ is because the Image of $A$ can cease to be open] for all $x\in \mathbb{R}^n$.
@@ -188,7 +189,7 @@ Note:
 * For the constraints, complementary slackness gives us that either the constraint condition $g_i(x_0)$ is $0$ or the corresponding  Lagrangian multiplier $p_i$ is $0$.
 * The Fritz John conditions allow $p_0$ to be $0$
 
-### Karush–Kuhn–Tucker conditions (KKT)
+## Karush–Kuhn–Tucker conditions (KKT)
 
 The KKT conditions associated to (A) are basically the Fritz John conditions under the additional assumption that $p_0$, the Langrange multiplier of $f$ is non-zero.
 More precisely,

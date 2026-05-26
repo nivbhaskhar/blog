@@ -57,7 +57,6 @@ If you're searching for a quick way to make GIFs out of a folder full of images,
   
 
 ```python
-# imports
 from PIL import Image
 import os
 
@@ -77,15 +76,16 @@ for img_file_name in sorted(os.listdir()):
 
 # Save images to an output.gif
 images[0].save('output.gif',
-               save_all=True, append_images=images[1:], 
-	       optimize=False, 
-               duration=800, loop=0)
-
-
+                save_all=True, append_images=images[1:],
+                optimize=False,
+                duration=800,
+                loop=0
+              )
+              
 ```  
 
 
-### Main parameters of Image.save()
+## Main parameters of Image.save()
 
 * **loop** :
   `loop=0` makes the GIF loop infinitely.

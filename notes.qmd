@@ -1,0 +1,25 @@
+---
+title: "&#9835; Notes"
+listing:
+  contents: posts         # This tells Quarto to look in the posts/ folder
+  sort: "date desc"        # Newest posts show up first
+  type: table            # Options: default, grid, or table
+  table-hover: true
+  include:
+    categories: "Notes"
+  sort-ui: false
+  filter-ui: false
+  fields: [date, title]
+  # Changes the column header name
+  # field-display-names:
+    # date: "Published"
+page-layout: article
+citation: false
+---
+
+This page records an assortment of technical notes I make for myself, mostly around math and machine learning. The prerequisites vary for each note and they tell no new tales, but I share them hoping you might find a glimmer of inspiration within the rabbit holes.
+
+Please do include a backlink and cite these notes if you use them in any form. Each post features a copyable BibTeX entry and standard format attribution at the end.
+
+Questions, comments, error-spotting? Drop me an email. I’d love to hear from you! 
+

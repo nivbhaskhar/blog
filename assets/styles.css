@@ -1,0 +1,108 @@
+/* Font and colours */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #111;
+  background-color: #fdfdfd;
+  line-height: 1.5;
+  font-weight: 400;
+  font-size: 16px;
+}
+
+h1, h2, h3, h4 {
+  font-weight: 400;
+}
+
+h2:not(#footnotes h2), h3, h4 {
+background-color: #ccd9ff;
+padding: 10px 15px;        
+border-radius: 6px;
+text-align: left; 
+}
+
+/* ========================================== */
+/* Navbar styling                             */
+/* ========================================== */
+
+
+.navbar {
+  border-top: 5px solid #424242;
+  border-bottom: 1px solid #eeeeee;
+  box-shadow: none;
+}
+
+
+/* Center-align the menu links in the middle of the header 
+.navbar-collapse {
+  justify-content: center;
+}
+
+.navbar-nav {
+  margin: 0 auto;
+} */
+
+/* Forces ALL navbar links to look identical, active or not */
+.navbar .nav-link, .navbar .nav-link.active {
+  color: #424242;
+  background: none;
+  border: none;
+}
+
+/* One simple hover state */
+.navbar .nav-link:hover {
+  text-decoration: underline;
+}
+
+
+/* ========================================== */
+/* Quarto table styling                       */
+/* ========================================== */
+
+
+/* Hides headers in quarto table display*/
+.quarto-listing-table thead {
+  display: none;
+  /* visibility: collapse;*/
+}
+
+/* Uses default colour for quarto table listings */
+.quarto-listing-table td a {
+  color: var(--bs-body-color, #111);
+  text-decoration: none;
+}
+
+/* Changes colour and underlines quarto table listings on hover 
+.quarto-listing-table td a:hover {
+  color: var(--bs-link-hover-color, #0d6efd);
+  text-decoration: underline;
+} */
+
+
+/* ========================================== */
+/* Post styling                               */
+/* ========================================== */
+
+
+/* Hides the "Published" label in each post */
+.quarto-title-meta-heading {
+  display: none;
+}
+
+/* ========================================== */
+/* Image alignment in posts.                 */
+/* ========================================== */
+
+/* Center the figure captions */
+figcaption, .figure-caption {
+  text-align: center;
+}
+
+/* ========================================================= */
+/* Custom Callout Box Styling (Theorems and questions)       */
+/* ========================================================= */
+
+/* Customizing call out box */
+.callout-note {
+  background-color: #f0f4ff; 
+  border-left-color: #ccd9ff !important; 
+  border-radius: 6px;
+}

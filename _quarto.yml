@@ -1,0 +1,57 @@
+project:
+  type: website
+  output-dir: docs  # Renders the HTML files into a 'docs' folder
+  render:
+    - "*.qmd"
+    - "!LICENSE.md"
+    - "!README.md"
+
+
+website:
+  title: "Nivedita Bhaskhar"
+  site-url: "https://nivbhaskhar.github.io/blog"
+  navbar:
+    background: "#ccd9ff"
+    foreground: "#424242"
+    search: true
+    tools-collapse: true # Collapses the tools in mobile menu
+    left:
+      - href: index.qmd
+        text: Blog
+      - href: notes.qmd
+        text: Notes
+      - href: quantum.qmd
+        text: Quantum
+      - href: https://nivbhaskhar.github.io
+        text: About
+    tools:
+      - icon: linkedin
+        href: https://www.linkedin.com/in/nivbhaskhar
+        aria-label: LinkedIn
+      - icon: github
+        href: https://github.com/nivbhaskhar
+        aria-label: GitHub
+
+
+  page-footer:
+    left: "&copy; 2026 Niv Bhaskhar"
+    center: "<a>niv.bhaskhar@gmail.com</a>"
+    right:
+      - icon: linkedin
+        href: https://www.linkedin.com/in/nivbhaskhar
+        aria-label: LinkedIn
+      - icon: github
+        href: https://github.com/nivbhaskhar
+        aria-label: GitHub
+
+format:
+  html:
+    theme: default
+    css: assets/styles.css
+    toc: false # no table of contents for posts
+    title-block-banner: false # removes large drop down title bar
+    date-format: "MMMM DD, YYYY" # Formats date cleanly (e.g., May 18, 2026)
+    footnotes-hover: true
+    fig-align: center
+    citation:
+      author: "Nivedita Bhaskhar"

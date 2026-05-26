@@ -1,0 +1,30 @@
+---
+title: "Web &#129717;"
+listing:
+  contents: posts         # This tells Quarto to look in the posts/ folder
+  sort: "date desc"        # Newest posts show up first
+  type: table            # Options: default, grid, or table
+  table-hover: true
+  include:
+    categories: "Exposition"
+  sort-ui: false
+  filter-ui: false
+  fields: [date, title]
+  # Changes the column header name
+  # field-display-names:
+    # date: "Published"
+page-layout: article
+citation: false
+---
+::: {.callout-note appearance="simple" icon=false}
+Looking for technical deep dives ? Check out my notes [&#8594;](notes.qmd)
+:::
+
+
+Hello there! My name is Nivedita Bhaskhar and I am a Machine Learning Engineer. In my past avatar as a pure mathematician, I worked with mathematical structures called *algebraic groups*. To know more, visit my main [website](https://nivbhaskhar.github.io).
+
+I like to write about mathematics, machine learning and quantum computing. I hope these pieces provide some appetizing food for thought! 
+
+Please do include a backlink and cite these articles if you use them in any form. Each post features a copyable BibTeX entry and standard format attribution at the end.
+
+Questions, comments, error-spotting? Drop me an email. I’d love to hear from you!

@@ -1,0 +1,20 @@
+---
+title: "&#9883;&#65039; Quantum computing"
+listing:
+  contents: posts         # This tells Quarto to look in the posts/ folder
+  sort: "date desc"        # Newest posts show up first
+  type: table            # Options: default, grid, or table
+  table-hover: true
+  include:
+    categories: "Quantum"
+  sort-ui: false
+  filter-ui: false
+  fields: [date, title]
+  # Changes the column header name
+  # field-display-names:
+    # date: "Published"
+page-layout: article
+citation: false
+---
+
+*Coming soon*

@@ -1,0 +1,21 @@
+[
+  {
+    "listing": "/quantum.html",
+    "items": []
+  },
+  {
+    "listing": "/notes.html",
+    "items": [
+      "/posts/2021-09-10-kkt-conditions.html"
+    ]
+  },
+  {
+    "listing": "/index.html",
+    "items": [
+      "/posts/2020-08-26-Mean-Variance.html",
+      "/posts/2020-08-03-SVD-details.html",
+      "/posts/2020-07-27-SVD.html",
+      "/posts/2020-07-20-GifsInPython.html"
+    ]
+  }
+]

@@ -1,0 +1,86 @@
+[
+  {
+    "objectID": "quantum.html",
+    "href": "quantum.html",
+    "title": "⚛️ Quantum computing",
+    "section": "",
+    "text": "Coming soon\n\n\n\n\n\n\n\n\nDate\nTitle\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "posts/2020-08-26-Mean-Variance.html",
+    "href": "posts/2020-08-26-Mean-Variance.html",
+    "title": "Mean and Variance",
+    "section": "",
+    "text": "Let’s assume we are working with a dataset whose data-points \\(x_1, x_2, \\ldots, x_N\\) are one dimensional.\nThe mean of the dataset is defined to be \\[\n\\mu = \\frac{x_1 + x_2 + \\ldots x_N}{N}.\n\\]\nThe variance is defined to be \\[\n\\sigma^2 = \\frac{(x_1-\\mu)^2 + (x_2-\\mu)^2 + \\ldots (x_N-\\mu)^2}{N}.\n\\]\nCode:\nimport numpy as np\n\n# x is the 1-d numpy array of your 1 dimensional datapoints\nx = np.array([1,2,3,4,-1,-2,-3,-4])\n\nprint(f\" The mean is {x.mean()}\")\nprint(f\" The mean is also given by {np.mean(x)}\")\nprint(f\" The variance is {x.var()}\")\nprint(f\" The variance is also given by{np.var(x)}\")\nOutput:\nThe mean is 0.0\nThe mean is also given by 0.0\nThe variance is 7.5\nThe variance is also given by 7.5"
+  },
+  {
+    "objectID": "posts/2020-08-26-Mean-Variance.html#footnotes",
+    "href": "posts/2020-08-26-Mean-Variance.html#footnotes",
+    "title": "Mean and Variance",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\n\\[\\begin{align*} \\tilde{X}\\tilde{X^T} &= \\sum_{i=1}^{N}  \\left(\\begin{array}{ccccc} \\overline{0} &  \\ldots &  \\overline{0} & x_i-\\mu & \\overline{0} \\ldots & \\overline{0} \\\\ \\end{array}\\right)\\tilde{X}^T  \\\\  & = \\sum_{i=1}^N \\left(\\begin{array}{ccccc} \\overline{0} &  \\ldots &  \\overline{0} & x_i-\\mu & \\overline{0} \\ldots & \\overline{0} \\end{array}\\right)\\left[\\sum_{j=1}^{N} \\left(\\begin{array}{c} \\overline{0} \\\\  \\ldots \\\\ \\overline{0} \\\\ (x_j-\\mu)^T \\\\ \\overline{0}^T \\\\ \\ldots \\\\ \\overline{0}^T \\end{array}\\right) \\right] \\\\ &= \\sum_{i=1}^{N} (x_i-\\mu)(x_i-\\mu)^T  = NS \\end{align*}\\]↩︎"
+  },
+  {
+    "objectID": "posts/2020-07-27-SVD.html",
+    "href": "posts/2020-07-27-SVD.html",
+    "title": "SVD - A geometric view point",
+    "section": "",
+    "text": "A geometric viewpoint of SVD"
+  },
+  {
+    "objectID": "posts/2020-07-27-SVD.html#footnotes",
+    "href": "posts/2020-07-27-SVD.html#footnotes",
+    "title": "SVD - A geometric view point",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\nA square matrix \\(X\\) is orthogonal iff \\(X^TX = XX^T\\) is the identity matrix.↩︎\nThe singular values of an \\(n\\times m\\) matrix A are the square roots of the eigenvalues of \\(A^TA\\) listed with their algebraic multiplicities.↩︎\nBy definition, the zero vector, \\(\\overline{0}\\), is perpendicular to every vector↩︎\nSince rotation preserves angles, any set of perpendicular vectors remain perpendicular (and unstretched) after the action of the matrix!↩︎"
+  },
+  {
+    "objectID": "notes.html",
+    "href": "notes.html",
+    "title": "♫ Notes",
+    "section": "",
+    "text": "This page records an assortment of technical notes I make for myself, mostly around math and machine learning. The prerequisites vary for each note and they tell no new tales, but I share them hoping you might find a glimmer of inspiration within the rabbit holes.\nPlease do include a backlink and cite these notes if you use them in any form. Each post features a copyable BibTeX entry and standard format attribution at the end.\nQuestions, comments, error-spotting? Drop me an email. I’d love to hear from you!\n\n\n\n\n\n\n\n\n\n\nDate\n\n\n\nTitle\n\n\n\n\n\n\n\n\nSeptember 10, 2021\n\n\nKarush–Kuhn–Tucker conditions\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Web 🪵",
+    "section": "",
+    "text": "Looking for technical deep dives ? Check out my notes →\n\n\n\nHello there! My name is Nivedita Bhaskhar and I am a Machine Learning Engineer. In my past avatar as a pure mathematician, I worked with mathematical structures called algebraic groups. To know more, visit my main website.\nI like to write about mathematics, machine learning and quantum computing. I hope these pieces provide some appetizing food for thought!\nPlease do include a backlink and cite these articles if you use them in any form. Each post features a copyable BibTeX entry and standard format attribution at the end.\nQuestions, comments, error-spotting? Drop me an email. I’d love to hear from you!\n\n\n\n\n\n\n\n\n\n\nDate\n\n\n\nTitle\n\n\n\n\n\n\n\n\nAugust 26, 2020\n\n\nMean and Variance\n\n\n\n\n\n\nAugust 03, 2020\n\n\nSVD - The details\n\n\n\n\n\n\nJuly 27, 2020\n\n\nSVD - A geometric view point\n\n\n\n\n\n\nJuly 20, 2020\n\n\nMaking GIFs in Python\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "posts/2020-07-20-GifsInPython.html",
+    "href": "posts/2020-07-20-GifsInPython.html",
+    "title": "Making GIFs in Python",
+    "section": "",
+    "text": "UnPuzzler in action\n\n\nIf you’re searching for a quick way to make GIFs out of a folder full of images, the Pillow library in Python does the trick for you!\n# imports\nfrom PIL import Image\nimport os\n\n# Change working directory to folder containing images to be GIF-fed\nos.chdir(\"path_to_folder_with_images\" )\n\n# Ensure your images are in the order you want them to appear in the GIF\nprint(\"The images will be GIF-fed in the following order\")\nprint(sorted(os.listdir())\n\n# Open the images as a PIL image object and store them in a list\nimages = []\nfor img_file_name in sorted(os.listdir()):\n  img = Image.open(img_file_name)\n  images.append(img)\n\n\n# Save images to an output.gif\nimages[0].save('output.gif',\n               save_all=True, append_images=images[1:], \n           optimize=False, \n               duration=800, loop=0)\n\n\nMain parameters of Image.save()\n\nloop : loop=0 makes the GIF loop infinitely. loop=n makes the GIF loop n times.\n\nduration : time in milliseconds each image will be displayed for\n\n\n\n\n\nCitationBibTeX citation:@online{bhaskhar2020,\n  author = {Bhaskhar, Nivedita},\n  title = {Making {GIFs} in {Python}},\n  date = {2020-07-20},\n  url = {https://nivbhaskhar.github.io/blog/posts/2020-07-20-GifsInPython.html},\n  langid = {en}\n}\nFor attribution, please cite this work as:\nBhaskhar, Nivedita. 2020. “Making GIFs in Python.” July 20.\nhttps://nivbhaskhar.github.io/blog/posts/2020-07-20-GifsInPython.html."
+  },
+  {
+    "objectID": "posts/2020-08-03-SVD-details.html",
+    "href": "posts/2020-08-03-SVD-details.html",
+    "title": "SVD - The details",
+    "section": "",
+    "text": "We’ll assume you that you have read this introductory post on singular value decomposition a.k.a SVD."
+  },
+  {
+    "objectID": "posts/2020-08-03-SVD-details.html#footnotes",
+    "href": "posts/2020-08-03-SVD-details.html#footnotes",
+    "title": "SVD - The details",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\nA square matrix \\(X\\) is orthogonal iff \\(X^TX = XX^T\\) is the identity matrix.↩︎\nThe singular values of an \\(n\\times m\\) matrix A are the square roots of the eigenvalues of \\(A^TA\\) listed with their algebraic multiplicities.↩︎"
+  },
+  {
+    "objectID": "posts/2021-09-10-kkt-conditions.html",
+    "href": "posts/2021-09-10-kkt-conditions.html",
+    "title": "Karush–Kuhn–Tucker conditions",
+    "section": "",
+    "text": "Ref: Foundations of optimization by Bazaraa and Shetty (link), Chapter 5"
+  },
+  {
+    "objectID": "posts/2021-09-10-kkt-conditions.html#footnotes",
+    "href": "posts/2021-09-10-kkt-conditions.html#footnotes",
+    "title": "Karush–Kuhn–Tucker conditions",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\n\\(x_0\\) lies in the interior of \\(X\\) if you can fit an open ball in \\(\\mathbb{R}^n\\) around \\(x_0\\) so that the ball also lies inside \\(X\\).↩︎\nIntuitively, the gradient \\(\\nabla f(x_0)\\) points in the direction of steepest ascent of \\(f\\) at \\(x_0\\). So any \\(x\\) which makes a negative inner product with it is a direction of descent↩︎\nIntuitively, since \\(g_i(x_0)=0\\), moving in a direction where \\(\\langle x, \\nabla g_i(x_0)\\rangle &lt; 0\\) ensures the constraint function decreases, keeping it \\(\\leq 0\\). If \\(g_j(x_0)\\) is already \\(&lt;0\\), moving a bit will not violate the constraint.↩︎\nIntuitively, the theorem tells us there is no direction in which we can move from \\(x_0\\) which will keep the constraints but minimize \\(f\\) further↩︎\nIf the hyperplane looks like \\(\\{x \\mid \\langle x, v \\rangle = c\\}\\) for some \\(c\\), and \\(F'\\) lies on one side of it, so say \\(\\langle f', v\\rangle \\geq c\\) for all \\(f'\\in F'\\). You can positively scale \\(f'\\) to make it break this inequality unless \\(c\\) is \\(0\\)↩︎\nSay \\(F'\\) also lies below the hyperplane \\(H\\) defined by \\(v\\) and \\(v = a \\nabla f(x_0) + h\\) where \\(h\\in H\\). Since we want \\(\\langle f', v \\rangle &lt; 0\\) for \\(f'\\in F\\), using \\(\\langle f', \\nabla f(x_0) \\rangle  &lt; 0\\) and \\(\\langle f', h \\rangle =0\\), we have \\(a &gt;0\\). Now construct this problematic vector \\(-\\epsilon \\nabla f(x_0) + h\\) in \\(F'\\). It needs to lie below the hyperplane perpendicular to \\(v\\) for any \\(\\epsilon &gt; 0\\). We can make \\(\\epsilon\\) tiny and nudge it above the hyperplane defined by \\(v\\)↩︎\ni.e. every coordinate is \\(&lt;0\\)↩︎\n\\(\\{Ax\\mid x\\in\\mathbb{R}^n\\}\\subset\\mathbb{R}^{|I|+1}\\)↩︎\nRemember \\(K\\) has all the vectors \\(k&lt;\\bar{0}\\)↩︎\nThe \\(\\geq\\) is because the Image of \\(A\\) can cease to be open↩︎\nsimply because \\(p\\) is not the \\(\\bar{0}\\) vector↩︎\nThe reason why it is called dual feasibility will be a dual story for another time↩︎"
+  }
+]

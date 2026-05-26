@@ -62,7 +62,7 @@ Lists:
 
 
 
-*Ref: Foundations of optimization by Bazaraa and Shetty ([link](https://www.springer.com/gp/book/9783540076803)), Chapter 5*
+*Reference: Foundations of optimization by Bazaraa and Shetty ([link](https://www.springer.com/gp/book/9783540076803)), Chapter 5*
 
 ## The optimization problem (A)
 

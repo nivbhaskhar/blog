@@ -78,7 +78,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-1e6bd20dea1a872a31693a70263f1c59.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-86fef9588b399ccbf429bbf078be9f7b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -267,8 +267,8 @@ Lists:
 
 ======================================================================
 -->
-<section id="one-dimensional-data" class="level3">
-<h3 class="anchored" data-anchor-id="one-dimensional-data">One dimensional data</h3>
+<section id="one-dimensional-data" class="level2">
+<h2 class="anchored" data-anchor-id="one-dimensional-data">One dimensional data</h2>
 <p>Let’s assume we are working with a dataset whose data-points <span class="math inline">\(x_1, x_2, \ldots, x_N\)</span> are one dimensional.</p>
 <p>The <strong><em>mean</em></strong> of the dataset is defined to be <span class="math display">\[
 \mu = \frac{x_1 + x_2 + \ldots x_N}{N}.
@@ -292,8 +292,8 @@ Lists:
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>The variance <span class="kw">is</span> <span class="fl">7.5</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>The variance <span class="kw">is</span> also given by <span class="fl">7.5</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="higher-dimensional-data" class="level3">
-<h3 class="anchored" data-anchor-id="higher-dimensional-data">Higher dimensional data</h3>
+<section id="higher-dimensional-data" class="level2">
+<h2 class="anchored" data-anchor-id="higher-dimensional-data">Higher dimensional data</h2>
 <p>Say now we are working with a dataset whose data-points <span class="math inline">\(x_1, x_2, \ldots, x_N\)</span> are <span class="math inline">\(d\)</span> dimensional, i.e.&nbsp;each <span class="math inline">\(x_i\)</span> is a <span class="math inline">\(d\times 1\)</span> column vector.</p>
 <p>The <strong><em>mean</em></strong> of the dataset is defined to be <span class="math display">\[
 \mu = \frac{x_1 + x_2 + \ldots x_N}{N}.
@@ -303,8 +303,8 @@ S= \frac{(x_1-\mu)(x_1-\mu)^T + (x_2-\mu)(x_2-\mu)^T + \ldots (x_N-\mu)(x_N-\mu)
 \]</span></p>
 <p>Note that since <span class="math inline">\(x_i, \mu\)</span> have shape <span class="math inline">\(d\times 1\)</span>, <span class="math inline">\((x_i-\mu)(x_i-\mu)^T\)</span> has shape <span class="math inline">\(d\times d\)</span>. Thus the covariance matrix <span class="math inline">\(S\)</span> is a <span class="math inline">\(d\times d\)</span> matrix.</p>
 </section>
-<section id="a-more-compact-formula" class="level3">
-<h3 class="anchored" data-anchor-id="a-more-compact-formula">A more compact formula</h3>
+<section id="a-more-compact-formula" class="level2">
+<h2 class="anchored" data-anchor-id="a-more-compact-formula">A more compact formula</h2>
 <p>To make the definition of the variance neater, let’s assemble our data-points into a <span class="math inline">\(d\times N\)</span> matrix <span class="math inline">\(X\)</span>.</p>
 <p><span class="math display">\[
 X= \left(
@@ -330,8 +330,8 @@ x_1-\mu &amp; x_2-\mu &amp; \ldots &amp; x_N-\mu \\
 \]</span></p>
 <p>By some matrix manipulation <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, the covariance matrix turns out to be nothing but <span class="math inline">\(S = \frac{1}{N}\tilde{X}\tilde{X}^T\)</span></p>
 </section>
-<section id="computation" class="level3">
-<h3 class="anchored" data-anchor-id="computation">Computation</h3>
+<section id="computation" class="level2">
+<h2 class="anchored" data-anchor-id="computation">Computation</h2>
 <p>Say we have 3 data-points, each of which is two-dimensional. Then we can represent the dataset as</p>
 <p><span class="math display">\[
 X = \left(\begin{array}{ccc}1 &amp; -1 &amp; 1 \\ 2 &amp; -2 &amp; 2 \end{array}\right)
@@ -376,8 +376,8 @@ X = \left(\begin{array}{ccc}1 &amp; -1 &amp; 1 \\ 2 &amp; -2 &amp; 2 \end{array}
 </div>
 </div>
 </section>
-<section id="symmetry" class="level3">
-<h3 class="anchored" data-anchor-id="symmetry">Symmetry</h3>
+<section id="symmetry" class="level2">
+<h2 class="anchored" data-anchor-id="symmetry">Symmetry</h2>
 <p>Notice that the covariance matrix in the previous example is symmetric. This is in fact true for every covariance matrix. Why ?</p>
 <p>Well, a matrix <span class="math inline">\(M\)</span> is symmetric provided <span class="math inline">\(M=M^T\)</span>. The covariance matrix looks like <span class="math inline">\(S = \frac{1}{N}\tilde{X}\tilde{X}^T\)</span>. Then,</p>
 <p><span class="math display">\[

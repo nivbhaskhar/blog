@@ -43,7 +43,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-1e6bd20dea1a872a31693a70263f1c59.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-86fef9588b399ccbf429bbf078be9f7b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -159,7 +159,7 @@ window.Quarto = {
 <div class="quarto-title">
 <h1 class="title">Karush–Kuhn–Tucker conditions</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">Optimization</div>
+    <div class="quarto-category">Convex-optimization</div>
     <div class="quarto-category">Notes</div>
   </div>
   </div>
@@ -240,24 +240,24 @@ Lists:
 ======================================================================
 -->
 <p><em>Ref: Foundations of optimization by Bazaraa and Shetty (<a href="https://www.springer.com/gp/book/9783540076803">link</a>), Chapter 5</em></p>
-<section id="the-optimization-problem-a" class="level3">
-<h3 class="anchored" data-anchor-id="the-optimization-problem-a">The optimization problem (A)</h3>
+<section id="the-optimization-problem-a" class="level2">
+<h2 class="anchored" data-anchor-id="the-optimization-problem-a">The optimization problem (A)</h2>
 <p>Minimize <span class="math inline">\(f(x)\)</span> under the constraints <span class="math inline">\(x\in X\)</span> and <span class="math inline">\(g_i(x) \leq 0\)</span> for <span class="math inline">\(1\leq i\leq m\)</span>, where</p>
 <ul>
 <li><span class="math inline">\(X\)</span> is a subset of <span class="math inline">\(\mathbb{R}^n\)</span></li>
 <li><span class="math inline">\(f,g_i\)</span> are functions <span class="math inline">\(U\to\mathbb{R}\)</span> for some open set <span class="math inline">\(U\supset X\)</span></li>
 </ul>
 </section>
-<section id="feasible-set-feasible-solutions-and-optimal-solutions" class="level3">
-<h3 class="anchored" data-anchor-id="feasible-set-feasible-solutions-and-optimal-solutions">Feasible set, feasible solutions and optimal solutions</h3>
+<section id="feasible-set-feasible-solutions-and-optimal-solutions" class="level2">
+<h2 class="anchored" data-anchor-id="feasible-set-feasible-solutions-and-optimal-solutions">Feasible set, feasible solutions and optimal solutions</h2>
 <ul>
 <li>The set of points in <span class="math inline">\(\mathbb{R}^n\)</span> which satisfy the constraints make up the <em>feasible set</em> <span class="math inline">\(S\)</span></li>
 <li>Any <span class="math inline">\(x\in S\)</span> is called a <em>feasible solution</em> to (A)</li>
 <li>Any <span class="math inline">\(x^*\in S\)</span> such that <span class="math inline">\(f(x^*)\)</span> is minimum among <span class="math inline">\(\{f(x)\mid x\in S\}\)</span> is called an <em>optimal solution</em> to (A)</li>
 </ul>
 </section>
-<section id="rephrasing-optimality" class="level3">
-<h3 class="anchored" data-anchor-id="rephrasing-optimality">Rephrasing optimality</h3>
+<section id="rephrasing-optimality" class="level2">
+<h2 class="anchored" data-anchor-id="rephrasing-optimality">Rephrasing optimality</h2>
 <p>In general, one would like to find optimal solutions to (A). Let’s rephrase what it means for <span class="math inline">\(x_0\in S\)</span> to be optimal.</p>
 <p>Set <span class="math inline">\(B = B(x_0)=\{x\in S \mid f(x)-f(x_0) &lt; 0\}\)</span>. Clearly <span class="math inline">\(x_0\)</span> is optimal exactly when <span class="math inline">\(B=\emptyset\)</span>. The idea then is to express <span class="math inline">\(B\)</span> as an intersection <span class="math inline">\(F\cap G\cap X\)</span> where:</p>
 <ul>
@@ -267,8 +267,8 @@ Lists:
 </ul>
 <p>It is an easy check to see indeed that <span class="math inline">\(B=F\cap G\cap X\)</span>. Thus <span class="math inline">\(x_0\in S\)</span> is optimal exactly when <span class="math inline">\(F\cap G\cap X\)</span> is empty.</p>
 </section>
-<section id="necessary-conditions-for-optimality" class="level3">
-<h3 class="anchored" data-anchor-id="necessary-conditions-for-optimality">Necessary conditions for optimality</h3>
+<section id="necessary-conditions-for-optimality" class="level2">
+<h2 class="anchored" data-anchor-id="necessary-conditions-for-optimality">Necessary conditions for optimality</h2>
 <p>Since it is in general harder to find optimal solutions, let us focus on <em>necessary</em> conditions for optimality instead. Assuming <span class="math inline">\(x_0\in S\)</span> is optimal, can we make some useful statements on <span class="math inline">\(F, G\)</span> and <span class="math inline">\(X\)</span> (apart from the fact that they exist)?</p>
 <p>It turns out that we can! The following theorem assures us that we can find convex sets <span class="math inline">\(F', G', X'\)</span> which are non intersecting which further turn out to be, in some sense, <em>convex approximations</em> of <span class="math inline">\(F,G,X\)</span> at <span class="math inline">\(x_0\)</span>. To simplify discussion, let us additionally assume that we pick an optimal <span class="math inline">\(x_0\in S\)</span> which also lies in the <em>interior</em><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> of <span class="math inline">\(X\)</span>. In this case <span class="math inline">\(X'\)</span> is just the full euclidean space and can be taken out of the picture. We then have</p>
 <div class="callout callout-style-default callout-note no-icon callout-titled">
@@ -293,15 +293,15 @@ Lists:
 </div>
 <p>We’ll take this theorem for granted and instead, focus on what it gives us.</p>
 </section>
-<section id="hyperplanes-half-spaces-and-convex-cones" class="level3">
-<h3 class="anchored" data-anchor-id="hyperplanes-half-spaces-and-convex-cones">Hyperplanes, half-spaces and convex cones</h3>
+<section id="hyperplanes-half-spaces-and-convex-cones" class="level2">
+<h2 class="anchored" data-anchor-id="hyperplanes-half-spaces-and-convex-cones">Hyperplanes, half-spaces and convex cones</h2>
 <p>Let us investigate the geometry of <span class="math inline">\(F'\)</span> and <span class="math inline">\(G'\)</span>. In particular can we deduce any connections between <span class="math inline">\(\nabla f(x_0)\)</span> and <span class="math inline">\(\nabla g_i(x_0)\)</span>s?</p>
 <p>The vectors perpendicular to <span class="math inline">\(\nabla f(x_0)\)</span>, i.e.&nbsp;<span class="math inline">\(\{x \mid \langle x, \langle x, \nabla f(x_0) = 0\}\)</span> form a <em>hyperplane</em> <span class="math inline">\(H\)</span> and <span class="math inline">\(F'\)</span> is just all vectors which lie on side of it. It is what is called a <em>half-space</em>.</p>
 <p>Clearly if <span class="math inline">\(v\in F'\)</span>, then any positively scaled <span class="math inline">\(\lambda v, \lambda &gt; 0\)</span> also lies in <span class="math inline">\(F'\)</span> (i.e.&nbsp;on the same side of the hyperplane) making <span class="math inline">\(F'\)</span> a <em>cone</em>. As an exercise, check that any positive linear combination of vectors in <span class="math inline">\(F'\)</span> also lie in <span class="math inline">\(F'\)</span>, which makes <span class="math inline">\(F'\)</span> a convex cone.</p>
 <p><span class="math inline">\(G'\)</span> is the intersection of such half spaces and also forms a convex cone.</p>
 </section>
-<section id="hyperplane-separation" class="level3">
-<h3 class="anchored" data-anchor-id="hyperplane-separation">Hyperplane separation</h3>
+<section id="hyperplane-separation" class="level2">
+<h2 class="anchored" data-anchor-id="hyperplane-separation">Hyperplane separation</h2>
 <p>Since we have these non-intersecting convex sets <span class="math inline">\(F'\)</span> and <span class="math inline">\(G'\)</span>, we can invoke the <a href="https://en.wikipedia.org/wiki/Hyperplane_separation_theorem">separation theorem</a> to get a hyperplane which separates these two. Further since <span class="math inline">\(F'\)</span> and <span class="math inline">\(G'\)</span> are cones, the hyperplane must pass through the origin, i.e.&nbsp;are just vectors perpendicular to some <span class="math inline">\(v\)</span><a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>.</p>
 <p>Since <span class="math inline">\(F'\)</span> is the entire halfspace below <span class="math inline">\(\nabla f(x_0)\)</span>, we can in fact show that <span class="math inline">\(v\)</span> is just <span class="math inline">\(\nabla f(x_0)\)</span> scaled<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>.</p>
 <div class="quarto-figure quarto-figure-center">
@@ -318,13 +318,13 @@ Lists:
 </figure>
 </div>
 </section>
-<section id="hyperplane-separation-after-a-linear-transformation" class="level3">
-<h3 class="anchored" data-anchor-id="hyperplane-separation-after-a-linear-transformation">Hyperplane separation after a linear transformation</h3>
+<section id="hyperplane-separation-after-a-linear-transformation" class="level2">
+<h2 class="anchored" data-anchor-id="hyperplane-separation-after-a-linear-transformation">Hyperplane separation after a linear transformation</h2>
 <p>Translating back to algebra, this means the equation <span class="math inline">\(Ax &lt; \bar{0}\)</span><a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a> has no solution <span class="math inline">\(x\in \mathbb{R}^n\)</span> where <span class="math display">\[A = \begin{bmatrix}  \nabla f(x_0) \\ \nabla g_{i_1}(x_0) \\ \vdots \\ \nabla g_{i_t}(x_0) \end{bmatrix} \in \mathrm{Mat}_{(|I|+1)\times n}(\mathbb{R})\]</span></p>
 <p>That is, the image<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a> of <span class="math inline">\(A\)</span> is disjoint from the convex cone <span class="math inline">\(K = \{y \in \mathbb{R}^{|I|+1} \mid y &lt; \bar{0}\}\)</span>. We can once again play our hyperplane separation card and separate these convex sets <span class="math inline">\(\mathrm{Img}(A)\)</span> and <span class="math inline">\(K\)</span> in <span class="math inline">\(\mathbb{R}^{|I|+1}\)</span> by a hyperplane <span class="math inline">\(H' = \{ x \mid \langle x, p \rangle = 0 \}\)</span> for some non-zero vector <span class="math inline">\(p\)</span>.</p>
 </section>
-<section id="reconstructing-the-fritz-john-conditions-for-optimality" class="level3">
-<h3 class="anchored" data-anchor-id="reconstructing-the-fritz-john-conditions-for-optimality">Reconstructing the Fritz John conditions for optimality</h3>
+<section id="reconstructing-the-fritz-john-conditions-for-optimality" class="level2">
+<h2 class="anchored" data-anchor-id="reconstructing-the-fritz-john-conditions-for-optimality">Reconstructing the Fritz John conditions for optimality</h2>
 <p>Without loss of generality, assume <span class="math inline">\(K\)</span> lies “below” the hyperplane, i.e.&nbsp;<span class="math inline">\(\langle k, p \rangle &lt; 0\)</span> for all <span class="math inline">\(k\in K\)</span>. Convince yourselves<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a> that this means <span class="math inline">\(p \geq \bar{0}\)</span>. And further the image of <span class="math inline">\(A\)</span> lies “above” the hyperplane, i.e.&nbsp;<span class="math inline">\(\langle p, Ax \rangle \geq 0\)</span><a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a> for all <span class="math inline">\(x\in \mathbb{R}^n\)</span>.</p>
 <p>This means <span class="math inline">\(p^TAx = 0\)</span> for all <span class="math inline">\(x\)</span> in <span class="math inline">\(\mathbb{R}^n\)</span>, i.e <span class="math inline">\(p^TA\)</span> or equivalently <span class="math inline">\(A^Tp\)</span> is the <span class="math inline">\(0\)</span> vector in <span class="math inline">\(\mathbb{R}^n\)</span> !</p>
 <p><span class="math display">\[\begin{bmatrix} \vert &amp; \vert &amp; &amp; \vert \\ \nabla f(x_0) &amp; \nabla g_{i_1}(x_0) &amp; \dots &amp; \nabla g_{i_t}(x_0) \\ \vert &amp; \vert &amp; &amp; \vert \end{bmatrix} \begin{bmatrix} p_0 \\ p_{i_1} \\ \vdots \\ p_{i_t} \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \\ \vdots \\ 0 \end{bmatrix}\]</span></p>
@@ -373,8 +373,8 @@ Lists:
 <li>The Fritz John conditions allow <span class="math inline">\(p_0\)</span> to be <span class="math inline">\(0\)</span></li>
 </ul>
 </section>
-<section id="karushkuhntucker-conditions-kkt" class="level3">
-<h3 class="anchored" data-anchor-id="karushkuhntucker-conditions-kkt">Karush–Kuhn–Tucker conditions (KKT)</h3>
+<section id="karushkuhntucker-conditions-kkt" class="level2">
+<h2 class="anchored" data-anchor-id="karushkuhntucker-conditions-kkt">Karush–Kuhn–Tucker conditions (KKT)</h2>
 <p>The KKT conditions associated to (A) are basically the Fritz John conditions under the additional assumption that <span class="math inline">\(p_0\)</span>, the Langrange multiplier of <span class="math inline">\(f\)</span> is non-zero. More precisely,</p>
 <div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">

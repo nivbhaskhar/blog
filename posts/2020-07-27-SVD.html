@@ -78,7 +78,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-1e6bd20dea1a872a31693a70263f1c59.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-86fef9588b399ccbf429bbf078be9f7b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -273,12 +273,12 @@ Lists:
 <figcaption>A geometric viewpoint of SVD</figcaption>
 </figure>
 </div>
-<section id="prerequisites" class="level3">
-<h3 class="anchored" data-anchor-id="prerequisites">Prerequisites</h3>
+<section id="prerequisites" class="level2">
+<h2 class="anchored" data-anchor-id="prerequisites">Prerequisites</h2>
 <p>We’ll assume you are familiar with (i.e.&nbsp;know the basic ideas and definitions of) the following topics: <em>matrices as linear maps, rank of a matrix, eigen-values and eigen-vectors, orthogonality</em></p>
 </section>
-<section id="svd-in-textbooks" class="level3">
-<h3 class="anchored" data-anchor-id="svd-in-textbooks">SVD in textbooks</h3>
+<section id="svd-in-textbooks" class="level2">
+<h2 class="anchored" data-anchor-id="svd-in-textbooks">SVD in textbooks</h2>
 <p><em>Singular value decomposition</em> a.k.a SVD of a real matrix is often taught at the tail end of a first course in Linear algebra. Prosaically speaking, singular value decomposition of a real matrix is nothing but <strong>taking the matrix and expressing it as a product of three <em>nicer</em> matrices</strong>.</p>
 <p>To be more precise but still prosaic, the actual result is as follows:</p>
 <div class="callout callout-style-default callout-note no-icon callout-titled">
@@ -302,8 +302,8 @@ Lists:
 </div>
 <p>If that .. looks a bit tame, let’s try and understand the power and utility of this result with the aid of an example.</p>
 </section>
-<section id="information-encoded-by-a-matrix" class="level3">
-<h3 class="anchored" data-anchor-id="information-encoded-by-a-matrix">Information encoded by a matrix</h3>
+<section id="information-encoded-by-a-matrix" class="level2">
+<h2 class="anchored" data-anchor-id="information-encoded-by-a-matrix">Information encoded by a matrix</h2>
 <p>Here’s <span class="math inline">\(A\)</span>, a very down to earth <span class="math inline">\(2 \times 2\)</span> matrix</p>
 <p><span class="math display">\[ A  =  \left( \begin{array}{cc}
       6 &amp; 2  \\
@@ -325,8 +325,8 @@ T(2,3) &amp;= T(2,0) + T(0,3) =  T(2e_1) + T(3e_2) \\
 </figure>
 </div>
 </section>
-<section id="finding-perpendicular-axes-that-stay-perpendicular" class="level3">
-<h3 class="anchored" data-anchor-id="finding-perpendicular-axes-that-stay-perpendicular">Finding perpendicular axes that stay perpendicular</h3>
+<section id="finding-perpendicular-axes-that-stay-perpendicular" class="level2">
+<h2 class="anchored" data-anchor-id="finding-perpendicular-axes-that-stay-perpendicular">Finding perpendicular axes that stay perpendicular</h2>
 <p>Because it is always easier to work with perpendicular axes, we would like to find perpendicular axes of our domain (or rather unit vectors along these axes) which <em>remain</em> perpendicular even after applying <span class="math inline">\(T\)</span>. Clearly <span class="math inline">\(\{e_1, e_2\}\)</span> was not a good choice. Is there a good choice ? If so, how can we find it ?</p>
 <p>A basis of a vector space consisting of unit vectors which are pairwise perpendicular to each other is called an <em>orthonormal basis</em> of the vector space. Thus our question in the more general context can be phrased as follows :</p>
 <div class="callout callout-style-default callout-note no-icon callout-titled">
@@ -343,8 +343,8 @@ T(2,3) &amp;= T(2,0) + T(0,3) =  T(2e_1) + T(3e_2) \\
 </div>
 </div>
 </section>
-<section id="enter-svd" class="level3">
-<h3 class="anchored" data-anchor-id="enter-svd">Enter SVD!</h3>
+<section id="enter-svd" class="level2">
+<h2 class="anchored" data-anchor-id="enter-svd">Enter SVD!</h2>
 <p>The singular value decomposition of <span class="math inline">\(A\)</span> precisely answers the above question!</p>
 <p><span class="math display">\[A = U \Sigma V^T\]</span></p>
 <div class="quarto-figure quarto-figure-center">
@@ -368,19 +368,19 @@ T(2,3) &amp;= T(2,0) + T(0,3) =  T(2e_1) + T(3e_2) \\
 \end{array}\right)\]</span></p>
 <p>Thus <span class="math inline">\(T(v_i) = \Sigma_{i,i} u_i\)</span> and they are mutually perpendicular to each other. Since <span class="math inline">\(u_i\)</span> are unit vectors, the length of <span class="math inline">\(T(v_i)\)</span> is precisely the diagonal entry <span class="math inline">\(\Sigma_{i,i}\)</span></p>
 </section>
-<section id="summary" class="level3">
-<h3 class="anchored" data-anchor-id="summary">Summary</h3>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
 <p>Given a linear map <span class="math inline">\(T : \mathbb{R}^m \to \mathbb{R}^n\)</span> (which is represented by an <span class="math inline">\(n\times m\)</span> matrix A with respect to standard basis), let <span class="math inline">\(A = U\Sigma V^T\)</span> be the singular value decomposition of <span class="math inline">\(A\)</span>. Then the columns of <span class="math inline">\(V\)</span> form an orthonormal basis of <span class="math inline">\(\mathbb{R}^m\)</span>. Further <span class="math inline">\(\{T(v_i)\}\)</span> still remain perpendicular to each other in <span class="math inline">\(\mathbb{R}^n\)</span>.</p>
 <p>The length of the vectors <span class="math inline">\(\{T(v_i)\}\)</span> are encoded by the diagonal entries of <span class="math inline">\(\Sigma\)</span>. The unit vectors along <span class="math inline">\(\{T(v_i)\}\)</span> can be completed to an orthonormal basis of <span class="math inline">\(\mathbb{R}^n\)</span>, which are precisely given by the columns of <span class="math inline">\(U\)</span>.</p>
 <p><em>So, you see the SVD of a matrix gives us a LOT of very useful information!</em></p>
 </section>
-<section id="uniqueness-of-the-svd" class="level3">
-<h3 class="anchored" data-anchor-id="uniqueness-of-the-svd">Uniqueness of the SVD ?</h3>
+<section id="uniqueness-of-the-svd" class="level2">
+<h2 class="anchored" data-anchor-id="uniqueness-of-the-svd">Uniqueness of the SVD ?</h2>
 <p>Since the non-zero diagonal entries of <span class="math inline">\(\Sigma\)</span> are precisely the <em>singular values</em> of <span class="math inline">\(A\)</span> in descending order, <span class="math inline">\(\Sigma\)</span> is unique for a given matrix <span class="math inline">\(A\)</span>. However, the columns of <span class="math inline">\(V\)</span> (and hence <span class="math inline">\(U\)</span>) are not unique.</p>
 <p>For a start, the columns of <span class="math inline">\(V\)</span> can vary up to sign (and since <span class="math inline">\(T(v_i)\)</span> is just <span class="math inline">\(u_i\)</span> scaled by a constant, <span class="math inline">\(u_i\)</span>’s sign will change too). To see why <span class="math inline">\(U,V\)</span> need not be unique and not just up to sign, think about what the singular value decomposition is for a rotation matrix<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>.</p>
 </section>
-<section id="svd-computation-code" class="level3">
-<h3 class="anchored" data-anchor-id="svd-computation-code">SVD computation code</h3>
+<section id="svd-computation-code" class="level2">
+<h2 class="anchored" data-anchor-id="svd-computation-code">SVD computation code</h2>
 <p>Of course, one can (and should know how to) compute the SVD by hand. But that’s a post for another day. For now, we’ll use the existing SVD implementation in numpy linalg package.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> np.array([[<span class="dv">6</span>,<span class="dv">2</span>], [<span class="op">-</span><span class="dv">7</span>,<span class="dv">6</span>]])</span>
@@ -398,8 +398,8 @@ T(2,3) &amp;= T(2,0) + T(0,3) =  T(2e_1) + T(3e_2) \\
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>array([[<span class="op">-</span><span class="fl">0.89442719</span>,  <span class="fl">0.4472136</span> ],</span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>       [ <span class="fl">0.4472136</span> ,  <span class="fl">0.89442719</span>]])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="wrapping-up-the-example" class="level3">
-<h3 class="anchored" data-anchor-id="wrapping-up-the-example">Wrapping up the example</h3>
+<section id="wrapping-up-the-example" class="level2">
+<h2 class="anchored" data-anchor-id="wrapping-up-the-example">Wrapping up the example</h2>
 <p><span class="math display">\[ \left( \begin{array}{cc}
       6 &amp; 2  \\
       -7 &amp; 6

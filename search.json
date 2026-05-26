@@ -14,6 +14,41 @@
     "text": "Let’s assume we are working with a dataset whose data-points \\(x_1, x_2, \\ldots, x_N\\) are one dimensional.\nThe mean of the dataset is defined to be \\[\n\\mu = \\frac{x_1 + x_2 + \\ldots x_N}{N}.\n\\]\nThe variance is defined to be \\[\n\\sigma^2 = \\frac{(x_1-\\mu)^2 + (x_2-\\mu)^2 + \\ldots (x_N-\\mu)^2}{N}.\n\\]\nCode:\nimport numpy as np\n\n# x is the 1-d numpy array of your 1 dimensional datapoints\nx = np.array([1,2,3,4,-1,-2,-3,-4])\n\nprint(f\" The mean is {x.mean()}\")\nprint(f\" The mean is also given by {np.mean(x)}\")\nprint(f\" The variance is {x.var()}\")\nprint(f\" The variance is also given by{np.var(x)}\")\nOutput:\nThe mean is 0.0\nThe mean is also given by 0.0\nThe variance is 7.5\nThe variance is also given by 7.5"
   },
   {
+    "objectID": "posts/2020-08-26-Mean-Variance.html#one-dimensional-data",
+    "href": "posts/2020-08-26-Mean-Variance.html#one-dimensional-data",
+    "title": "Mean and Variance",
+    "section": "",
+    "text": "Let’s assume we are working with a dataset whose data-points \\(x_1, x_2, \\ldots, x_N\\) are one dimensional.\nThe mean of the dataset is defined to be \\[\n\\mu = \\frac{x_1 + x_2 + \\ldots x_N}{N}.\n\\]\nThe variance is defined to be \\[\n\\sigma^2 = \\frac{(x_1-\\mu)^2 + (x_2-\\mu)^2 + \\ldots (x_N-\\mu)^2}{N}.\n\\]\nCode:\nimport numpy as np\n\n# x is the 1-d numpy array of your 1 dimensional datapoints\nx = np.array([1,2,3,4,-1,-2,-3,-4])\n\nprint(f\" The mean is {x.mean()}\")\nprint(f\" The mean is also given by {np.mean(x)}\")\nprint(f\" The variance is {x.var()}\")\nprint(f\" The variance is also given by{np.var(x)}\")\nOutput:\nThe mean is 0.0\nThe mean is also given by 0.0\nThe variance is 7.5\nThe variance is also given by 7.5"
+  },
+  {
+    "objectID": "posts/2020-08-26-Mean-Variance.html#higher-dimensional-data",
+    "href": "posts/2020-08-26-Mean-Variance.html#higher-dimensional-data",
+    "title": "Mean and Variance",
+    "section": "Higher dimensional data",
+    "text": "Higher dimensional data\nSay now we are working with a dataset whose data-points \\(x_1, x_2, \\ldots, x_N\\) are \\(d\\) dimensional, i.e. each \\(x_i\\) is a \\(d\\times 1\\) column vector.\nThe mean of the dataset is defined to be \\[\n\\mu = \\frac{x_1 + x_2 + \\ldots x_N}{N}.\n\\]\nThe covariance matrix is defined to be \\[\nS= \\frac{(x_1-\\mu)(x_1-\\mu)^T + (x_2-\\mu)(x_2-\\mu)^T + \\ldots (x_N-\\mu)(x_N-\\mu)^T}{N}.\n\\]\nNote that since \\(x_i, \\mu\\) have shape \\(d\\times 1\\), \\((x_i-\\mu)(x_i-\\mu)^T\\) has shape \\(d\\times d\\). Thus the covariance matrix \\(S\\) is a \\(d\\times d\\) matrix."
+  },
+  {
+    "objectID": "posts/2020-08-26-Mean-Variance.html#a-more-compact-formula",
+    "href": "posts/2020-08-26-Mean-Variance.html#a-more-compact-formula",
+    "title": "Mean and Variance",
+    "section": "A more compact formula",
+    "text": "A more compact formula\nTo make the definition of the variance neater, let’s assemble our data-points into a \\(d\\times N\\) matrix \\(X\\).\n\\[\nX= \\left(\n\\begin{array}{cccc}\n. & . & \\ldots & . \\\\\n. & . & \\ldots & . \\\\\nx_1 & x_2 & \\ldots & x_N \\\\\n. & . & \\ldots & . \\\\\n. & . & \\ldots & . \\\\\n\\end{array}\n\\right)\n\\]\nDefine \\(\\tilde{X} = X-\\mu\\), i.e. subtract \\(\\mu\\) from every column of \\(X\\).\n\\[\n\\tilde{X}= \\left(\n\\begin{array}{cccc}\n. & . & \\ldots & . \\\\\n. & . & \\ldots & . \\\\\nx_1-\\mu & x_2-\\mu & \\ldots & x_N-\\mu \\\\\n. & . & \\ldots & . \\\\\n. & . & \\ldots & . \\\\\n\\end{array}\\right)\n\\]\nBy some matrix manipulation 1, the covariance matrix turns out to be nothing but \\(S = \\frac{1}{N}\\tilde{X}\\tilde{X}^T\\)"
+  },
+  {
+    "objectID": "posts/2020-08-26-Mean-Variance.html#computation",
+    "href": "posts/2020-08-26-Mean-Variance.html#computation",
+    "title": "Mean and Variance",
+    "section": "Computation",
+    "text": "Computation\nSay we have 3 data-points, each of which is two-dimensional. Then we can represent the dataset as\n\\[\nX = \\left(\\begin{array}{ccc}1 & -1 & 1 \\\\ 2 & -2 & 2 \\end{array}\\right)\n\\]\nThe mean would be \\[\n\\mu = \\left(\\begin{array}{c}\\frac{1 + -1 + 1}{3} \\\\ \\frac{2 + -2 + 2}{3} \\end{array}\\right) = \\left(\\begin{array}{c}\\frac{1}{3} \\\\ \\frac{2}{3} \\end{array}\\right)\n\\]\nFurther, \\[\n\\tilde{X} = \\left(\\begin{array}{ccc}1- \\frac{1}{3} & -1 - \\frac{1}{3} & 1-\\frac{1}{3} \\\\ 2-\\frac{2}{3} & -2-\\frac{2}{3} & 2-\\frac{2}{3} \\end{array}\\right) = \\left(\\begin{array}{ccc}\\frac{2}{3} & - \\frac{4}{3} & \\frac{2}{3} \\\\ \\frac{4}{3} & -\\frac{8}{3} & \\frac{4}{3} \\end{array}\\right)\n\\]\nThe covariance-matrix would be \\(\\frac{1}{N}\\tilde{X}\\tilde{X}^T\\) which is \\[\n\\begin{align*} S &= \\frac{1}{3}\\begin{pmatrix}\\frac{2}{3} & - \\frac{4}{3} & \\frac{2}{3} \\\\ \\frac{4}{3} & -\\frac{8}{3} & \\frac{4}{3} \\end{pmatrix}\\begin{pmatrix}\\frac{2}{3} & \\frac{4}{3} \\\\ -\\frac{4}{3} & -\\frac{8}{3} \\\\  \\frac{2}{3} & \\frac{4}{3} \\end{pmatrix}\\\\ & = \\frac{1}{3}\\begin{pmatrix}\\frac{24}{9} & \\frac{48}{9} \\\\ \\frac{48}{9} & \\frac{96}{9} \\end{pmatrix}\\\\\n& = \\begin{pmatrix}\\frac{8}{9} & \\frac{16}{9} \\\\ \\frac{16}{9} & \\frac{32}{9} \\end{pmatrix}\\end{align*}\n\\]\nCode:\nimport numpy as np\n\n# x is the d x N numpy array of your d-dimensional datapoints\nx = np.array([[1,-1,1], [2,-2,2]])\n\nprint(f\" The mean is  {np.mean(x, axis=1)}\")\nprint(f\" The covariance matrix is {np.cov(x,bias=True)}\")\nOutput:\nThe mean is [0.33333333 0.66666667]\nThe covariance matrix is  \n     [[0.88888889 1.77777778]\n     [1.77777778 3.55555556]]\n\n\n\n\n\n\nImportantCaution\n\n\n\n\nIn this post, we use the convention that the columns of the data matrix \\(X\\) correspond to the data points and the rows, the attributes of each data point. Some people might switch the rows and columns when constructing \\(X\\). So take a moment to look at the notations used!\nBy default, bias is set to False in np.cov. This would give the so-called sample-covariance matrix. If you want the usual covariance, remember to set bias=True"
+  },
+  {
+    "objectID": "posts/2020-08-26-Mean-Variance.html#symmetry",
+    "href": "posts/2020-08-26-Mean-Variance.html#symmetry",
+    "title": "Mean and Variance",
+    "section": "Symmetry",
+    "text": "Symmetry\nNotice that the covariance matrix in the previous example is symmetric. This is in fact true for every covariance matrix. Why ?\nWell, a matrix \\(M\\) is symmetric provided \\(M=M^T\\). The covariance matrix looks like \\(S = \\frac{1}{N}\\tilde{X}\\tilde{X}^T\\). Then,\n\\[\nS^T = \\frac{1}{N}\\left(\\tilde{X}\\tilde{X}^T\\right)^T = \\frac{1}{N} (\\tilde{X}^T)^T\\tilde{X}^T = S !\n\\]\nEt voila!"
+  },
+  {
     "objectID": "posts/2020-08-26-Mean-Variance.html#footnotes",
     "href": "posts/2020-08-26-Mean-Variance.html#footnotes",
     "title": "Mean and Variance",
@@ -26,6 +61,69 @@
     "title": "SVD - A geometric view point",
     "section": "",
     "text": "A geometric viewpoint of SVD"
+  },
+  {
+    "objectID": "posts/2020-07-27-SVD.html#prerequisites",
+    "href": "posts/2020-07-27-SVD.html#prerequisites",
+    "title": "SVD - A geometric view point",
+    "section": "Prerequisites",
+    "text": "Prerequisites\nWe’ll assume you are familiar with (i.e. know the basic ideas and definitions of) the following topics: matrices as linear maps, rank of a matrix, eigen-values and eigen-vectors, orthogonality"
+  },
+  {
+    "objectID": "posts/2020-07-27-SVD.html#svd-in-textbooks",
+    "href": "posts/2020-07-27-SVD.html#svd-in-textbooks",
+    "title": "SVD - A geometric view point",
+    "section": "SVD in textbooks",
+    "text": "SVD in textbooks\nSingular value decomposition a.k.a SVD of a real matrix is often taught at the tail end of a first course in Linear algebra. Prosaically speaking, singular value decomposition of a real matrix is nothing but taking the matrix and expressing it as a product of three nicer matrices.\nTo be more precise but still prosaic, the actual result is as follows:\n\n\n\n\n\n\nNoteTheorem : SVD\n\n\n\nLet \\(A\\) be an \\(n \\times m\\) real matrix. Then \\(A = U\\Sigma V^T\\) where:\n\n\\(U\\) is an \\(n \\times n\\) orthogonal1 matrix\n\\(V\\) is an \\(m \\times m\\) orthogonal matrix\n\\(\\Sigma\\) is an \\(n\\times m\\) matrix where every entry except the first \\(r\\) diagonal entries is zero where \\(r\\) is the rank of \\(A\\)\nFurther the non-zero diagonal entries of \\(\\Sigma\\) are precisely the so-called singular values2 of \\(A\\) arranged in descending order.\n\n\n\nIf that .. looks a bit tame, let’s try and understand the power and utility of this result with the aid of an example."
+  },
+  {
+    "objectID": "posts/2020-07-27-SVD.html#information-encoded-by-a-matrix",
+    "href": "posts/2020-07-27-SVD.html#information-encoded-by-a-matrix",
+    "title": "SVD - A geometric view point",
+    "section": "Information encoded by a matrix",
+    "text": "Information encoded by a matrix\nHere’s \\(A\\), a very down to earth \\(2 \\times 2\\) matrix\n\\[ A  =  \\left( \\begin{array}{cc}\n      6 & 2  \\\\\n      -7 & 6\n    \\end{array} \\right) \\]\nIt is actually representing a linear map \\(T: \\mathbb{R}^2 \\to \\mathbb{R}^2\\) with respect to the standard basis \\(e_1 = (1,0)\\) and \\(e_2 = (0,1)\\). The linear map \\(T\\) sends the usual basis elements \\(e_1\\rightsquigarrow (6,-7)\\) and \\(e_2\\rightsquigarrow (2,6)\\). Now, not only do we know how \\(T\\) acts on \\(e_1\\) and \\(e_2\\), we actually know how it acts on any \\((a,b)\\). For instance\n\\[\n\\begin{align*}\nT(2,3) &= T(2,0) + T(0,3) =  T(2e_1) + T(3e_2) \\\\\n&= 2T(e_1) + 3T(e_2) = 2(6,-7) + 3(2,6) \\\\\n& = (18,4)\n\\end{align*}\n\\]\nLet’s visualize how our linear transformation \\(T\\) acts on the standard coordinate axes. We can see that the perpendicular axes \\(e_1, e_2\\) get distorted by \\(T\\). The images \\(\\{T(e_1), T(e_2)\\}\\) are no longer perpendicular.\n\n\n\nDistorted action on coordinate axes"
+  },
+  {
+    "objectID": "posts/2020-07-27-SVD.html#finding-perpendicular-axes-that-stay-perpendicular",
+    "href": "posts/2020-07-27-SVD.html#finding-perpendicular-axes-that-stay-perpendicular",
+    "title": "SVD - A geometric view point",
+    "section": "Finding perpendicular axes that stay perpendicular",
+    "text": "Finding perpendicular axes that stay perpendicular\nBecause it is always easier to work with perpendicular axes, we would like to find perpendicular axes of our domain (or rather unit vectors along these axes) which remain perpendicular even after applying \\(T\\). Clearly \\(\\{e_1, e_2\\}\\) was not a good choice. Is there a good choice ? If so, how can we find it ?\nA basis of a vector space consisting of unit vectors which are pairwise perpendicular to each other is called an orthonormal basis of the vector space. Thus our question in the more general context can be phrased as follows :\n\n\n\n\n\n\nNoteQuestion\n\n\n\nGiven a linear map \\(T : \\mathbb{R}^m \\to \\mathbb{R}^n\\) (which is represented by a \\(n \\times m\\) matrix \\(A\\) with respect to the standard basis), can we find an orthonormal basis \\(\\{v_1, v_2, \\ldots, v_m\\}\\) of \\(\\mathbb{R}^m\\) such that \\(\\{T(v_1),T(v_2), \\ldots T(v_m) \\}\\) are still mutually perpendicular3 to each other ?"
+  },
+  {
+    "objectID": "posts/2020-07-27-SVD.html#enter-svd",
+    "href": "posts/2020-07-27-SVD.html#enter-svd",
+    "title": "SVD - A geometric view point",
+    "section": "Enter SVD!",
+    "text": "Enter SVD!\nThe singular value decomposition of \\(A\\) precisely answers the above question!\n\\[A = U \\Sigma V^T\\]\n\n\n\nNice action on coordinate axes\n\n\nRecall \\(V\\) in the SVD of \\(A\\) is an \\(m \\times m\\) orthogonal matrix. Thus, the columns of \\(V\\) form an orthonormal basis \\(\\{v_1, v_2, \\ldots, v_m\\}\\) of \\(\\mathbb{R}^m\\). Similarly \\(U\\) is an orthogonal \\(n \\times n\\) matrix, so the columns of \\(U\\) form an orthonormal basis \\(\\{u_1, u_2, \\ldots u_n\\}\\) of \\(\\mathbb{R}^n\\).\nBut how are \\(U\\) and \\(V\\) related ? Right-multiplying the equation \\(A = U\\Sigma V^T\\) by \\(V\\), gives\n\\[AV = U\\Sigma(V^TV) = U\\Sigma\\]\nSo the columns of \\(U\\Sigma\\) are precisely \\(\\{T(v_1), T(v_2), \\ldots T(v_m)\\} \\subset \\mathbb{R}^n\\).\nFurther since \\(\\Sigma\\) is an \\(n\\times m\\) matrix with non-zero entries only along the diagonal entries (\\(\\Sigma_{i,i}\\)) if at all, the columns of \\(U\\Sigma\\) are just the first \\(m\\) columns of \\(U\\) scaled by the respective diagonal entries of \\(\\Sigma\\)\n\\[U\\Sigma = \\left(\n\\begin{array}{cccc}\n. & . & \\ldots & . \\\\\n. & . & \\ldots & . \\\\\n\\Sigma_{1,1}u_1 & \\Sigma_{2,2}u_2 & \\ldots & \\Sigma_{m,m}u_m \\\\\n. & . & \\ldots & . \\\\\n. & . & \\ldots & . \\\\\n\\end{array}\\right)\\]\nThus \\(T(v_i) = \\Sigma_{i,i} u_i\\) and they are mutually perpendicular to each other. Since \\(u_i\\) are unit vectors, the length of \\(T(v_i)\\) is precisely the diagonal entry \\(\\Sigma_{i,i}\\)"
+  },
+  {
+    "objectID": "posts/2020-07-27-SVD.html#summary",
+    "href": "posts/2020-07-27-SVD.html#summary",
+    "title": "SVD - A geometric view point",
+    "section": "Summary",
+    "text": "Summary\nGiven a linear map \\(T : \\mathbb{R}^m \\to \\mathbb{R}^n\\) (which is represented by an \\(n\\times m\\) matrix A with respect to standard basis), let \\(A = U\\Sigma V^T\\) be the singular value decomposition of \\(A\\). Then the columns of \\(V\\) form an orthonormal basis of \\(\\mathbb{R}^m\\). Further \\(\\{T(v_i)\\}\\) still remain perpendicular to each other in \\(\\mathbb{R}^n\\).\nThe length of the vectors \\(\\{T(v_i)\\}\\) are encoded by the diagonal entries of \\(\\Sigma\\). The unit vectors along \\(\\{T(v_i)\\}\\) can be completed to an orthonormal basis of \\(\\mathbb{R}^n\\), which are precisely given by the columns of \\(U\\).\nSo, you see the SVD of a matrix gives us a LOT of very useful information!"
+  },
+  {
+    "objectID": "posts/2020-07-27-SVD.html#uniqueness-of-the-svd",
+    "href": "posts/2020-07-27-SVD.html#uniqueness-of-the-svd",
+    "title": "SVD - A geometric view point",
+    "section": "Uniqueness of the SVD ?",
+    "text": "Uniqueness of the SVD ?\nSince the non-zero diagonal entries of \\(\\Sigma\\) are precisely the singular values of \\(A\\) in descending order, \\(\\Sigma\\) is unique for a given matrix \\(A\\). However, the columns of \\(V\\) (and hence \\(U\\)) are not unique.\nFor a start, the columns of \\(V\\) can vary up to sign (and since \\(T(v_i)\\) is just \\(u_i\\) scaled by a constant, \\(u_i\\)’s sign will change too). To see why \\(U,V\\) need not be unique and not just up to sign, think about what the singular value decomposition is for a rotation matrix4."
+  },
+  {
+    "objectID": "posts/2020-07-27-SVD.html#svd-computation-code",
+    "href": "posts/2020-07-27-SVD.html#svd-computation-code",
+    "title": "SVD - A geometric view point",
+    "section": "SVD computation code",
+    "text": "SVD computation code\nOf course, one can (and should know how to) compute the SVD by hand. But that’s a post for another day. For now, we’ll use the existing SVD implementation in numpy linalg package.\nimport numpy as np\nA = np.array([[6,2], [-7,6]])\nU,s,VT = np.linalg.svd(A)\nprint(U)\nprint(s)\nprint(VT)\nThe above code gives\n&gt;&gt;&gt; U\narray([[-0.4472136 ,  0.89442719],\n       [ 0.89442719,  0.4472136 ]])\n&gt;&gt;&gt; s\narray([10.,  5.])\n&gt;&gt;&gt; VT\narray([[-0.89442719,  0.4472136 ],\n       [ 0.4472136 ,  0.89442719]])"
+  },
+  {
+    "objectID": "posts/2020-07-27-SVD.html#wrapping-up-the-example",
+    "href": "posts/2020-07-27-SVD.html#wrapping-up-the-example",
+    "title": "SVD - A geometric view point",
+    "section": "Wrapping up the example",
+    "text": "Wrapping up the example\n\\[ \\left( \\begin{array}{cc}\n      6 & 2  \\\\\n      -7 & 6\n    \\end{array} \\right) \\approx\n    \\left( \\begin{array}{cc}\n      -0.45  &  0.89 \\\\\n       0.89 & 0.45 \\\\\n    \\end{array} \\right)\n  \\left( \\begin{array}{cc}\n      10  &  0 \\\\\n       0 & 5  \\\\\n    \\end{array} \\right)\n  \\left( \\begin{array}{cc}\n-0.89 & 0.45 \\\\\n0.45 &  0.89 \\\\\n\\end{array}\\right)\n\\]\nYou can check that \\(100,25\\) are the eigen-values of \\(A^TA\\) and hence \\(10,5\\) are the singular values of \\(A\\).\nIf you actually work out the SVD by hand, you’ll see that this corresponds to\n\\[ \\left( \\begin{array}{cc}\n      6 & 2  \\\\\n      -7 & 6\n    \\end{array} \\right)=\n    \\left( \\begin{array}{cc}\n      \\frac{-1}{\\sqrt{5}}  & \\frac{2}{\\sqrt{5}} \\\\\n       \\frac{2}{\\sqrt{5}} & \\frac{1}{\\sqrt{5}} \\\\\n    \\end{array} \\right)\n  \\left( \\begin{array}{cc}\n      10  &  0 \\\\\n       0 & 5  \\\\\n    \\end{array} \\right)\n  \\left( \\begin{array}{cc}\n\\frac{-2}{\\sqrt{5}} & \\frac{1}{\\sqrt{5}} \\\\\n\\frac{1}{\\sqrt{5}} &  \\frac{2}{\\sqrt{5}} \\\\\n\\end{array}\\right)\n\\]"
   },
   {
     "objectID": "posts/2020-07-27-SVD.html#footnotes",
@@ -53,7 +151,14 @@
     "href": "posts/2020-07-20-GifsInPython.html",
     "title": "Making GIFs in Python",
     "section": "",
-    "text": "UnPuzzler in action\n\n\nIf you’re searching for a quick way to make GIFs out of a folder full of images, the Pillow library in Python does the trick for you!\n# imports\nfrom PIL import Image\nimport os\n\n# Change working directory to folder containing images to be GIF-fed\nos.chdir(\"path_to_folder_with_images\" )\n\n# Ensure your images are in the order you want them to appear in the GIF\nprint(\"The images will be GIF-fed in the following order\")\nprint(sorted(os.listdir())\n\n# Open the images as a PIL image object and store them in a list\nimages = []\nfor img_file_name in sorted(os.listdir()):\n  img = Image.open(img_file_name)\n  images.append(img)\n\n\n# Save images to an output.gif\nimages[0].save('output.gif',\n               save_all=True, append_images=images[1:], \n           optimize=False, \n               duration=800, loop=0)\n\n\nMain parameters of Image.save()\n\nloop : loop=0 makes the GIF loop infinitely. loop=n makes the GIF loop n times.\n\nduration : time in milliseconds each image will be displayed for\n\n\n\n\n\nCitationBibTeX citation:@online{bhaskhar2020,\n  author = {Bhaskhar, Nivedita},\n  title = {Making {GIFs} in {Python}},\n  date = {2020-07-20},\n  url = {https://nivbhaskhar.github.io/blog/posts/2020-07-20-GifsInPython.html},\n  langid = {en}\n}\nFor attribution, please cite this work as:\nBhaskhar, Nivedita. 2020. “Making GIFs in Python.” July 20.\nhttps://nivbhaskhar.github.io/blog/posts/2020-07-20-GifsInPython.html."
+    "text": "UnPuzzler in action\nIf you’re searching for a quick way to make GIFs out of a folder full of images, the Pillow library in Python does the trick for you!"
+  },
+  {
+    "objectID": "posts/2020-07-20-GifsInPython.html#main-parameters-of-image.save",
+    "href": "posts/2020-07-20-GifsInPython.html#main-parameters-of-image.save",
+    "title": "Making GIFs in Python",
+    "section": "Main parameters of Image.save()",
+    "text": "Main parameters of Image.save()\n\nloop : loop=0 makes the GIF loop infinitely. loop=n makes the GIF loop n times.\n\nduration : time in milliseconds each image will be displayed for"
   },
   {
     "objectID": "posts/2020-08-03-SVD-details.html",
@@ -61,6 +166,41 @@
     "title": "SVD - The details",
     "section": "",
     "text": "We’ll assume you that you have read this introductory post on singular value decomposition a.k.a SVD."
+  },
+  {
+    "objectID": "posts/2020-08-03-SVD-details.html#prerequisites",
+    "href": "posts/2020-08-03-SVD-details.html#prerequisites",
+    "title": "SVD - The details",
+    "section": "",
+    "text": "We’ll assume you that you have read this introductory post on singular value decomposition a.k.a SVD."
+  },
+  {
+    "objectID": "posts/2020-08-03-SVD-details.html#the-theorem",
+    "href": "posts/2020-08-03-SVD-details.html#the-theorem",
+    "title": "SVD - The details",
+    "section": "The theorem",
+    "text": "The theorem\nIn this post, we’ll get our hands dirty and examine how and why SVD works. But let’s first recall what it is.\n\n\n\n\n\n\nNoteTheorem : SVD\n\n\n\nLet \\(A\\) be an \\(n \\times m\\) real matrix. Then \\(A = U\\Sigma V^T\\) where:\n\n\\(U\\) is an \\(n \\times n\\) orthogonal1 matrix\n\\(V\\) is an \\(m \\times m\\) orthogonal matrix\n\\(\\Sigma\\) is an \\(n\\times m\\) matrix where every entry except the first \\(r\\) diagonal entries is zero where \\(r\\) is the rank of \\(A\\)\nFurther the non-zero diagonal entries of \\(\\Sigma\\) are precisely the so-called singular values2 of \\(A\\) arranged in descending order.\n\n\n\nWe saw in the introductory post that the columns of \\(V\\) (let’s call them \\(v_1, v_2, \\ldots v_m\\)) are mutually perpendicular unit vectors which form a basis of \\(\\mathbb{R}^m\\) (a.k.a an orthonormal basis of \\(\\mathbb{R}^m\\)).\nFurther \\(\\{A(v_i)\\}\\) still remain perpendicular to each other in \\(\\mathbb{R}^n\\). The length of the vectors \\(\\{A(v_i)\\}\\) are encoded by the diagonal entries of \\(\\Sigma\\). The unit vectors along \\(\\{A(v_i)\\}\\) can be completed to an orthonormal basis of \\(\\mathbb{R}^n\\), which are precisely given by the columns of \\(U\\)."
+  },
+  {
+    "objectID": "posts/2020-08-03-SVD-details.html#a-blackbox",
+    "href": "posts/2020-08-03-SVD-details.html#a-blackbox",
+    "title": "SVD - The details",
+    "section": "A blackbox",
+    "text": "A blackbox\nBefore jumping to the proof, let’s reveal our secret weapon, the spectral theorem. This theorem, applied to real matrices states the following:\n\n\n\n\n\n\nNoteSpectral theorem\n\n\n\nLet \\(B\\) be an \\(m\\times m\\) real and symmetric matrix. Then there exists an orthonormal eigenbasis for \\(B\\).\n\n\nWait, what ? Let’s unravel that sentence again and take the result in, bit by bit.\nYou give me any real square matrix \\(B\\) such that it is symmetric, i.e. \\(B_{i,j} = B_{j,i}\\). We know that \\(B\\) is really representing a linear map \\(Q: \\mathbb{R}^m \\to \\mathbb{R}^m\\) with respect to the standard basis. But the images of the standard basis under \\(Q\\) of course might get distorted. So the images might no longer remain perpendicular to each other, much less continue being the standard basis.\nThe spectral theorem assures us however that if \\(B\\) is symmetric, there is a much nicer basis available, an orthonormal basis of \\(\\mathbb{R}^m\\) in fact, which \\(Q\\) simply scales to different lengths!\nMore precisely, we can find unit mutually perpendicular vectors \\(w_1, w_2, \\ldots, w_m\\) so that \\(Q(w_i) = \\lambda_i w_i\\) for some scalars \\(\\lambda_i\\). Of course these scalars are by definition the eigen-values of \\(Q\\), or equivalently of \\(B\\)."
+  },
+  {
+    "objectID": "posts/2020-08-03-SVD-details.html#a-running-example-and-a-proof",
+    "href": "posts/2020-08-03-SVD-details.html#a-running-example-and-a-proof",
+    "title": "SVD - The details",
+    "section": "A running example and a proof",
+    "text": "A running example and a proof\n\nIf only I had the theorems! Then I should find the proofs easily enough - Riemann”\n\nRemember \\(A\\), our very down to earth \\(2 \\times 2\\) matrix from last time\n\\[\nA  =  \\left( \\begin{array}{cc}\n      6 & 2  \\\\\n      -7 & 6\n    \\end{array} \\right)\n\\]\nNow unfortunately, we cannot use the spectral theorem directly on a general \\(A\\) because it is not symmetric. So instead, we first manufacture a symmetric matrix \\(B\\) from \\(A\\) by letting \\(B = A^TA\\). In our running example,\n\\[\nB  = \\left( \\begin{array}{cc}\n      6 & -7 \\\\\n      2 & 6\n    \\end{array} \\right)   \\left( \\begin{array}{cc}\n      6 & 2  \\\\\n      -7 & 6\n    \\end{array} \\right) = \\left( \\begin{array}{cc}\n       85 & -30  \\\\\n      -30 & 40\n    \\end{array} \\right)\n\\]\nSpectral theorem applied to \\(B\\) guarantees that there are two perpendicular unit vectors which are simply scaled by the action of \\(B\\). We’ll not get into how you can find these vectors but wave the spectral theorem wand and give them to you.\n\\[\n\\begin{align*}\nv_1 = \\left( \\begin{array}{c}\n      \\frac{-2}{\\sqrt{5}} \\\\\n      \\frac{1}{\\sqrt{5}}\n      \\end{array} \\right) \\  & \\mathrm{ and} \\hspace{2mm} Bv_1 = 100 v_1 \\\\\nv_2 = \\left( \\begin{array}{c}\n      \\frac{1}{\\sqrt{5}} \\\\\n      \\frac{2}{\\sqrt{5}}\n      \\end{array} \\right) \\ & \\mathrm{ and} \\hspace{2mm}  Bv_2 = 25 v_2\n\\end{align*}\n\\]\nHere’s a visualization of the action of \\(B\\) on the standard basis and on \\(V = (v_1,v_2)\\). Both the bases’ lengths are scaled up a bit for clarity in the picture\n\n\n\nAction of symmetric B\n\n\nSo we have found an orthonormal basis \\(v_1, v_2\\) of \\(\\mathbb{R}^2\\), which is very nice for \\(B\\). How does \\(A\\) act on it ?\n\\[\n\\begin{align*}\nAv_1 = \\left( \\begin{array}{c}\n      \\frac{-10}{\\sqrt{5}} \\\\\n      \\frac{20}{\\sqrt{5}}\n      \\end{array} \\right) \\  & \\mathrm{ and} \\hspace{2mm} \\| Av_1 \\| = 10\\\\\nAv_2 = \\left( \\begin{array}{c}\n      \\frac{10}{\\sqrt{5}} \\\\\n      \\frac{5}{\\sqrt{5}}\n      \\end{array} \\right) \\ & \\mathrm{ and} \\hspace{2mm}  \\|Av_2\\| = 5\\\\\n\\end{align*}\n\\]\nWe see that \\(Av_1\\) is perpendicular to \\(Av_2\\) ! Further the length of \\(Av_1, Av_2\\) are \\(\\sqrt{100} = 10, \\sqrt{25} = 5\\), which are precisely the singular values of \\(A\\) by definition.\nThis is not a coincidence. For starters, we know \\(v_1\\) perpendicular to \\(v_2\\), i.e. \\(v_1^Tv_2 = 0\\). Let’s see why \\(Av_1\\) is perpendicular to \\(Av_2\\)\n\\[\n\\begin{align*}\nAv_1 \\cdot Av_2 &= (Av_1)^T Av_2 = v_1^T A^T A v_2\\\\\n& = v_1^T Bv_2 = v_1^T 25v_2\\\\\n& = 25 v_1^Tv_2 = 0\\\\\n\\end{align*}\n\\]\nThus \\(Av_1, Av_2\\) are perpendicular to each other. As an exercise, using the fact that length of a vector \\(\\|x \\|= x^T x\\), try computing the lengths of \\(Av_i\\).\nMore generally, the same reasoning tells us the following:\n\n\n\n\n\n\nIf \\(v_1, v_2\\) are perpendicular eigenvectors of \\(B=A^TA\\) for eigenvalues \\(\\lambda_1, \\lambda_2\\), then \\(Av_1, Av_2\\) are still perpendicular and have lengths \\(\\sqrt{\\lambda_1}, \\sqrt{\\lambda_2}\\).\n\n\n\nThus, the orthonormal eigenbasis of \\(B=A^TA\\) given by the spectral theorem is exactly \\(V\\) in the SVD of \\(A = U\\Sigma V^T\\) !"
+  },
+  {
+    "objectID": "posts/2020-08-03-SVD-details.html#summary",
+    "href": "posts/2020-08-03-SVD-details.html#summary",
+    "title": "SVD - The details",
+    "section": "Summary",
+    "text": "Summary\nGiven an \\(n\\times m\\) matrix A, here are the steps to find the SVD of \\(A\\):\n\nForm the \\(m \\times m\\) symmetric matrix \\(B= A^TA\\)\nThe spectral theorem gives us an orthogonal eigen-basis \\(v_1,v_2, \\ldots, v_m\\) for \\(B\\) of \\(\\mathbb{R}^m\\) with eigenvalues \\(\\lambda_1 \\geq \\lambda_2 \\geq \\ldots \\lambda_m\\)\n\\(V\\) is just the \\(m\\times m\\) matrix \\(\\left(\\begin{array}{cccc}v_1 & v_2 & \\ldots & v_m \\end{array}\\right)\\)\n\\(\\Sigma\\) is the \\(n\\times m\\) matrix where all non-diagonal entries are 0 and \\(\\Sigma_{i,i} = \\sqrt{\\lambda_i}\\)\n\\(AV\\) is an \\(n\\times m\\) matrix made of mutually perpendicular columns\nScaling the columns of \\(AV\\) to unit vectors, complete it to an orthonormal basis of \\(\\mathbb{R^n}\\). This orthonormal basis gives you the \\(n\\times n\\) matrix \\(U\\).\nFinally,\n\n\\[A = U \\Sigma V^T \\]\nFor our running example, we see that this corresponds to\n\\[ \\left( \\begin{array}{cc}\n      6 & 2  \\\\\n      -7 & 6\n    \\end{array} \\right)=\n    \\left( \\begin{array}{cc}\n      \\frac{-1}{\\sqrt{5}}  & \\frac{2}{\\sqrt{5}} \\\\\n       \\frac{2}{\\sqrt{5}} & \\frac{1}{\\sqrt{5}} \\\\\n    \\end{array} \\right)\n  \\left( \\begin{array}{cc}\n      10  &  0 \\\\\n       0 & 5  \\\\\n    \\end{array} \\right)\n  \\left( \\begin{array}{cc}\n\\frac{-2}{\\sqrt{5}} & \\frac{1}{\\sqrt{5}} \\\\\n\\frac{1}{\\sqrt{5}} &  \\frac{2}{\\sqrt{5}} \\\\\n\\end{array}\\right)\n\\]"
   },
   {
     "objectID": "posts/2020-08-03-SVD-details.html#footnotes",
@@ -75,6 +215,69 @@
     "title": "Karush–Kuhn–Tucker conditions",
     "section": "",
     "text": "Ref: Foundations of optimization by Bazaraa and Shetty (link), Chapter 5"
+  },
+  {
+    "objectID": "posts/2021-09-10-kkt-conditions.html#the-optimization-problem-a",
+    "href": "posts/2021-09-10-kkt-conditions.html#the-optimization-problem-a",
+    "title": "Karush–Kuhn–Tucker conditions",
+    "section": "The optimization problem (A)",
+    "text": "The optimization problem (A)\nMinimize \\(f(x)\\) under the constraints \\(x\\in X\\) and \\(g_i(x) \\leq 0\\) for \\(1\\leq i\\leq m\\), where\n\n\\(X\\) is a subset of \\(\\mathbb{R}^n\\)\n\\(f,g_i\\) are functions \\(U\\to\\mathbb{R}\\) for some open set \\(U\\supset X\\)"
+  },
+  {
+    "objectID": "posts/2021-09-10-kkt-conditions.html#feasible-set-feasible-solutions-and-optimal-solutions",
+    "href": "posts/2021-09-10-kkt-conditions.html#feasible-set-feasible-solutions-and-optimal-solutions",
+    "title": "Karush–Kuhn–Tucker conditions",
+    "section": "Feasible set, feasible solutions and optimal solutions",
+    "text": "Feasible set, feasible solutions and optimal solutions\n\nThe set of points in \\(\\mathbb{R}^n\\) which satisfy the constraints make up the feasible set \\(S\\)\nAny \\(x\\in S\\) is called a feasible solution to (A)\nAny \\(x^*\\in S\\) such that \\(f(x^*)\\) is minimum among \\(\\{f(x)\\mid x\\in S\\}\\) is called an optimal solution to (A)"
+  },
+  {
+    "objectID": "posts/2021-09-10-kkt-conditions.html#rephrasing-optimality",
+    "href": "posts/2021-09-10-kkt-conditions.html#rephrasing-optimality",
+    "title": "Karush–Kuhn–Tucker conditions",
+    "section": "Rephrasing optimality",
+    "text": "Rephrasing optimality\nIn general, one would like to find optimal solutions to (A). Let’s rephrase what it means for \\(x_0\\in S\\) to be optimal.\nSet \\(B = B(x_0)=\\{x\\in S \\mid f(x)-f(x_0) &lt; 0\\}\\). Clearly \\(x_0\\) is optimal exactly when \\(B=\\emptyset\\). The idea then is to express \\(B\\) as an intersection \\(F\\cap G\\cap X\\) where:\n\n\\(G=\\cap G_i\\) where \\(G_i = \\{x \\mid g_i(x)\\leq 0\\}\\) captures one portion of the constraints\n\\(X\\) captures the other portion of the constraints\n\\(F=\\{x \\mid f(x)&lt;f(x_0)\\}\\) captures all points which violate optimality of \\(x_0\\)\n\nIt is an easy check to see indeed that \\(B=F\\cap G\\cap X\\). Thus \\(x_0\\in S\\) is optimal exactly when \\(F\\cap G\\cap X\\) is empty."
+  },
+  {
+    "objectID": "posts/2021-09-10-kkt-conditions.html#necessary-conditions-for-optimality",
+    "href": "posts/2021-09-10-kkt-conditions.html#necessary-conditions-for-optimality",
+    "title": "Karush–Kuhn–Tucker conditions",
+    "section": "Necessary conditions for optimality",
+    "text": "Necessary conditions for optimality\nSince it is in general harder to find optimal solutions, let us focus on necessary conditions for optimality instead. Assuming \\(x_0\\in S\\) is optimal, can we make some useful statements on \\(F, G\\) and \\(X\\) (apart from the fact that they exist)?\nIt turns out that we can! The following theorem assures us that we can find convex sets \\(F', G', X'\\) which are non intersecting which further turn out to be, in some sense, convex approximations of \\(F,G,X\\) at \\(x_0\\). To simplify discussion, let us additionally assume that we pick an optimal \\(x_0\\in S\\) which also lies in the interior1 of \\(X\\). In this case \\(X'\\) is just the full euclidean space and can be taken out of the picture. We then have\n\n\n\n\n\n\nNoteTheorem : Non-intersecting convex sets for an optimal point\n\n\n\nLet \\(x_0\\in \\mathrm{Interior}(X)\\) be an optimal solution for (A). Let \\(I\\) be the set of indices \\(\\{i : g_i(x_0)=0\\}\\). Assume that \\(f, g_i,\\forall i\\in I\\) are differentiable at \\(x_0\\) while \\(g_i, \\forall i\\not\\in I\\) are continuous at \\(x_0\\). Set:\n\n\\(X'=\\mathbb{R}^n\\)\n\\(F' = \\{x \\mid \\langle x, \\nabla f(x_0)\\rangle &lt; 0\\}\\)2\n\\(G'_i = \\{x \\mid  \\langle x, \\nabla g_i(x_0)\\rangle &lt; 0\\}\\) for \\(i\\in I\\)3\n\\(G' = \\cap_{i\\in I}G'_i\\)\n\nThen \\(F'\\cap G' (\\cap X') = \\emptyset\\)4.\n\n\nWe’ll take this theorem for granted and instead, focus on what it gives us."
+  },
+  {
+    "objectID": "posts/2021-09-10-kkt-conditions.html#hyperplanes-half-spaces-and-convex-cones",
+    "href": "posts/2021-09-10-kkt-conditions.html#hyperplanes-half-spaces-and-convex-cones",
+    "title": "Karush–Kuhn–Tucker conditions",
+    "section": "Hyperplanes, half-spaces and convex cones",
+    "text": "Hyperplanes, half-spaces and convex cones\nLet us investigate the geometry of \\(F'\\) and \\(G'\\). In particular can we deduce any connections between \\(\\nabla f(x_0)\\) and \\(\\nabla g_i(x_0)\\)s?\nThe vectors perpendicular to \\(\\nabla f(x_0)\\), i.e. \\(\\{x \\mid \\langle x, \\langle x, \\nabla f(x_0) = 0\\}\\) form a hyperplane \\(H\\) and \\(F'\\) is just all vectors which lie on side of it. It is what is called a half-space.\nClearly if \\(v\\in F'\\), then any positively scaled \\(\\lambda v, \\lambda &gt; 0\\) also lies in \\(F'\\) (i.e. on the same side of the hyperplane) making \\(F'\\) a cone. As an exercise, check that any positive linear combination of vectors in \\(F'\\) also lie in \\(F'\\), which makes \\(F'\\) a convex cone.\n\\(G'\\) is the intersection of such half spaces and also forms a convex cone."
+  },
+  {
+    "objectID": "posts/2021-09-10-kkt-conditions.html#hyperplane-separation",
+    "href": "posts/2021-09-10-kkt-conditions.html#hyperplane-separation",
+    "title": "Karush–Kuhn–Tucker conditions",
+    "section": "Hyperplane separation",
+    "text": "Hyperplane separation\nSince we have these non-intersecting convex sets \\(F'\\) and \\(G'\\), we can invoke the separation theorem to get a hyperplane which separates these two. Further since \\(F'\\) and \\(G'\\) are cones, the hyperplane must pass through the origin, i.e. are just vectors perpendicular to some \\(v\\)5.\nSince \\(F'\\) is the entire halfspace below \\(\\nabla f(x_0)\\), we can in fact show that \\(v\\) is just \\(\\nabla f(x_0)\\) scaled6.\n\n\n\nGeometry of \\(F'\\)\n\n\nThus \\(H\\) is indeed the hyperplane separating \\(F'\\) and \\(G'\\) with \\(G'\\) above and \\(F'\\) below. Hence vectors in \\(G'\\) (i.e any \\(g'\\) with \\(\\langle g', \\nabla g_i(x_0) \\rangle &lt; 0\\) for all \\(i\\in I\\)) have to also satisfy \\(\\langle g', \\nabla f(x_0) \\rangle &gt; 0\\).\n\n\n\nHyperplane separation"
+  },
+  {
+    "objectID": "posts/2021-09-10-kkt-conditions.html#hyperplane-separation-after-a-linear-transformation",
+    "href": "posts/2021-09-10-kkt-conditions.html#hyperplane-separation-after-a-linear-transformation",
+    "title": "Karush–Kuhn–Tucker conditions",
+    "section": "Hyperplane separation after a linear transformation",
+    "text": "Hyperplane separation after a linear transformation\nTranslating back to algebra, this means the equation \\(Ax &lt; \\bar{0}\\)7 has no solution \\(x\\in \\mathbb{R}^n\\) where \\[A = \\begin{bmatrix}  \\nabla f(x_0) \\\\ \\nabla g_{i_1}(x_0) \\\\ \\vdots \\\\ \\nabla g_{i_t}(x_0) \\end{bmatrix} \\in \\mathrm{Mat}_{(|I|+1)\\times n}(\\mathbb{R})\\]\nThat is, the image8 of \\(A\\) is disjoint from the convex cone \\(K = \\{y \\in \\mathbb{R}^{|I|+1} \\mid y &lt; \\bar{0}\\}\\). We can once again play our hyperplane separation card and separate these convex sets \\(\\mathrm{Img}(A)\\) and \\(K\\) in \\(\\mathbb{R}^{|I|+1}\\) by a hyperplane \\(H' = \\{ x \\mid \\langle x, p \\rangle = 0 \\}\\) for some non-zero vector \\(p\\)."
+  },
+  {
+    "objectID": "posts/2021-09-10-kkt-conditions.html#reconstructing-the-fritz-john-conditions-for-optimality",
+    "href": "posts/2021-09-10-kkt-conditions.html#reconstructing-the-fritz-john-conditions-for-optimality",
+    "title": "Karush–Kuhn–Tucker conditions",
+    "section": "Reconstructing the Fritz John conditions for optimality",
+    "text": "Reconstructing the Fritz John conditions for optimality\nWithout loss of generality, assume \\(K\\) lies “below” the hyperplane, i.e. \\(\\langle k, p \\rangle &lt; 0\\) for all \\(k\\in K\\). Convince yourselves9 that this means \\(p \\geq \\bar{0}\\). And further the image of \\(A\\) lies “above” the hyperplane, i.e. \\(\\langle p, Ax \\rangle \\geq 0\\)10 for all \\(x\\in \\mathbb{R}^n\\).\nThis means \\(p^TAx = 0\\) for all \\(x\\) in \\(\\mathbb{R}^n\\), i.e \\(p^TA\\) or equivalently \\(A^Tp\\) is the \\(0\\) vector in \\(\\mathbb{R}^n\\) !\n\\[\\begin{bmatrix} \\vert & \\vert & & \\vert \\\\ \\nabla f(x_0) & \\nabla g_{i_1}(x_0) & \\dots & \\nabla g_{i_t}(x_0) \\\\ \\vert & \\vert & & \\vert \\end{bmatrix} \\begin{bmatrix} p_0 \\\\ p_{i_1} \\\\ \\vdots \\\\ p_{i_t} \\end{bmatrix} = \\begin{bmatrix} 0 \\\\ 0 \\\\ \\vdots \\\\ 0 \\end{bmatrix}\\]\nThis gives us,\n\n\n\n\n\n\nNoteFritz John conditions for optimal points\n\n\n\nLet \\(x_0\\in \\mathrm{Interior}(X)\\) be an optimal solution for (A). Let \\(I\\) be the set of indices \\(\\{i : g_i(x_0)=0\\}\\). Assume that \\(f, g_i,\\forall i\\in I\\) are differentiable at \\(x_0\\) while \\(g_i, \\forall i\\not\\in I\\) are continuous at \\(x_0\\). Then there exist non-negative \\(p_i\\) such that:\n\nNot all \\(p_0\\), \\(p_i, i\\in I\\) are zero simultaneously11.\n\\(p_0 \\nabla f(x_0) + \\sum_{i \\in I} p_i \\nabla g_i(x_0) = 0\\)\n\n\n\nTo make this statement read cleaner (i.e get rid of the \\(I\\) set notation in the statement), let us also assume all the \\(g_j\\)s are differentiable at \\(x_0\\) and not just \\(g_i\\) for \\(i\\in I\\). So \\(\\nabla g_j(x_0)\\) exists for all \\(j\\). Simply set \\(p_j = 0\\) for all \\(j\\not\\in I\\) to get\n\n\n\n\n\n\nNoteFritz John conditions for optimal points (II)\n\n\n\nLet \\(x_0\\in \\mathrm{Interior}(X)\\) be an optimal solution for (A). Assume that \\(f, g_j\\forall j\\) are differentiable at \\(x_0\\). Then there exist \\(p_0, p_1, \\ldots p_m\\) such that:\n\n\\(p_j\\geq 0\\) for all \\(0\\leq j \\leq m\\)\nNot all \\(p_j\\) are zero simultaneously.\n\\(p_j g_j(x_0) = 0\\) (complementary slackness)\n\\(p_0 \\nabla f(x_0) + \\sum_{j=1}^{m} p_j \\nabla g_j(x_0) = 0\\)\n\n\n\nNote:\n\n\\(p_0\\) is called the Lagrangian multiplier corresponding to the objective function \\(f\\) and \\(p_i\\), the Lagrangian multiplier corresponding to constraint \\(g_i\\).\nFor the constraints, complementary slackness gives us that either the constraint condition \\(g_i(x_0)\\) is \\(0\\) or the corresponding Lagrangian multiplier \\(p_i\\) is \\(0\\).\nThe Fritz John conditions allow \\(p_0\\) to be \\(0\\)"
+  },
+  {
+    "objectID": "posts/2021-09-10-kkt-conditions.html#karushkuhntucker-conditions-kkt",
+    "href": "posts/2021-09-10-kkt-conditions.html#karushkuhntucker-conditions-kkt",
+    "title": "Karush–Kuhn–Tucker conditions",
+    "section": "Karush–Kuhn–Tucker conditions (KKT)",
+    "text": "Karush–Kuhn–Tucker conditions (KKT)\nThe KKT conditions associated to (A) are basically the Fritz John conditions under the additional assumption that \\(p_0\\), the Langrange multiplier of \\(f\\) is non-zero. More precisely,\n\n\n\n\n\n\nNoteKKT\n\n\n\nLet \\(f, g_i\\) be as in problem (A). Let \\(x^*\\in \\mathrm{Interior}(X)\\) and assume that \\(f, g_j\\forall j\\) are differentiable at \\(x^*\\). We say \\(x^*\\) satisfies the KKT conditions if there exist \\(p_1, \\ldots p_m\\) such that:\n\ng_j(x^) $ for all \\(1\\leq j \\leq m\\) (primal-feasibility)\n\\(p_j\\geq 0\\) for all \\(1\\leq j \\leq m\\) (dual-feasibility)12\n\\(p_j g_j(x^*) = 0\\) (complementary slackness)\n\\(\\nabla f(x^*) + \\sum_{j=1}^{m} p_j \\nabla g_j(x^*) = 0\\) (stationarity)\n\n\n\nIt should be clear that if \\(x^*\\) is indeed an optimal point for (A) and \\(p_0\\neq 0\\), then it satisfies the KKT conditions. Conditions which try to force \\(p_0\\neq 0\\) for \\(x^*\\) are called constraint qualifications, for instance demanding that \\(\\nabla(g_1)(x^*), \\ldots, \\nabla(g_m)(x^*)\\) be linearly independent. Indeed if this were the case and \\(x^*\\) is optimal, Fritz-John’s stationarity equation will force \\(p_0 \\neq 0\\).\nKKT conditions are already interesting at this point as a test for optimality. Any \\(x^*\\) (with a constrain qualification) which fails to satisfy the KKT conditions will not be optimal. They are even more useful because under some additional assumptions on \\(f\\), and \\(g_i\\) they can actually guarantee optimality!"
   },
   {
     "objectID": "posts/2021-09-10-kkt-conditions.html#footnotes",

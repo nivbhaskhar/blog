@@ -43,7 +43,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-1e6bd20dea1a872a31693a70263f1c59.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-86fef9588b399ccbf429bbf078be9f7b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -232,12 +232,12 @@ Lists:
 
 ======================================================================
 -->
-<section id="prerequisites" class="level3">
-<h3 class="anchored" data-anchor-id="prerequisites">Prerequisites</h3>
+<section id="prerequisites" class="level2">
+<h2 class="anchored" data-anchor-id="prerequisites">Prerequisites</h2>
 <p>We’ll assume you that you have read <a href="../posts/2020-07-27-SVD.html">this introductory post</a> on singular value decomposition a.k.a SVD.</p>
 </section>
-<section id="the-theorem" class="level3">
-<h3 class="anchored" data-anchor-id="the-theorem">The theorem</h3>
+<section id="the-theorem" class="level2">
+<h2 class="anchored" data-anchor-id="the-theorem">The theorem</h2>
 <p>In this post, we’ll get our hands dirty and examine how and why SVD works. But let’s first recall what it is.</p>
 <div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -261,8 +261,8 @@ Lists:
 <p>We saw in the introductory post that the columns of <span class="math inline">\(V\)</span> (let’s call them <span class="math inline">\(v_1, v_2, \ldots v_m\)</span>) are mutually perpendicular unit vectors which form a basis of <span class="math inline">\(\mathbb{R}^m\)</span> (a.k.a an <em>orthonormal basis</em> of <span class="math inline">\(\mathbb{R}^m\)</span>).</p>
 <p>Further <span class="math inline">\(\{A(v_i)\}\)</span> still remain perpendicular to each other in <span class="math inline">\(\mathbb{R}^n\)</span>. The length of the vectors <span class="math inline">\(\{A(v_i)\}\)</span> are encoded by the diagonal entries of <span class="math inline">\(\Sigma\)</span>. The unit vectors along <span class="math inline">\(\{A(v_i)\}\)</span> can be completed to an orthonormal basis of <span class="math inline">\(\mathbb{R}^n\)</span>, which are precisely given by the columns of <span class="math inline">\(U\)</span>.</p>
 </section>
-<section id="a-blackbox" class="level3">
-<h3 class="anchored" data-anchor-id="a-blackbox">A blackbox</h3>
+<section id="a-blackbox" class="level2">
+<h2 class="anchored" data-anchor-id="a-blackbox">A blackbox</h2>
 <p>Before jumping to the proof, let’s reveal our secret weapon, the <em>spectral theorem</em>. This theorem, applied to real matrices states the following:</p>
 <div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -282,8 +282,8 @@ Lists:
 <p>The spectral theorem assures us however that if <span class="math inline">\(B\)</span> is symmetric, there is a much <em>nicer</em> basis available, an <em>orthonormal</em> basis of <span class="math inline">\(\mathbb{R}^m\)</span> in fact, which <span class="math inline">\(Q\)</span> simply scales to different lengths!</p>
 <p>More precisely, we can find unit mutually perpendicular vectors <span class="math inline">\(w_1, w_2, \ldots, w_m\)</span> so that <span class="math inline">\(Q(w_i) = \lambda_i w_i\)</span> for some scalars <span class="math inline">\(\lambda_i\)</span>. Of course these scalars are by definition the <em>eigen-values</em> of <span class="math inline">\(Q\)</span>, or equivalently of <span class="math inline">\(B\)</span>.</p>
 </section>
-<section id="a-running-example-and-a-proof" class="level3">
-<h3 class="anchored" data-anchor-id="a-running-example-and-a-proof">A running example and a proof</h3>
+<section id="a-running-example-and-a-proof" class="level2">
+<h2 class="anchored" data-anchor-id="a-running-example-and-a-proof">A running example and a proof</h2>
 <blockquote class="blockquote">
 <p><em>If only I had the theorems! Then I should find the proofs easily enough</em> - Riemann”</p>
 </blockquote>
@@ -363,8 +363,8 @@ Av_1 \cdot Av_2 &amp;= (Av_1)^T Av_2 = v_1^T A^T A v_2\\
 </div>
 <p>Thus, the orthonormal eigenbasis of <span class="math inline">\(B=A^TA\)</span> given by the spectral theorem is exactly <span class="math inline">\(V\)</span> in the SVD of <span class="math inline">\(A = U\Sigma V^T\)</span> !</p>
 </section>
-<section id="summary" class="level3">
-<h3 class="anchored" data-anchor-id="summary">Summary</h3>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
 <p>Given an <span class="math inline">\(n\times m\)</span> matrix A, here are the steps to find the SVD of <span class="math inline">\(A\)</span>:</p>
 <ul>
 <li>Form the <span class="math inline">\(m \times m\)</span> symmetric matrix <span class="math inline">\(B= A^TA\)</span></li>

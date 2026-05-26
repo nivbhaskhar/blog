@@ -1,17 +1,19 @@
 # --- Quarto Outputs and Caches ---
-.quarto/
-_published/.quarto/
-_site/
+/.quarto/
+/docs/
+/_site/
 /site_libs/
 .jupyter/
 *_cache/
 html_env/
+**/*.quarto_ipynb
+
 
 # --- Obsidian Specifics ---
-.obsidian/
+/.obsidian/
 
 # --- Obsidian folders ---
-_drafts/
+/_drafts/
 
 
 # --- System and OS Files ---

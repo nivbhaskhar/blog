@@ -2,7 +2,7 @@
 layout: post
 title: "1D convolution"
 date: 2023-07-26
-categories: [ML, Convolution, Notes]
+categories: [ML, CV, Notes]
 ---
 <!-- 
 ======================================================================

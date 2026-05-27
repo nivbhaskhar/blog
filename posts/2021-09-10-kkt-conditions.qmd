@@ -2,7 +2,7 @@
 layout: post
 title: "Karush–Kuhn–Tucker conditions"
 date: 2021-09-10
-categories: [Convex-optimization, Notes]
+categories: [Convex optimization, Notes]
 ---
 <!-- 
 ======================================================================

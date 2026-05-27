@@ -2,7 +2,7 @@
 layout: post
 title: "Finding least-squares solutions"
 date: 2020-09-14
-categories: [ML, Python-libraries, Exposition]
+categories: [ML, Python libraries, Exposition]
 ---
 <!-- 
 ======================================================================

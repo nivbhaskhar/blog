@@ -2,7 +2,7 @@
 layout: post
 title: "Linear regression and the normal equation"
 date: 2020-09-13
-categories: [ML, Linear algebra, Exposition]
+categories: [ML, Math, Linear algebra, Exposition]
 ---
 <!-- 
 ======================================================================

@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2020-07-20">
+<meta name="dcterms.date" content="2020-09-30">
 
-<title>Making GIFs in Python – Nivedita Bhaskhar</title>
+<title>Detecting cycles in linked lists - an analogy – Nivedita Bhaskhar</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -163,9 +163,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Making GIFs in Python</h1>
+<h1 class="title">Detecting cycles in linked lists - an analogy</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">Python libraries</div>
+    <div class="quarto-category">Algorithms</div>
     <div class="quarto-category">Exposition</div>
   </div>
   </div>
@@ -178,7 +178,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 20, 2020</p>
+      <p class="date">September 30, 2020</p>
     </div>
   </div>
   
@@ -213,7 +213,7 @@ Danger!
 :::
 
 FOOTNOTES USAGE 1
-When we see X[^def-X] ..
+When we see X[^def-X], we think that we might have seen X[^def-X] before
 
 [^def-X] Definition of X
 
@@ -239,57 +239,107 @@ Lists:
 -->
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="../assets/2020-07-20-animation.gif" class="img-fluid figure-img"></p>
-<figcaption><a href="https://nivbhaskhar.github.io/portfolio/unpuzzled">UnPuzzler</a> in action</figcaption>
+<p><img src="../assets/2020-09-30-tortoise-hare.png" class="img-fluid figure-img"></p>
+<figcaption>Detecting cycles using hares and tortoises</figcaption>
 </figure>
 </div>
-<p>If you’re searching for a quick way to make GIFs out of a folder full of images, the Pillow library in Python does the trick for you!</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> PIL <span class="im">import</span> Image</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Change working directory to folder containing images to be GIF-fed</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>os.chdir(<span class="st">"path_to_folder_with_images"</span> )</span>
+<p>Linked lists are some of the first data structures we see when we start thinking algorithmically. And a frequently encountered problem on this topic is detecting cycles in linked lists. In this post, let’s go ahead and unravel this problem. But before that ..</p>
+<section id="what-is-a-linked-list" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-a-linked-list">What is a linked list ?</h2>
+<p>Imagine a narrow tunnel. Each spot in the tunnel leads to exactly one spot ahead. You know the entrance to this tunnel. Once you step into the tunnel, it is completely dark and you can’t see anything else. But there’s some hope. If you are in spot X, then a light appears in the spot Y just ahead of you and so you can move to that spot Y now.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../assets/2020-09-30-step-ahead.png" class="img-fluid figure-img"></p>
+<figcaption>One step ahead</figcaption>
+</figure>
+</div>
+<p>The light keeps shining in the step just ahead of you and vanishes from the spot as soon as you reach it. So you can only move ahead step by step (and have no knowledge of what is behind nor what is much further ahead of you)</p>
+<p>If the tunnel ends, you can see daylight just ahead. So you will know that the tunnel has ended once you are on the “last step”. The tunnel is your <em>linked list</em>.</p>
+</section>
+<section id="and-what-is-a-cycle" class="level2">
+<h2 class="anchored" data-anchor-id="and-what-is-a-cycle">And what is a cycle ?</h2>
+<p>Imagine you are in front of such a tunnel. But you are warned that the tunnel might have a <em>cycle</em>, i.e the “end of the tunnel” might link back to somewhere in the middle of the tunnel. So there is no actual end to the tunnel in fact. For instance, imagine a tunnel shaped like a nine.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../assets/2020-09-30-tunnel-with-cycle.png" class="img-fluid figure-img"></p>
+<figcaption>A looping tunnel</figcaption>
+</figure>
+</div>
+<p>If the tunnel does not have a cycle, it has an actual end point from where you can see daylight and know that you have reached the end. If you end up walking through the tunnel which has a cycle, you’ll keep looping around and stuck in the darkness forever not knowing if there is light at the end of the tunnel or if you are stuck in a nightmare loop.</p>
+</section>
+<section id="and-what-is-the-problem" class="level2">
+<h2 class="anchored" data-anchor-id="and-what-is-the-problem">And what is the problem ?</h2>
+<p>Your job is to come up with a strategy which allows you to detect if this tunnel in front of you has a cycle or not, i.e.&nbsp;<em>can you detect if your linked list has a cycle</em> ? Assume that if you are in the tunnel and you realize the tunnel has a cycle, you can radio an SOS message and someone will come and rescue you.</p>
+</section>
+<section id="a-cool-strategy" class="level2">
+<h2 class="anchored" data-anchor-id="a-cool-strategy">A cool strategy !</h2>
+<p>You invite two adventurous friends of yours over. They are going to be sent into the tunnel armed with radios. They go into the tunnel at the same time but one of them is going to walk at a slower speed than the other.</p>
+<p>If the tunnel has no cycle, all is well, both friends will exit the tunnel (the faster one will exit sooner of course).</p>
+<p><em>What if the tunnel does have a cycle</em>? Well, the faster one will get trapped in the cycle first. He keeps running around. The slower one will also get trapped in the cycle later. He also keeps running around. But eventually…</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../assets/2020-09-30-bulb.png" class="img-fluid figure-img" style="width:10.0%"></p>
+<figcaption>Eureka!</figcaption>
+</figure>
+</div>
+<p>These two will meet!! Why would they meet ? This seems intuitive enough, but we want a <em>proof</em>. A wise friend whispers “Think relative speed ..”</p>
+<p>Think from the the point of view of the slower guy. He is stationary with respect to himself and the faster guy is moving with some non zero speed. What happens when you stand still in a circular track while your friend is running around it ? He bumps into you. Voila!</p>
+</section>
+<section id="a-summary" class="level2">
+<h2 class="anchored" data-anchor-id="a-summary">A summary</h2>
+<p>So the strategy to detect a cycle in our tunnel aka linked list is - to use two friends equipped with radios (pointers), one slow and one fast to traverse the tunnel. If any one of them exits the tunnel, they radio you and you know the tunnel has no cycles. Otherwise if the tunnel does have a cycle, they will meet and will radio you once they have met and you will know that there is indeed a cycle.</p>
+<p>Unsurprisingly, one name for this algorithm apparently is the <em>tortoise and the hare algorithm</em></p>
+</section>
+<section id="lets-code" class="level2">
+<h2 class="anchored" data-anchor-id="lets-code">Let’s code!</h2>
+<p>Let’s translate our strategy into python code.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ListNode:</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, x<span class="op">=</span><span class="va">None</span>):</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>         <span class="va">self</span>.val <span class="op">=</span> x</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>         <span class="va">self</span>.<span class="bu">next</span> <span class="op">=</span> <span class="va">None</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure your images are in the order you want them to appear in the GIF</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"The images will be GIF-fed in the following order"</span>)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">sorted</span>(os.listdir())</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Open the images as a PIL image object and store them in a list</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>images <span class="op">=</span> []</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> img_file_name <span class="kw">in</span> <span class="bu">sorted</span>(os.listdir()):</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  img <span class="op">=</span> Image.<span class="bu">open</span>(img_file_name)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  images.append(img)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Save images to an output.gif</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>images[<span class="dv">0</span>].save(<span class="st">'output.gif'</span>,</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>                save_all<span class="op">=</span><span class="va">True</span>, append_images<span class="op">=</span>images[<span class="dv">1</span>:],</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>                optimize<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>                duration<span class="op">=</span><span class="dv">800</span>,</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>                loop<span class="op">=</span><span class="dv">0</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>              )</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>              </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<section id="main-parameters-of-image.save" class="level2">
-<h2 class="anchored" data-anchor-id="main-parameters-of-image.save">Main parameters of Image.save()</h2>
-<ul>
-<li><strong>loop</strong> : <code>loop=0</code> makes the GIF loop infinitely. <code>loop=n</code> makes the GIF loop <em>n</em> times.<br>
-</li>
-<li><strong>duration</strong> : time in milliseconds each image will be displayed for</li>
-</ul>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> hasCycle(head: ListNode) <span class="op">-&gt;</span> <span class="bu">bool</span>:</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">''' Return True if linked list has a cycle and false otherwise'''</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Base case : If linked list has &lt;= 1 element, no cycle</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> head <span class="kw">is</span> <span class="va">None</span> <span class="kw">or</span> head.<span class="bu">next</span> <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">False</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Position slow and fast pointers at the start and start+1 position</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    slow_pointer <span class="op">=</span> head</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    fast_pointer <span class="op">=</span> head.<span class="bu">next</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Traverse linked list while fast_pointer is not at the end of the linked list</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span>(fast_pointer <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>):</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        <span class="co"># If pointers meet, return True</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> slow_pointer <span class="op">==</span> fast_pointer:</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="va">True</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># else if the fast pointer is one step before the end of the linked list, return False</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> fast_pointer.<span class="bu">next</span> <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="va">False</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>        <span class="co"># otherwise move the fast_pointer ahead by 2 steps and the slow_pointer by one</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>            slow_pointer <span class="op">=</span> slow_pointer.<span class="bu">next</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>            fast_pointer <span class="op">=</span> fast_pointer.<span class="bu">next</span>.<span class="bu">next</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    <span class="co"># If the fast_pointer has reached the end of the linked list, return False</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="va">False</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{bhaskhar2020,
   author = {Bhaskhar, Nivedita},
-  title = {Making {GIFs} in {Python}},
-  date = {2020-07-20},
-  url = {https://nivbhaskhar.github.io/blog/posts/2020-07-20-GifsInPython.html},
+  title = {Detecting Cycles in Linked Lists - an Analogy},
+  date = {2020-09-30},
+  url = {https://nivbhaskhar.github.io/blog/posts/2020-09-30-cycles-in-linked-lists.html},
   langid = {en}
 }
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-bhaskhar2020" class="csl-entry quarto-appendix-citeas" role="listitem">
-Bhaskhar, Nivedita. 2020. <span>“Making GIFs in Python.”</span> July 20.
-<a href="https://nivbhaskhar.github.io/blog/posts/2020-07-20-GifsInPython.html">https://nivbhaskhar.github.io/blog/posts/2020-07-20-GifsInPython.html</a>.
+Bhaskhar, Nivedita. 2020. <span>“Detecting Cycles in Linked Lists - an
+Analogy.”</span> September 30. <a href="https://nivbhaskhar.github.io/blog/posts/2020-09-30-cycles-in-linked-lists.html">https://nivbhaskhar.github.io/blog/posts/2020-09-30-cycles-in-linked-lists.html</a>.
 </div></div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {

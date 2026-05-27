@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2020-08-26">
+<meta name="dcterms.date" content="2020-10-09">
 
-<title>Mean and Variance – Nivedita Bhaskhar</title>
+<title>Permutations from transpositions – Nivedita Bhaskhar</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -23,41 +23,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -192,10 +157,11 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Mean and Variance</h1>
+<h1 class="title">Permutations from transpositions</h1>
   <div class="quarto-categories">
+    <div class="quarto-category">Algorithms</div>
+    <div class="quarto-category">Group theory</div>
     <div class="quarto-category">Math</div>
-    <div class="quarto-category">Statistics</div>
     <div class="quarto-category">Exposition</div>
   </div>
   </div>
@@ -208,7 +174,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">August 26, 2020</p>
+      <p class="date">October 09, 2020</p>
     </div>
   </div>
   
@@ -267,143 +233,121 @@ Lists:
 
 ======================================================================
 -->
-<section id="one-dimensional-data" class="level2">
-<h2 class="anchored" data-anchor-id="one-dimensional-data">One dimensional data</h2>
-<p>Let’s assume we are working with a dataset whose data-points <span class="math inline">\(x_1, x_2, \ldots, x_N\)</span> are one dimensional.</p>
-<p>The <strong><em>mean</em></strong> of the dataset is defined to be <span class="math display">\[
-\mu = \frac{x_1 + x_2 + \ldots x_N}{N}.
-\]</span></p>
-<p>The <strong><em>variance</em></strong> is defined to be <span class="math display">\[
-\sigma^2 = \frac{(x_1-\mu)^2 + (x_2-\mu)^2 + \ldots (x_N-\mu)^2}{N}.
-\]</span></p>
-<p>Code:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># x is the 1-d numpy array of your 1 dimensional datapoints</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.array([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="op">-</span><span class="dv">1</span>,<span class="op">-</span><span class="dv">2</span>,<span class="op">-</span><span class="dv">3</span>,<span class="op">-</span><span class="dv">4</span>])</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f" The mean is </span><span class="sc">{</span>x<span class="sc">.</span>mean()<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f" The mean is also given by </span><span class="sc">{</span>np<span class="sc">.</span>mean(x)<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f" The variance is </span><span class="sc">{</span>x<span class="sc">.</span>var()<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f" The variance is also given by</span><span class="sc">{</span>np<span class="sc">.</span>var(x)<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Output:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>The mean <span class="kw">is</span> <span class="fl">0.0</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>The mean <span class="kw">is</span> also given by <span class="fl">0.0</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>The variance <span class="kw">is</span> <span class="fl">7.5</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>The variance <span class="kw">is</span> also given by <span class="fl">7.5</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="what-is-a-permutation" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-a-permutation">What is a permutation ?</h2>
+<p>Any rearrangement of the list [1,2,3,…,n] is called a <em>permutation</em> of it.</p>
+<p>For example, there are 6 permutations of [1,2,3], namely [1,2,3], [1,3,2], [2,1,3], [2,3,1], [3,1,2] and [3,2,1]</p>
 </section>
-<section id="higher-dimensional-data" class="level2">
-<h2 class="anchored" data-anchor-id="higher-dimensional-data">Higher dimensional data</h2>
-<p>Say now we are working with a dataset whose data-points <span class="math inline">\(x_1, x_2, \ldots, x_N\)</span> are <span class="math inline">\(d\)</span> dimensional, i.e.&nbsp;each <span class="math inline">\(x_i\)</span> is a <span class="math inline">\(d\times 1\)</span> column vector.</p>
-<p>The <strong><em>mean</em></strong> of the dataset is defined to be <span class="math display">\[
-\mu = \frac{x_1 + x_2 + \ldots x_N}{N}.
-\]</span></p>
-<p>The <strong><em>covariance matrix</em></strong> is defined to be <span class="math display">\[
-S= \frac{(x_1-\mu)(x_1-\mu)^T + (x_2-\mu)(x_2-\mu)^T + \ldots (x_N-\mu)(x_N-\mu)^T}{N}.
-\]</span></p>
-<p>Note that since <span class="math inline">\(x_i, \mu\)</span> have shape <span class="math inline">\(d\times 1\)</span>, <span class="math inline">\((x_i-\mu)(x_i-\mu)^T\)</span> has shape <span class="math inline">\(d\times d\)</span>. Thus the covariance matrix <span class="math inline">\(S\)</span> is a <span class="math inline">\(d\times d\)</span> matrix.</p>
+<section id="what-is-a-transposition" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-a-transposition">What is a transposition ?</h2>
+<p>A <em>transposition</em> <span class="math inline">\((i,j)\)</span> is a simple move which switches the numbers <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span></p>
+<p>For example,</p>
+<ul>
+<li>The transposition (2,3) applied to [1,2,3] gives the permutation [1,3,2].</li>
+<li>The transposition (2,3) applied to [5,3,4,1,2] gives the permutation [5,2,4,1,3]</li>
+</ul>
 </section>
-<section id="a-more-compact-formula" class="level2">
-<h2 class="anchored" data-anchor-id="a-more-compact-formula">A more compact formula</h2>
-<p>To make the definition of the variance neater, let’s assemble our data-points into a <span class="math inline">\(d\times N\)</span> matrix <span class="math inline">\(X\)</span>.</p>
-<p><span class="math display">\[
-X= \left(
-\begin{array}{cccc}
-. &amp; . &amp; \ldots &amp; . \\
-. &amp; . &amp; \ldots &amp; . \\
-x_1 &amp; x_2 &amp; \ldots &amp; x_N \\
-. &amp; . &amp; \ldots &amp; . \\
-. &amp; . &amp; \ldots &amp; . \\
-\end{array}
-\right)
-\]</span></p>
-<p>Define <span class="math inline">\(\tilde{X} = X-\mu\)</span>, i.e.&nbsp;subtract <span class="math inline">\(\mu\)</span> from every column of <span class="math inline">\(X\)</span>.</p>
-<p><span class="math display">\[
-\tilde{X}= \left(
-\begin{array}{cccc}
-. &amp; . &amp; \ldots &amp; . \\
-. &amp; . &amp; \ldots &amp; . \\
-x_1-\mu &amp; x_2-\mu &amp; \ldots &amp; x_N-\mu \\
-. &amp; . &amp; \ldots &amp; . \\
-. &amp; . &amp; \ldots &amp; . \\
-\end{array}\right)
-\]</span></p>
-<p>By some matrix manipulation <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, the covariance matrix turns out to be nothing but <span class="math inline">\(S = \frac{1}{N}\tilde{X}\tilde{X}^T\)</span></p>
-</section>
-<section id="computation" class="level2">
-<h2 class="anchored" data-anchor-id="computation">Computation</h2>
-<p>Say we have 3 data-points, each of which is two-dimensional. Then we can represent the dataset as</p>
-<p><span class="math display">\[
-X = \left(\begin{array}{ccc}1 &amp; -1 &amp; 1 \\ 2 &amp; -2 &amp; 2 \end{array}\right)
-\]</span></p>
-<p>The mean would be <span class="math display">\[
-\mu = \left(\begin{array}{c}\frac{1 + -1 + 1}{3} \\ \frac{2 + -2 + 2}{3} \end{array}\right) = \left(\begin{array}{c}\frac{1}{3} \\ \frac{2}{3} \end{array}\right)
-\]</span></p>
-<p>Further, <span class="math display">\[
-\tilde{X} = \left(\begin{array}{ccc}1- \frac{1}{3} &amp; -1 - \frac{1}{3} &amp; 1-\frac{1}{3} \\ 2-\frac{2}{3} &amp; -2-\frac{2}{3} &amp; 2-\frac{2}{3} \end{array}\right) = \left(\begin{array}{ccc}\frac{2}{3} &amp; - \frac{4}{3} &amp; \frac{2}{3} \\ \frac{4}{3} &amp; -\frac{8}{3} &amp; \frac{4}{3} \end{array}\right)
-\]</span></p>
-<p>The covariance-matrix would be <span class="math inline">\(\frac{1}{N}\tilde{X}\tilde{X}^T\)</span> which is <span class="math display">\[
-\begin{align*} S &amp;= \frac{1}{3}\begin{pmatrix}\frac{2}{3} &amp; - \frac{4}{3} &amp; \frac{2}{3} \\ \frac{4}{3} &amp; -\frac{8}{3} &amp; \frac{4}{3} \end{pmatrix}\begin{pmatrix}\frac{2}{3} &amp; \frac{4}{3} \\ -\frac{4}{3} &amp; -\frac{8}{3} \\  \frac{2}{3} &amp; \frac{4}{3} \end{pmatrix}\\ &amp; = \frac{1}{3}\begin{pmatrix}\frac{24}{9} &amp; \frac{48}{9} \\ \frac{48}{9} &amp; \frac{96}{9} \end{pmatrix}\\
-&amp; = \begin{pmatrix}\frac{8}{9} &amp; \frac{16}{9} \\ \frac{16}{9} &amp; \frac{32}{9} \end{pmatrix}\end{align*}
-\]</span></p>
-<p>Code:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># x is the d x N numpy array of your d-dimensional datapoints</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.array([[<span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>], [<span class="dv">2</span>,<span class="op">-</span><span class="dv">2</span>,<span class="dv">2</span>]])</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f" The mean is  </span><span class="sc">{</span>np<span class="sc">.</span>mean(x, axis<span class="op">=</span><span class="dv">1</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f" The covariance matrix is </span><span class="sc">{</span>np<span class="sc">.</span>cov(x,bias<span class="op">=</span><span class="va">True</span>)<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Output:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>The mean <span class="kw">is</span> [<span class="fl">0.33333333</span> <span class="fl">0.66666667</span>]</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>The covariance matrix <span class="kw">is</span>  </span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>     [[<span class="fl">0.88888889</span> <span class="fl">1.77777778</span>]</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>     [<span class="fl">1.77777778</span> <span class="fl">3.55555556</span>]]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="callout callout-style-default callout-important no-icon callout-titled">
+<section id="permutations-from-transpositions" class="level2">
+<h2 class="anchored" data-anchor-id="permutations-from-transpositions">Permutations from transpositions ?</h2>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span>Caution
+<span class="screen-reader-only">Note</span>Question
 </div>
 </div>
 <div class="callout-body-container callout-body">
+<p>Suppose we start with [1,2,….n] and we are only allowed to use transpositions to switch elements across. Can we end up with <em>any</em> permutation of [1,2,…,n] ?</p>
+</div>
+</div>
+<p>The answer is … yes! This fact, in group theory is expressed as the following theorem:</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Theorem
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The group of permutations is generated by transpositions</p>
+</div>
+</div>
+<p>As an example, let’s see how we can get [3,2,4,1] from [1,2,3,4] by repeatedly using just transpositions</p>
 <ul>
-<li>In this post, we use the convention that the columns of the data matrix <span class="math inline">\(X\)</span> correspond to the data points and the rows, the attributes of each data point. Some people might switch the rows and columns when constructing <span class="math inline">\(X\)</span>. So take a moment to look at the notations used!</li>
-<li>By default, bias is set to False in np.cov. This would give the so-called <em>sample-covariance matrix</em>. If you want the usual covariance, remember to set <code>bias=True</code></li>
+<li><p>First use the (1,4) transposition : [<strong>1</strong>,2,3,<strong>4</strong>]-&gt;[<strong>4</strong>,2,3,<strong>1</strong>]</p></li>
+<li><p>Then use the (3,4) transposition : [<strong>4</strong>,2,<strong>3</strong>,1]-&gt;[<strong>3</strong>,2,<strong>4</strong>,1]</p></li>
 </ul>
-</div>
-</div>
+<p>Note that there might be many ways to use transpositions to get to a permutation. In this post, we are only concerned about showing the <em>existence</em> of one such way!</p>
 </section>
-<section id="symmetry" class="level2">
-<h2 class="anchored" data-anchor-id="symmetry">Symmetry</h2>
-<p>Notice that the covariance matrix in the previous example is symmetric. This is in fact true for every covariance matrix. Why ?</p>
-<p>Well, a matrix <span class="math inline">\(M\)</span> is symmetric provided <span class="math inline">\(M=M^T\)</span>. The covariance matrix looks like <span class="math inline">\(S = \frac{1}{N}\tilde{X}\tilde{X}^T\)</span>. Then,</p>
-<p><span class="math display">\[
-S^T = \frac{1}{N}\left(\tilde{X}\tilde{X}^T\right)^T = \frac{1}{N} (\tilde{X}^T)^T\tilde{X}^T = S !
-\]</span></p>
-<p>Et voila!</p>
+<section id="to-is-equivalent-to-from" class="level2">
+<h2 class="anchored" data-anchor-id="to-is-equivalent-to-from"><em>To</em> is equivalent to <em>From</em></h2>
+<p>First, let’s note that if we can go from [1,2,..,n] to a permutation <em>s</em> using transpositions <span class="math inline">\(T_1, T_2, \ldots, T_r\)</span>, then you can use the transpositions in reverse order to go from <span class="math inline">\(s\)</span> to [1,2,…,n]</p>
+<p>As an example, observe that we can go from [3,2,4,1] to [1,2,3,4] by repeatedly using just transpositions as follows</p>
+<ul>
+<li><p>First use the (3,4) transposition : [<strong>3</strong>,2,<strong>4</strong>,1]-&gt;[<strong>4</strong>,2,<strong>3</strong>,1]</p></li>
+<li><p>Then use the (1,4) transposition : [<strong>4</strong>,2,3,<strong>1</strong>]-&gt;[<strong>1</strong>,2,3,<strong>4</strong>]</p></li>
+</ul>
+<p>So we’ll show that we can go from an arbitrary permutation <span class="math inline">\(s\)</span> to [1,2,….,n] using just transpositions</p>
+</section>
+<section id="bubble-sort" class="level2">
+<h2 class="anchored" data-anchor-id="bubble-sort">Bubble sort</h2>
+<p>Now there is a classical sorting algorithm called <em>bubble sort</em>. Given a list of <span class="math inline">\(n\)</span> numbers, it sorts it in ascending order.</p>
+<p>The way it works is as follows:</p>
+<ul>
+<li><p>Look at <em>0</em>-th and <em>1</em>-st element in list. Swap them if <em>0</em>-th element &gt; <em>1</em>-st element.</p></li>
+<li><p>Look at <em>1</em>-st and <em>2</em>-nd element in list. Swap them if <em>1</em>-st element &gt; <em>2</em>-nd element.</p></li>
+<li><p>…</p></li>
+<li><p>Look at <span class="math inline">\(n-1\)</span>-th and <span class="math inline">\(n\)</span>-th element in list. Swap them if <span class="math inline">\(n-1\)</span>-th element &gt; <span class="math inline">\(n\)</span>-th element.</p>
+<p><em>At this stage, the largest element of the list has been pushed or rather, bubbled to the end of the list. This process takes <span class="math inline">\(n-1\)</span> steps</em></p></li>
+<li><p>Now repeat the same process for the first <span class="math inline">\(n-1\)</span> elements of the list. That is, compare (<em>0</em>-th and <em>1</em>-st element), swap if needed. Compare (<em>1</em>-st and <em>2</em>-nd element), swap if needed…. Compare (<span class="math inline">\(n-2\)</span>-th and <span class="math inline">\(n-1\)</span>-th element), swap if needed.</p>
+<p><em>At this stage, the second largest element of the list has been bubbled to the last but one position in the list. This process takes <span class="math inline">\(n-2\)</span> steps</em></p></li>
+<li><p>Keep repeating the same process for the first <span class="math inline">\(n-2\)</span> elements of the list. Then, for the first <span class="math inline">\(n-3\)</span> elements of the list and so on.</p></li>
+<li><p>When you do the process for the first <span class="math inline">\(n-i\)</span> elements of the list, the <span class="math inline">\(i+1\)</span>-th largest element of the list gets pushed to its correct position in the sorted order.</p></li>
+<li><p>Thus after <span class="math inline">\(n-1 + n-2 + .... + 2 + 1 = O(n^2)\)</span> steps over all, you’ll end up with the list sorted in ascending order.</p></li>
+</ul>
+</section>
+<section id="proof-of-the-theorem" class="level2">
+<h2 class="anchored" data-anchor-id="proof-of-the-theorem">Proof of the theorem</h2>
+<p>Let’s apply bubble sort to our permutation <span class="math inline">\(s\)</span>. Notice that any step in bubble sort is a swap of exactly two elements if at all, i.e.&nbsp;a transposition move! And we change <span class="math inline">\(s\)</span> to [1,2,…,n] !</p>
+<p>Thus using <span class="math inline">\(O(n^2)\)</span> transpositions, we can covert <span class="math inline">\(s\)</span> to [1,2,…,n] and vice versa, by reversing the order of transpositions. Voila! We just proved our theorem.</p>
+</section>
+<section id="bubble-sort-in-action" class="level2">
+<h2 class="anchored" data-anchor-id="bubble-sort-in-action">Bubble sort in action !</h2>
+<p>Let’s apply our constructive bubble-sort proof to go from [3,2,4,1] to [1,2,3,4] using just transpositions</p>
+<p><em>For the first 4 elements</em></p>
+<ul>
+<li>Swap <em>1</em>-st and <em>2</em>-nd element using (2,3) transposition : [<strong>3</strong>,<strong>2</strong>,4,1]-&gt;[<strong>2</strong>,<strong>3</strong>,4,1]</li>
+<li><em>2</em>-nd and <em>3</em>-rd element in good shape, no need to swap : [2,<strong>3</strong>,<strong>4</strong>,1] stays as it is</li>
+<li>Swap <em>3</em>-rd and <em>4</em>-th element using (1,4) transposition : [2,3,<strong>4</strong>,<strong>1</strong>]-&gt;[2,3,<strong>1</strong>,<strong>4</strong>]</li>
+</ul>
+<p><em>For the first 3 elements</em> - <em>1</em>-st and <em>2</em>-nd element in good shape, no need to swap : [<strong>2</strong>,<strong>3</strong>,1,4] stays as it is</p>
+<ul>
+<li>Swap <em>2</em>-nd and <em>3</em>-rd element using (1,3) transposition : [2,<strong>3</strong>,<strong>1</strong>,4]-&gt;[2,<strong>1</strong>,<strong>3</strong>,4]</li>
+</ul>
+<p><em>For the first 2 elements</em> - Swap <em>1</em>-st and <em>2</em>-nd element using (1,2) transposition : [<strong>2</strong>,<strong>1</strong>,3,4] -&gt; [<strong>1</strong>,<strong>2</strong>,3,4]</p>
+<p>Done!</p>
+</section>
+<section id="transposition-usage" class="level2">
+<h2 class="anchored" data-anchor-id="transposition-usage">Transposition usage</h2>
+<p>Note that we ended up using 4 transpositions for the bubble-sort algorithm to go from [3,2,4,1] to [1,2,3,4] while we had used just 2 to achieve it earlier. So this algorithm is not very economical in terms of usage of transpositions. However, it gives a nice constructive proof of how to generate permutations with transpositions!</p>
 
 
 </section>
 
-
-<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
-
-<ol>
-<li id="fn1"><p><span class="math display">\[\begin{align*} \tilde{X}\tilde{X^T} &amp;= \sum_{i=1}^{N}  \left(\begin{array}{ccccc} \overline{0} &amp;  \ldots &amp;  \overline{0} &amp; x_i-\mu &amp; \overline{0} \ldots &amp; \overline{0} \\ \end{array}\right)\tilde{X}^T  \\  &amp; = \sum_{i=1}^N \left(\begin{array}{ccccc} \overline{0} &amp;  \ldots &amp;  \overline{0} &amp; x_i-\mu &amp; \overline{0} \ldots &amp; \overline{0} \end{array}\right)\left[\sum_{j=1}^{N} \left(\begin{array}{c} \overline{0} \\  \ldots \\ \overline{0} \\ (x_j-\mu)^T \\ \overline{0}^T \\ \ldots \\ \overline{0}^T \end{array}\right) \right] \\ &amp;= \sum_{i=1}^{N} (x_i-\mu)(x_i-\mu)^T  = NS \end{align*}\]</span><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol>
-</section><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{bhaskhar2020,
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{bhaskhar2020,
   author = {Bhaskhar, Nivedita},
-  title = {Mean and {Variance}},
-  date = {2020-08-26},
-  url = {https://nivbhaskhar.github.io/blog/posts/2020-08-26-Mean-Variance.html},
+  title = {Permutations from Transpositions},
+  date = {2020-10-09},
+  url = {https://nivbhaskhar.github.io/blog/posts/2020-10-09-permutations-from-transpositions.html},
   langid = {en}
 }
 </code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-bhaskhar2020" class="csl-entry quarto-appendix-citeas" role="listitem">
-Bhaskhar, Nivedita. 2020. <span>“Mean and Variance.”</span> August 26.
-<a href="https://nivbhaskhar.github.io/blog/posts/2020-08-26-Mean-Variance.html">https://nivbhaskhar.github.io/blog/posts/2020-08-26-Mean-Variance.html</a>.
+Bhaskhar, Nivedita. 2020. <span>“Permutations from
+Transpositions.”</span> October 9. <a href="https://nivbhaskhar.github.io/blog/posts/2020-10-09-permutations-from-transpositions.html">https://nivbhaskhar.github.io/blog/posts/2020-10-09-permutations-from-transpositions.html</a>.
 </div></div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {

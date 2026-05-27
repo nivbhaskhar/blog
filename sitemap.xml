@@ -2,62 +2,66 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://nivbhaskhar.github.io/blog/quantum.html</loc>
-    <lastmod>2026-05-27T01:54:25.977Z</lastmod>
+    <lastmod>2026-05-27T02:14:28.203Z</lastmod>
   </url>
   <url>
     <loc>https://nivbhaskhar.github.io/blog/posts/2021-09-10-kkt-conditions.html</loc>
-    <lastmod>2026-05-27T01:54:25.977Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nivbhaskhar.github.io/blog/posts/2020-09-14-leastsquares-code.html</loc>
-    <lastmod>2026-05-27T01:54:25.977Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nivbhaskhar.github.io/blog/posts/2020-09-03-k-fold-cross-validation.html</loc>
-    <lastmod>2026-05-27T01:54:25.977Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nivbhaskhar.github.io/blog/posts/2020-08-27-working-with-real-data.html</loc>
-    <lastmod>2026-05-27T01:54:25.977Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nivbhaskhar.github.io/blog/posts/2020-08-03-SVD-details.html</loc>
-    <lastmod>2026-05-27T01:54:25.977Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nivbhaskhar.github.io/blog/posts/2020-07-20-GifsInPython.html</loc>
-    <lastmod>2026-05-27T01:54:25.976Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nivbhaskhar.github.io/blog/index.html</loc>
-    <lastmod>2026-05-27T01:54:25.976Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nivbhaskhar.github.io/blog/notes.html</loc>
-    <lastmod>2026-05-27T01:54:25.976Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nivbhaskhar.github.io/blog/posts/2020-07-27-SVD.html</loc>
-    <lastmod>2026-05-27T01:54:25.977Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nivbhaskhar.github.io/blog/posts/2020-08-26-Mean-Variance.html</loc>
-    <lastmod>2026-05-27T01:54:25.977Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nivbhaskhar.github.io/blog/posts/2020-09-01-decision-tree-regressor.html</loc>
-    <lastmod>2026-05-27T01:54:25.977Z</lastmod>
-  </url>
-  <url>
-    <loc>https://nivbhaskhar.github.io/blog/posts/2020-09-13-least-squares.html</loc>
-    <lastmod>2026-05-27T01:54:25.977Z</lastmod>
+    <lastmod>2026-05-27T02:14:28.203Z</lastmod>
   </url>
   <url>
     <loc>https://nivbhaskhar.github.io/blog/posts/2020-09-30-cycles-in-linked-lists.html</loc>
-    <lastmod>2026-05-27T01:54:25.977Z</lastmod>
+    <lastmod>2026-05-27T02:14:28.203Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nivbhaskhar.github.io/blog/posts/2020-09-13-least-squares.html</loc>
+    <lastmod>2026-05-27T02:14:28.203Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nivbhaskhar.github.io/blog/posts/2020-09-01-decision-tree-regressor.html</loc>
+    <lastmod>2026-05-27T02:14:28.203Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nivbhaskhar.github.io/blog/posts/2020-08-26-Mean-Variance.html</loc>
+    <lastmod>2026-05-27T02:14:28.203Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nivbhaskhar.github.io/blog/posts/2020-07-27-SVD.html</loc>
+    <lastmod>2026-05-27T02:14:28.203Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nivbhaskhar.github.io/blog/notes.html</loc>
+    <lastmod>2026-05-27T02:14:28.202Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nivbhaskhar.github.io/blog/index.html</loc>
+    <lastmod>2026-05-27T02:14:28.202Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nivbhaskhar.github.io/blog/posts/2020-07-20-GifsInPython.html</loc>
+    <lastmod>2026-05-27T02:14:28.202Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nivbhaskhar.github.io/blog/posts/2020-08-03-SVD-details.html</loc>
+    <lastmod>2026-05-27T02:14:28.203Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nivbhaskhar.github.io/blog/posts/2020-08-27-working-with-real-data.html</loc>
+    <lastmod>2026-05-27T02:14:28.203Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nivbhaskhar.github.io/blog/posts/2020-09-03-k-fold-cross-validation.html</loc>
+    <lastmod>2026-05-27T02:14:28.203Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nivbhaskhar.github.io/blog/posts/2020-09-14-leastsquares-code.html</loc>
+    <lastmod>2026-05-27T02:14:28.203Z</lastmod>
+  </url>
+  <url>
+    <loc>https://nivbhaskhar.github.io/blog/posts/2020-10-09-permutations-from-transpositions.html</loc>
+    <lastmod>2026-05-27T02:14:28.203Z</lastmod>
   </url>
   <url>
     <loc>https://nivbhaskhar.github.io/blog/posts/2023-07-26-1d-convolution.html</loc>
-    <lastmod>2026-05-27T01:54:25.977Z</lastmod>
+    <lastmod>2026-05-27T02:14:28.203Z</lastmod>
   </url>
 </urlset>

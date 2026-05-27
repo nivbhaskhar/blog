@@ -52,7 +52,7 @@ Lists:
 ======================================================================
 -->
 
-![Detecting cycles using hares and tortoises](../assets/2020-09-30-tortoise-hare.png)
+![Detecting cycles using hares and tortoises](../assets/2020-09-30-tortoise-hare.png){width=75%}
 
 
 Linked lists are some of the first data structures we see when we start thinking algorithmically. And a frequently encountered problem on this topic is detecting cycles in linked lists. In this post, let’s go ahead and unravel this problem. But before that ..
@@ -100,9 +100,9 @@ If the tunnel has no cycle, all is well, both friends will exit the tunnel (the 
 
 
 
-![Eureka!](/assets/2020-09-30-bulb.png){width=10%}
+![Eureka!](/assets/2020-09-30-bulb.png){width=20%}
 
-These two will meet!! Why would they meet ? This seems intuitive enough, but we want a *proof*. A wise friend whispers "Think relative speed .." 
+These two will meet! Why would they meet ? This seems intuitive enough, but we want a *proof*. A wise friend whispers "Think relative speed .." 
 
 
 Think from the the point of view of the slower guy. He is stationary with respect to himself and the faster guy is moving with some non zero speed. What happens when you stand still in a circular track while your friend is running around it ? He bumps into you. Voila!
@@ -140,10 +140,10 @@ def hasCycle(head: ListNode) -> bool:
 
     # Traverse linked list while fast_pointer is not at the end of the linked list
     while(fast_pointer is not None):
-        # If pointers meet, return True
+        # if pointers meet, return True
         if slow_pointer == fast_pointer:
             return True
-        # else if the fast pointer is one step before the end of the linked list, return False
+        # if the fast pointer is one step before the end of the linked list, return False
         elif fast_pointer.next is None:
             return False
         # otherwise move the fast_pointer ahead by 2 steps and the slow_pointer by one

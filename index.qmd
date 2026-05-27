@@ -28,3 +28,5 @@ I like to write about mathematics, machine learning and quantum computing. I hop
 Please do include a backlink and cite these articles if you use them in any form. Each post features a copyable BibTeX entry and standard format attribution at the end.
 
 Questions, comments, error-spotting? Drop me an email. I’d love to hear from you!
+
+&nbsp;

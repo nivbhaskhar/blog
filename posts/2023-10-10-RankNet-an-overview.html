@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2020-07-20">
+<meta name="dcterms.date" content="2023-10-10">
 
-<title>Making GIFs in Python – Nivedita Bhaskhar</title>
+<title>RankNet - an overview – Nivedita Bhaskhar</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -23,41 +23,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -107,6 +72,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="../assets/styles.css">
 </head>
@@ -163,10 +157,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Making GIFs in Python</h1>
+<h1 class="title">RankNet - an overview</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">Python libraries</div>
-    <div class="quarto-category">Exposition</div>
+    <div class="quarto-category">ML</div>
+    <div class="quarto-category">Ranking and recommendations</div>
+    <div class="quarto-category">Notes</div>
   </div>
   </div>
 
@@ -178,7 +173,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 20, 2020</p>
+      <p class="date">October 10, 2023</p>
     </div>
   </div>
   
@@ -213,7 +208,7 @@ Danger!
 :::
 
 FOOTNOTES USAGE 1
-When we see X[^def-X] ..
+When we see X[^def-X], we think that we might have seen X[^def-X] before
 
 [^def-X] Definition of X
 
@@ -234,62 +229,227 @@ Lists:
 * `inline code`
 * **bold**
 * *italic*,
+* _italic_
+
+Lists:
+
+- `inline code`
+- **bold**
+- *italic*,
+- _italic_
 
 ======================================================================
 -->
+<p><em>References</em>:</p>
+<ul>
+<li><em>(Main paper) From RankNet to LambdaRank to LambdaMART: an overview by Chris Burges</em> <a href="https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/MSR-TR-2010-82.pdf">(link)</a></li>
+<li><em>Learning to Rank using Gradient Descent : RankNet by Chris Burges et al</em> <a href="https://icml.cc/2015/wp-content/uploads/2015/06/icml_ranking.pdf">(link)</a></li>
+</ul>
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">Overview</h2>
+<p>The main paper talks about 3 algorithms in the Learning to rank a.k.a LTR class of algorithms,</p>
+<ul>
+<li>RankNet</li>
+<li>Lambda rank</li>
+<li>LambdaMART (boosted tree version of Lambda rank)</li>
+</ul>
+<p>which were developed by Christopher J.C Burges et al.</p>
+<p>We’ll do a deep dive into the RankNet portion of it. RankNet is a supervised learning method to rank a collection of given responses to a query.</p>
+<p>Why read this paper ? It is a self contained single exposition on successful algorithms for solving real world ranking problems (which were originally spread across multiple papers). Some of these algorithms can also be modified to use for more supervised learning tasks</p>
+</section>
+<section id="the-training-data" class="level2">
+<h2 class="anchored" data-anchor-id="the-training-data">The training data</h2>
+<p>Each data point looks like a pair <span class="math inline">\((A, B)\)</span> where <span class="math inline">\(A, B\)</span> are responses to the <em>same</em> query. The paper implicitly seems to assume all responses <span class="math inline">\(A, B\)</span> are represented in <span class="math inline">\(\mathbb{R}^n\)</span>.</p>
+<p>(<strong>system <span class="math inline">\(P\)</span></strong>) One way of labelling <span class="math inline">\((A, B)\)</span> would be:</p>
+<ul>
+<li><span class="math inline">\(1\)</span> if <span class="math inline">\(A\)</span> has to be ranked higher than <span class="math inline">\(B\)</span>, <span class="math inline">\(0\)</span> if <span class="math inline">\(B\)</span> has to be ranked higher than <span class="math inline">\(A\)</span>, and <span class="math inline">\(0.5\)</span> if <span class="math inline">\(B, A\)</span> have equal rank (or no info is available)</li>
+<li>In this case the label should be interpreted as the probability that <span class="math inline">\(A\)</span> has to be ranked higher than <span class="math inline">\(B\)</span></li>
+</ul>
+<p>(<strong>system <span class="math inline">\(P'\)</span></strong>) Another way of labelling <span class="math inline">\((A, B)\)</span> would be:</p>
+<ul>
+<li><span class="math inline">\(1\)</span> if <span class="math inline">\(A\)</span> has to be ranked higher than <span class="math inline">\(B\)</span>, <span class="math inline">\(-1\)</span> if <em>B</em> has to be ranked higher than <span class="math inline">\(A\)</span>, and <span class="math inline">\(0\)</span> if <span class="math inline">\(B, A\)</span> have equal rank (or no info is available)</li>
+<li>In this case <span class="math inline">\((1+ label)/2\)</span> should be interpreted as the probability that <span class="math inline">\(A\)</span> has to be ranked higher than <span class="math inline">\(B\)</span></li>
+</ul>
+<p><strong>Discussion points</strong>:</p>
+<ul>
+<li>Any example pair <span class="math inline">\((A, B)\)</span> should satisfy that they are both responses to the same query. Can we have in the training data <span class="math inline">\((A, B)\)</span> which are responses to query <span class="math inline">\(q\)</span> and <span class="math inline">\((A’, B’)\)</span> which are responses to query <span class="math inline">\(q’\)</span> ? I think so.</li>
+<li>No necessity that the training data examples specify a complete ranking of responses to a query. Authors don’t even insist that the training data be consistent</li>
+<li>Model will learn score function <span class="math inline">\(f: \mathbb{R}^n→\mathbb{R}\)</span></li>
+<li>Interpretation of score function: If <span class="math inline">\(f(A) &gt; f(B)\)</span> , then model thinks response <span class="math inline">\(A\)</span> should be ranked higher than response <span class="math inline">\(B\)</span></li>
+</ul>
+</section>
+<section id="loss-functions" class="level2">
+<h2 class="anchored" data-anchor-id="loss-functions">Loss functions</h2>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Loss function for label system <span class="math inline">\(P\)</span><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[
+Loss(A, B, \mathrm{Label(A,B)}) = \ln(e^{\lambda(f(A)-f(B))}+1) - \lambda(f(A)-f(B))\mathrm{Label}(A,B)
+\]</span></p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Loss function for label system <span class="math inline">\(P'\)</span><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[
+Loss(A, B, \mathrm{Label(A,B)}) = \ln(e^{-\lambda(f(A)-f(B))}+1) + \frac{\lambda}{2} (f(A)-f(B))(1-\mathrm{Label}(A,B))
+\]</span></p>
+</div>
+</div>
+<p>Let us see why. Assume the system <span class="math inline">\(P\)</span> of labelling.</p>
+<p>Recall that to turn a score into a probability, we can use the sigmoid function <span class="math inline">\(S_{\lambda}(x) = \frac{1}{1+e^{-\lambda x}}\)</span> where <span class="math inline">\(\lambda &gt; 0\)</span></p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="../assets/2020-07-20-animation.gif" class="img-fluid figure-img"></p>
-<figcaption><a href="https://nivbhaskhar.github.io/portfolio/unpuzzled">UnPuzzler</a> in action</figcaption>
+<p><img src="../assets/2023-10-10-sigmoid.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption>Sigmoid <span class="math inline">\(S_1: x \leadsto \frac{1}{1+e^{-x}}\)</span> <a href="https://en.wikipedia.org/wiki/Sigmoid_function#/media/File:Logistic-curve.svg">(figure from wikipedia)</a></figcaption>
 </figure>
 </div>
-<p>If you’re searching for a quick way to make GIFs out of a folder full of images, the Pillow library in Python does the trick for you!</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> PIL <span class="im">import</span> Image</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Change working directory to folder containing images to be GIF-fed</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>os.chdir(<span class="st">"path_to_folder_with_images"</span> )</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Ensure your images are in the order you want them to appear in the GIF</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"The images will be GIF-fed in the following order"</span>)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">sorted</span>(os.listdir())</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Open the images as a PIL image object and store them in a list</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>images <span class="op">=</span> []</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> img_file_name <span class="kw">in</span> <span class="bu">sorted</span>(os.listdir()):</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  img <span class="op">=</span> Image.<span class="bu">open</span>(img_file_name)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  images.append(img)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Save images to an output.gif</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>images[<span class="dv">0</span>].save(<span class="st">'output.gif'</span>,</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>                save_all<span class="op">=</span><span class="va">True</span>, append_images<span class="op">=</span>images[<span class="dv">1</span>:],</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>                optimize<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>                duration<span class="op">=</span><span class="dv">800</span>,</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>                loop<span class="op">=</span><span class="dv">0</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>              )</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>              </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<section id="main-parameters-of-image.save" class="level2">
-<h2 class="anchored" data-anchor-id="main-parameters-of-image.save">Main parameters of Image.save()</h2>
+<p>Then <span class="math inline">\(x &gt;&gt; 0 \implies S(x) \sim 1\)</span> and <span class="math inline">\(x &lt;&lt; 0 \implies S(x) \sim 0\)</span>. For us, if <span class="math inline">\(f(A) &gt;&gt; f(B)\)</span>, i.e.&nbsp;<span class="math inline">\(f(A) − f(B) &gt;&gt; 0\)</span>, we want the probability that <span class="math inline">\(A\)</span> is ranked higher than <span class="math inline">\(B\)</span> to be close to <span class="math inline">\(1\)</span>.</p>
+<section id="deriving-the-loss-function" class="level4">
+<h4 class="anchored" data-anchor-id="deriving-the-loss-function">Deriving the loss function</h4>
+<p>Let us put all this together!</p>
+<p>Define the estimated probability that <span class="math inline">\(A\)</span> has to be ranked higher than <span class="math inline">\(B\)</span> to be <span class="math inline">\(\tilde{p}(A,B)\)</span>. <span class="math inline">\(\tilde{p}\)</span> is what the model really has to learn, when it is given training data with the true probabilities a.k.a labels In other words <span class="math inline">\(\tilde{p}(A, B)\)</span> is the probability that the model will predict label <span class="math inline">\(1\)</span> and <span class="math inline">\(1 − \tilde{p}(A, B)\)</span> is the probability that the model will predict <span class="math inline">\(0\)</span>. The loss function therefore is just binary cross entropy. If that doesn’t mean much, let us just walk through it from scratch.</p>
+<p>Given example <span class="math inline">\((A, B)\)</span> with label <span class="math inline">\(p(A, B)\)</span>, we want to increase the probability that the model predicts <span class="math inline">\(p(A, B)\)</span> [maximum likelihood principle]. That is we want to</p>
 <ul>
-<li><strong>loop</strong> : <code>loop=0</code> makes the GIF loop infinitely. <code>loop=n</code> makes the GIF loop <em>n</em> times.<br>
-</li>
-<li><strong>duration</strong> : time in milliseconds each image will be displayed for</li>
+<li>Maximize <span class="math inline">\(\tilde{p}(A, B)\)</span> if <span class="math inline">\(p(A, B)\)</span> is <span class="math inline">\(1\)</span> and <span class="math inline">\(1 − \tilde{p}(A, B)\)</span> if <span class="math inline">\(p(A, B)\)</span> is <span class="math inline">\(0\)</span></li>
+<li>Since log is monotone, this is equivalent to maximizing <span class="math inline">\(\ln(\tilde{p}(A, B))\)</span> if <span class="math inline">\(p(A, B)\)</span> is <span class="math inline">\(1\)</span> and <span class="math inline">\(\ln(1 − \tilde{p}(A, B))\)</span> if <span class="math inline">\(p(A, B)\)</span> is 0</li>
+<li>This can be written in one shot as maximizing <span class="math display">\[
+p(A,B)\ln(\tilde{p}(A,B)) + (1-p(A,B))\ln(1-\tilde{p}(A,B))
+\]</span> or rather minimizing the negative of this.</li>
 </ul>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Loss function formulation
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Minimize<br>
+<span class="math display">\[
+-p(A,B)\ln(\tilde{p}(A,B)) - (1-p(A,B))\ln(1-\tilde{p}(A,B))
+\]</span></p>
+</div>
+</div>
+<p><em>Some fun algebra with the sigmoid function!</em></p>
+<p>Since <span class="math inline">\(S_{\lambda}(x) = \frac{1}{1+e^{-\lambda x}}\)</span>, <span class="math display">\[
+\begin{align*} \ln S_{\lambda}(x) &amp; = -\ln (1 + \frac{1}{e^{\lambda x}}) \\ &amp;= -\ln (e^{\lambda x} + 1) + \ln(e^{\lambda x}) \\ &amp; = \lambda x - \ln (e^{\lambda x} + 1)  \end{align*}
+\]</span></p>
+<p><span class="math display">\[
+\begin{align*} \ln (1-S_{\lambda}(x)) &amp;= \ln(1-\frac{1}{1+e^{-\lambda x}}) \\ &amp;= \ln(e^{-\lambda x}) - \ln (1 + e^{-\lambda x}) \\ &amp;= -\lambda x + \ln S_{\lambda}(x) \\ &amp;= -\lambda x + [-\ln (e^{\lambda x} + 1)+\lambda x] \\ &amp;= -\ln(e^{\lambda x} + 1) \end{align*}
+\]</span></p>
+<p>Let <span class="math inline">\(x = f(A) − f(B)\)</span> and <span class="math inline">\(p = p(A, B)\)</span> for ease of notation. Since <span class="math display">\[
+\tilde{p}(A, B) = S_{\lambda}(f(A) − f(B)) = S_{\lambda}(x),
+\]</span></p>
+<p>the loss function to minimize becomes <span class="math display">\[
+\begin{align*} Loss(A,B) &amp;= -p(A,B)\ln(\tilde{p}(A,B)) - (1-p(A,B))\ln(1-\tilde{p}(A,B)) \\ &amp;= -p \ln S_{\lambda}(x) - (1-p)\ln(1-S_{\lambda}(x)) \\ &amp;= -p(\lambda x - \ln (e^{\lambda x} + 1)) - (1-p)(-\ln(e^{\lambda x} + 1))  \\ &amp;= -\lambda px + p\ln(e^{\lambda x}+1) + (1-p)\ln(e^{\lambda x} + 1) \\ &amp;= -\lambda px + \ln(e^{\lambda x}+1) \\ &amp;= \ln(e^{\lambda(f(A)-f(B))}+1) - \lambda p(A,B)(f(A)-f(B))\end{align*}
+\]</span></p>
+<p><em>Note: if no training information is available or there is a tie between <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>, we can have the training label be <span class="math inline">\(0.5\)</span>.</em></p>
+<p>Here’s a plot of <span class="math inline">\(Loss(A, B)\)</span> vs <span class="math inline">\(f(A) − f(B)\)</span> for fixed labels <span class="math inline">\(p(A, B) \in \{ 0, 0.5, 1\}\)</span></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../assets/2023-10-10-plot-loss-vs-scorediff.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption>Figure modified from the Learning to Rank paper for <span class="math inline">\(\lambda = 1\)</span></figcaption>
+</figure>
+</div>
+</section>
+</section>
+<section id="training" class="level2">
+<h2 class="anchored" data-anchor-id="training">Training</h2>
+<p>How does the model learn the scoring function <span class="math inline">\(f\)</span> ?</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../assets/2023-10-10-ranknet-architecture.png" class="img-fluid figure-img"></p>
+<figcaption>Architecture skeleton</figcaption>
+</figure>
+</div>
+<p>The key point is to learn the same <span class="math inline">\(f\)</span> to score responses, i.e.&nbsp;score A,B by the <em>same</em> net <span class="math inline">\(f\)</span>. So when we use the loss function <span class="math display">\[
+L(A, B) = function(f(A) − f(B), Label(A, B))
+\]</span></p>
+<p>to update the weights of <span class="math inline">\(f\)</span>, we should ensure that the corresponding weights in the <span class="math inline">\(f\)</span> acting on <span class="math inline">\(A\)</span> and in the <span class="math inline">\(f\)</span> acting on <span class="math inline">\(B\)</span> in the above diagram are updated identically.</p>
+</section>
+<section id="inferenceprediction" class="level2">
+<h2 class="anchored" data-anchor-id="inferenceprediction">Inference/Prediction</h2>
+<p>We have learnt <span class="math inline">\(f\)</span> by training on our training data. To get ranking of responses <span class="math inline">\(\{A_i\}\)</span> for a given query <span class="math inline">\(q\)</span> at inference time, simply evaluate <span class="math inline">\(f\)</span> on all responses <span class="math inline">\(A_i\)</span> to get scores <span class="math inline">\(f(A_i)\)</span> Rank the responses <span class="math inline">\(A_i\)</span> in descending order by their scores <span class="math inline">\(f(A_i)\)</span> i.e.&nbsp;responses with higher scores are more relevant for the query</p>
+</section>
+<section id="mini-batch-learning-speeding-up-gradient-descent" class="level2">
+<h2 class="anchored" data-anchor-id="mini-batch-learning-speeding-up-gradient-descent">Mini batch learning : Speeding up gradient descent</h2>
+<p>Assume for fun the system <span class="math inline">\(P'\)</span> of labelling now — i.e.&nbsp;labels are in  [− 1, 1, 0]</p>
+<p><span class="math display">\[
+Loss(A,B) = \ln(e^{-\lambda(f(A)-f(B))}+1) + \frac{\lambda}{2} (f(A)-f(B))(1-Label(A,B))
+\]</span></p>
+<p><span class="math display">\[
+\frac{\partial Loss(A,B)}{\partial f(A)} = \frac{\lambda e^{-\lambda(f(A)-f(B))}}{e^{-\lambda(f(A)-f(B))}+1} + \frac{\lambda}{2}(1-Label(A,B))
+\]</span></p>
+<p><span class="math display">\[
+\frac{\partial Loss(A,B)}{\partial f(B)} = \frac{-\lambda e^{-\lambda(f(A)-f(B))}}{e^{-\lambda(f(A)-f(B))}+1} - \frac{\lambda}{2}(1-Label(A,B))
+\]</span></p>
+<p><span class="math display">\[
+\frac{\partial Loss(A,B)}{\partial f(A)} = - \frac{\partial Loss(A,B)}{\partial f(B)} = \lambda\left(\frac{1}{1+e^{\lambda(f(A)-f(B))}}+ \frac{1-Label(A,B)}{2}\right)
+\]</span></p>
+<p>If the neural net for learning <span class="math inline">\(f\)</span> has weights <span class="math inline">\(w_k\)</span>, we’ll learn it by updating for each example <span class="math inline">\((A, B)\)</span> as follows:</p>
+<p><span class="math display">\[
+\begin{align*} w_k &amp;= w_k - \eta \frac{\partial Loss(A,B)}{\partial w_k} \\ &amp;= w_k - \eta \left(\frac{\partial Loss(A,B)}{\partial f(A)}\frac{\partial f(A)}{\partial w_k} + \frac{\partial Loss(A,B)}{\partial f(B)}\frac{\partial f(B)}{\partial w_k}\right) \\ &amp;= w_k - \eta\left(\frac{\partial Loss(A,B)}{\partial f(A)}\right)\left(\frac{\partial f(A)}{\partial w_k} - \frac{\partial f(B)}{\partial w_k}\right) \\ &amp;= w_k - \eta\textcolor{red}{\lambda\left(\frac{1}{1+e^{\lambda(f(A)-f(B))}}+ \frac{1-Label(A,B)}{2}\right)}\left(\frac{\partial f(A)}{\partial w_k} - \frac{\partial f(B)}{\partial w_k}\right) \\ &amp; = w_k - \eta \textcolor{red}{\lambda(A,B)}\left(\frac{\partial f(A)}{\partial w_k} - \frac{\partial f(B)}{\partial w_k}\right)\end{align*}
+\]</span></p>
+<p>Let <span class="math inline">\(I_q = \{(A, B)\}\)</span> be examples to be ranked (for a given query <span class="math inline">\(q\)</span>).</p>
+<ul>
+<li>Assume if <span class="math inline">\((A, B)\)</span> in <span class="math inline">\(I_q\)</span>, then <span class="math inline">\((B, A)\)</span> is not<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></li>
+<li>For simplicity of calculations, assume each <span class="math inline">\((A, B)\)</span> in <span class="math inline">\(I_q\)</span> has label 1</li>
+</ul>
+<p><span class="math inline">\(w_k\)</span> for a query <span class="math inline">\(q\)</span> has to be updated as <span class="math display">\[
+\begin{align*}w_k &amp;= w_k - \eta\left(\sum_{(A,B)\in I_q}\frac{\partial Loss(A,B)}{\partial w_k}\right) \\ &amp;= w_k -\eta\left(\sum_{(A,B)\in I_q}\lambda(A,B)\left(\frac{\partial f(A)}{\partial w_k} - \frac{\partial f(B)}{\partial w_k}\right)\right)\end{align*}
+\]</span></p>
+<p>Let <span class="math inline">\(S_q = \{A|&nbsp;(A, B) or&nbsp;(B, A) ∈ I_q\}\)</span>. We’d like to change the summation over pairs <span class="math inline">\(\sum_{(A,B)\in I_q}\)</span> to <span class="math inline">\(\sum_{A\in S_q}\)</span>.</p>
+<p>Define <span class="math inline">\(\lambda(X)\)</span> for each <span class="math inline">\(X\)</span> in <span class="math inline">\(S_q\)</span> so that <span class="math display">\[
+\lambda(X) = \sum_{(X, Y)\in I_q} \lambda(X, Y) − \sum_{(Y', X) \in I_q} \lambda(Y', X)
+\]</span></p>
+<p>Claim/exercise which we skip writing out is that the above summation reduces as <span class="math display">\[
+\begin{align*}w_k &amp;= w_k -\eta\left(\sum_{(A,B)\in I_q}\lambda(A,B)\left(\frac{\partial f(A)}{\partial w_k} - \frac{\partial f(B)}{\partial w_k}\right)\right) \\ &amp;= w_k - \eta\left(\sum_{X\in S_q}\lambda(X)\frac{\partial f(X)}{\partial w_k}\right)\end{align*}
+\]</span></p>
+<p>This helps to do 1 update over a bunch of examples instead of an update per example by grouping over a component, i.e.&nbsp;instead of updating <span class="math inline">\(w_k\)</span> for each example <span class="math inline">\((A, B) \in I_q\)</span>, update over a collection of examples <span class="math inline">\({(X, A)} \cup {(A, X)}\)</span></p>
+<p>Training time improvement — <span class="math inline">\(O(|S_q^2|) \leadsto O(|S_q|)\)</span> which led to LambdaRank!</p>
+</section>
+<section id="cons-of-ranknet" class="level2">
+<h2 class="anchored" data-anchor-id="cons-of-ranknet">Cons of RankNet</h2>
+<p>All pairs <span class="math inline">\((A,B)\)</span> are given the same importance during training and not suitable if we want to give&nbsp;more importance to higher ranked responses (eg as in DCG metric)</p>
 
 
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{bhaskhar2020,
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>i.e.&nbsp;where labels for <span class="math inline">\(A &gt; B\)</span> is <span class="math inline">\(1\)</span>, <span class="math inline">\(A = B\)</span> is <span class="math inline">\(0.5\)</span> and <span class="math inline">\(B &gt; A\)</span> is <span class="math inline">\(0\)</span> <a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>i.e.&nbsp;where labels for <span class="math inline">\(A &gt; B\)</span> is <span class="math inline">\(1\)</span>, <span class="math inline">\(A = B\)</span> is <span class="math inline">\(0\)</span> and <span class="math inline">\(B &gt; A\)</span> is <span class="math inline">\(-1\)</span> <a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>?? what happens when you have inconsistent examples<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{bhaskhar2023,
   author = {Bhaskhar, Nivedita},
-  title = {Making {GIFs} in {Python}},
-  date = {2020-07-20},
-  url = {https://nivbhaskhar.github.io/blog/posts/2020-07-20-GifsInPython.html},
+  title = {RankNet - an Overview},
+  date = {2023-10-10},
+  url = {https://nivbhaskhar.github.io/blog/posts/2023-10-10-RankNet-an-overview.html},
   langid = {en}
 }
-</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-bhaskhar2020" class="csl-entry quarto-appendix-citeas" role="listitem">
-Bhaskhar, Nivedita. 2020. <span>“Making GIFs in Python.”</span> July 20.
-<a href="https://nivbhaskhar.github.io/blog/posts/2020-07-20-GifsInPython.html">https://nivbhaskhar.github.io/blog/posts/2020-07-20-GifsInPython.html</a>.
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-bhaskhar2023" class="csl-entry quarto-appendix-citeas" role="listitem">
+Bhaskhar, Nivedita. 2023. <span>“RankNet - an Overview.”</span> October
+10. <a href="https://nivbhaskhar.github.io/blog/posts/2023-10-10-RankNet-an-overview.html">https://nivbhaskhar.github.io/blog/posts/2023-10-10-RankNet-an-overview.html</a>.
 </div></div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {

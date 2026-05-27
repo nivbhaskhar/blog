@@ -78,7 +78,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-fc2ba2187ccc948dc9b31bdd7263a77d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-86fef9588b399ccbf429bbf078be9f7b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -239,7 +239,7 @@ Lists:
 -->
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="../assets/2020-09-30-tortoise-hare.png" class="img-fluid figure-img"></p>
+<p><img src="../assets/2020-09-30-tortoise-hare.png" class="img-fluid figure-img" style="width:75.0%"></p>
 <figcaption>Detecting cycles using hares and tortoises</figcaption>
 </figure>
 </div>
@@ -278,11 +278,11 @@ Lists:
 <p><em>What if the tunnel does have a cycle</em>? Well, the faster one will get trapped in the cycle first. He keeps running around. The slower one will also get trapped in the cycle later. He also keeps running around. But eventually…</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="../assets/2020-09-30-bulb.png" class="img-fluid figure-img" style="width:10.0%"></p>
+<p><img src="../assets/2020-09-30-bulb.png" class="img-fluid figure-img" style="width:20.0%"></p>
 <figcaption>Eureka!</figcaption>
 </figure>
 </div>
-<p>These two will meet!! Why would they meet ? This seems intuitive enough, but we want a <em>proof</em>. A wise friend whispers “Think relative speed ..”</p>
+<p>These two will meet! Why would they meet ? This seems intuitive enough, but we want a <em>proof</em>. A wise friend whispers “Think relative speed ..”</p>
 <p>Think from the the point of view of the slower guy. He is stationary with respect to himself and the faster guy is moving with some non zero speed. What happens when you stand still in a circular track while your friend is running around it ? He bumps into you. Voila!</p>
 </section>
 <section id="a-summary" class="level2">
@@ -313,10 +313,10 @@ Lists:
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Traverse linked list while fast_pointer is not at the end of the linked list</span></span>
 <span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span>(fast_pointer <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span>):</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        <span class="co"># If pointers meet, return True</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        <span class="co"># if pointers meet, return True</span></span>
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> slow_pointer <span class="op">==</span> fast_pointer:</span>
 <span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="va">True</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># else if the fast pointer is one step before the end of the linked list, return False</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># if the fast pointer is one step before the end of the linked list, return False</span></span>
 <span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> fast_pointer.<span class="bu">next</span> <span class="kw">is</span> <span class="va">None</span>:</span>
 <span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="va">False</span></span>
 <span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>        <span class="co"># otherwise move the fast_pointer ahead by 2 steps and the slow_pointer by one</span></span>

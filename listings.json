@@ -4,13 +4,6 @@
     "items": []
   },
   {
-    "listing": "/notes.html",
-    "items": [
-      "/posts/2023-07-26-1d-convolution.html",
-      "/posts/2021-09-10-kkt-conditions.html"
-    ]
-  },
-  {
     "listing": "/index.html",
     "items": [
       "/posts/2020-10-09-permutations-from-transpositions.html",
@@ -24,6 +17,14 @@
       "/posts/2020-08-03-SVD-details.html",
       "/posts/2020-07-27-SVD.html",
       "/posts/2020-07-20-GifsInPython.html"
+    ]
+  },
+  {
+    "listing": "/notes.html",
+    "items": [
+      "/posts/2023-10-10-RankNet-an-overview.html",
+      "/posts/2023-07-26-1d-convolution.html",
+      "/posts/2021-09-10-kkt-conditions.html"
     ]
   }
 ]

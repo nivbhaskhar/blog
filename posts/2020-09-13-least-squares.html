@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2023-07-26">
+<meta name="dcterms.date" content="2020-09-13">
 
-<title>1D convolution – Nivedita Bhaskhar</title>
+<title>Linear regression and the normal equation – Nivedita Bhaskhar</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -23,41 +23,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -192,11 +157,11 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">1D convolution</h1>
+<h1 class="title">Linear regression and the normal equation</h1>
   <div class="quarto-categories">
     <div class="quarto-category">ML</div>
-    <div class="quarto-category">CV</div>
-    <div class="quarto-category">Notes</div>
+    <div class="quarto-category">Linear algebra</div>
+    <div class="quarto-category">Exposition</div>
   </div>
   </div>
 
@@ -208,7 +173,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 26, 2023</p>
+      <p class="date">September 13, 2020</p>
     </div>
   </div>
   
@@ -264,250 +229,166 @@ Lists:
 * `inline code`
 * **bold**
 * *italic*,
-* _italic_
-
-Lists:
-
-- `inline code`
-- **bold**
-- *italic*,
-- _italic_
 
 ======================================================================
 -->
-<p><em>References</em>:</p>
-<ul>
-<li><em>Numpy documentation</em>: <a href="https://numpy.org/doc/stable/reference/generated/numpy.convolve.html">numpy.convolve.html</a></li>
-<li><em>Video lecture</em>: <a href="https://www.youtube.com/watch?v=Al-TsPNXXwg">Dr Hamprecht, Lecture 1.2 CVF20, Heidelberg University</a></li>
-</ul>
-<section id="theory-convolving-sequences" class="level2">
-<h2 class="anchored" data-anchor-id="theory-convolving-sequences">Theory: Convolving sequences</h2>
-<p>Let <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> be infinite sequences. Then the convolution <span class="math inline">\(f\star g\)</span> is an infinite sequence with</p>
+<section id="prerequisites" class="level2">
+<h2 class="anchored" data-anchor-id="prerequisites">Prerequisites</h2>
+<p>Basic linear algebra, derivatives, orthogonal projections and a will to think abstractly!</p>
+</section>
+<section id="what-is-linear-regression" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-linear-regression">What is linear regression ?</h2>
+<p>In an experiment, we observe the values of some <em>features</em> or <em>attributes</em>. We would like to predict the value of a <em>target</em> variable based on the observed features. Linear regression tries to guess a linear relationship between the features and the target.</p>
+<p>To continue with our weather example from before, say we have access to the average daily temperature <span class="math inline">\(T\)</span>, the wind-gut <span class="math inline">\(W\)</span> , and the total minutes of sunshine <span class="math inline">\(S\)</span> per day. These will be our features. We would like to predict the amount of precipitation <span class="math inline">\(P\)</span> each day. This will be our target variable.</p>
+<p>We are trying to find a linear relationship between <span class="math inline">\(P, T, W, S\)</span>. That is, we’d like to find <span class="math inline">\(\theta_0, \theta_1, \theta_2, \theta_3\)</span> so that</p>
 <p><span class="math display">\[
-f\star g(i) = \sum_{j=-\infty}^{\infty}f(j)g(i-j)
+P = \theta_0 + \theta_1 T + \theta_2 W + \theta_3 S
 \]</span></p>
 </section>
-<section id="in-practice-finite-filters-and-signals" class="level2">
-<h2 class="anchored" data-anchor-id="in-practice-finite-filters-and-signals">In practice: Finite filters and signals</h2>
-<p>The basic idea is to superimpose the (flipped) filter on part of the signal and calculate the dot product of the two aligned bits, then move the filter ahead and repeat.</p>
-<p>More formally,</p>
-<ul>
-<li>Let <span class="math inline">\(f = [f_0, f_1, \ldots, f_{m-1}]\)</span> be the <em>filter</em> or <em>kernel</em> or <em>window</em> which is an <span class="math inline">\(m\times 1\)</span> vector<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></li>
-<li>Let <span class="math inline">\(g = [g_0, g_1, \ldots, g_{n-1}]\)</span> be the <em>signal</em> or <em>image</em> which is an <span class="math inline">\(n\times 1\)</span> vector</li>
-</ul>
-<p>One way of convolution is to make the convolved image or signal <span class="math inline">\(f\star g\)</span> also be an <span class="math inline">\(n\times 1\)</span> vector. To find the <span class="math inline">\(i^{th}\)</span> value of the convolved signal, i.e.&nbsp;<span class="math inline">\(f\star g(i)\)</span>:</p>
-<ul>
-<li>Flip the kernel <span class="math inline">\([f_{m-1}, f_{m-2}, \ldots, f_{1}, f_{0}]\)</span> → <span class="math inline">\([f_{m-1}=(f_{2m'}), f_{2m'-1}, \ldots, f_{1}, f_0]\)</span></li>
-<li>Line the flipped kernel against the signal <span class="math inline">\(g\)</span> so that the center <span class="math inline">\(f_{m'}\)</span> is aligned with <span class="math inline">\(g_i\)</span></li>
-</ul>
+<section id="linear-regression-abstracted-out" class="level2">
+<h2 class="anchored" data-anchor-id="linear-regression-abstracted-out">Linear regression abstracted out</h2>
+<p>Let’s say we have weather data over <span class="math inline">\(n\)</span> days. For day <span class="math inline">\(i\)</span>, we collect that day’s feature values <span class="math inline">\(T, W, S\)</span> into a row vector <span class="math inline">\(x_i = (x_i^1, x_i^2, x_i^3)\)</span>. That day’s precipitation value becomes the target value <span class="math inline">\(y_i\)</span>.</p>
+<p>Abstracting out this set up, we can assume we are given data points <span class="math inline">\(x_1, x_2, \ldots x_n\)</span> where each data point <span class="math inline">\(x_i\)</span> has <span class="math inline">\(k\)</span> <em>features</em> and has target <span class="math inline">\(y_i\)</span>. That is, each data point <span class="math inline">\(x_i\)</span> looks like the row vector <span class="math inline">\(x_i = (x_i^1, x_i^2, \ldots, x_i^k)\)</span> and the target variable in which we are interested in has value <span class="math inline">\(y_i\)</span> for the data point <span class="math inline">\(x_i\)</span>.</p>
+<p>Linear regression tries to find a linear relationship between the data points <span class="math inline">\(x_i\)</span> and their targets <span class="math inline">\(y_i\)</span>. That is, we want to find real numbers <span class="math inline">\(\theta_0, \theta_1, \ldots , \theta_k\)</span> so that for each <span class="math inline">\(i\)</span>, we have</p>
 <p><span class="math display">\[
-\begin{matrix} g_0 &amp; g_1 &amp; \ldots  &amp; g_{i-m’} &amp; g_{i-(m’-1)} &amp; \ldots &amp; g_{i-1} &amp; g_i &amp; g_{i+1} &amp; \ldots &amp; g_{i+(m'-1)} &amp; g_{i+m’} &amp; g_{i+(m’+1)} &amp; \ldots \\
-&amp; &amp; &amp; f_{2m'} &amp; f_{2m'-1} &amp; \ldots &amp; f_{m'+1} &amp; f_{m'} &amp; f_{m'-1} &amp; \ldots &amp; f_{1} &amp; f_{0}\end{matrix}
+\theta_0 + \theta_1 x_i^1+ \theta_2 x_i^2 + \ldots + \theta_k x_i^k = y_i
 \]</span></p>
-<ul>
-<li>Take the dot product of the flipped kernel and the portion of the signal it aligns with</li>
-</ul>
+<section id="introducing-dummies" class="level4">
+<h4 class="anchored" data-anchor-id="introducing-dummies">Introducing dummies</h4>
+<p>The <span class="math inline">\(\theta_0\)</span> stands out without a binding feature <span class="math inline">\(x_i^0\)</span>, so to make it uniform, we introduce a dummy feature <span class="math inline">\(x_i^0 = 1\)</span> for each datapoint <span class="math inline">\(x_i\)</span>. That is, each data point <span class="math inline">\(x_i\)</span> now looks like the row vector</p>
+<p><span class="math display">\[
+x_i = (x_i^0=1, x_i^1, x_i^2, \ldots, x_i^k)
+\]</span></p>
+<p>So we want to find real numbers <span class="math inline">\(\theta_0, \theta_1, \ldots , \theta_k\)</span> so that for each <span class="math inline">\(i\)</span>, we have</p>
+<p><span class="math display">\[
+\theta_0 x_i^0 + \theta_1 x_i^1+ \theta_2 x_i^2 + \ldots + \theta_k x_i^k = y_i
+\]</span></p>
+</section>
+</section>
+<section id="a-matrix-equation" class="level2">
+<h2 class="anchored" data-anchor-id="a-matrix-equation">A matrix equation</h2>
+<p>Let’s bundle up <span class="math inline">\(\theta_0, \theta_1, \theta_2, \ldots, \theta_k\)</span> into a column vector <span class="math inline">\(\theta\)</span>, <span class="math inline">\(y_1, y_2, \ldots, y_n\)</span> into a column vector <span class="math inline">\(Y\)</span> and the row vectors <span class="math inline">\(x_1, x_2, \ldots , x_n\)</span> into a <span class="math inline">\(n\times (k+1)\)</span> matrix <span class="math inline">\(X\)</span></p>
+<p><span class="math display">\[
+X = \left(\begin{array}{ccccc} x_1^0 &amp; x_1^1 &amp; x_1^2 &amp; \ldots &amp; x_1^k \\ x_2^0 &amp; x_2^1 &amp; x_2^2 &amp; \ldots &amp; x_2^k \\ . &amp; . &amp; . &amp; \ldots &amp; .  \\ x_n^0 &amp; x_n^1 &amp; x_n^2 &amp; \ldots &amp; x_n^k \end{array}\right)\ ; \ \theta = \left(\begin{array}{c} \theta_0 \\ \theta_1 \\ . \\ . \\ \theta_k \end{array}\right) \ ; \ Y = \left(\begin{array}{c} y_1 \\ y_2 \\. \\ y_n \end{array}\right)
+\]</span></p>
+<p>Then solving the <span class="math inline">\(n\)</span> linear regression equations above simultaneously is the same as solving the matrix equation <span class="math inline">\(X\theta = Y\)</span></p>
+</section>
+<section id="an-approximate-solution-using-least-squares" class="level2">
+<h2 class="anchored" data-anchor-id="an-approximate-solution-using-least-squares">An approximate solution using least-squares</h2>
+<p>Unfortunately, you might not always be able to solve this system of linear equations on the nose. Then we aim for an <em>approximate solution</em> which is the best among other approximate solutions in the following sense:</p>
+<p>Let <span class="math inline">\(X\theta = \hat{Y}_{\theta}\)</span>. That is, our predicted values for the target variable is <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> <span class="math inline">\(\hat{Y}_{\theta}\)</span>. We would like our predictions to be as close to the real truth as possible. So we want <span class="math inline">\(\hat{Y}_{\theta}\)</span> to be as close to <span class="math inline">\(Y\)</span> as possible. That is, we want the norm <span class="math inline">\(\|Y-\hat{Y}_{\theta}\|\)</span> to be minimal.</p>
+<p>Since this is the same as demanding minimality of <span class="math inline">\(\|Y-\hat{Y}_{\theta}\|^2\)</span>, we want to minimize the following sum of squares</p>
+<p><span class="math display">\[
+(y_1-\hat{y}_1)^2 + (y_2-\hat{y}_2)^2 + \ldots (y_n - \hat{y}_n^2)
+\]</span></p>
+<p>That is, we want a <em>least-squares solution</em> of the matrix equation <span class="math inline">\(X\theta = Y\)</span></p>
+</section>
+<section id="an-analytic-approach" class="level2">
+<h2 class="anchored" data-anchor-id="an-analytic-approach">An analytic approach</h2>
+<p><em>If you are uncomfortable with multivariable derivatives, skip ahead to the geometric approach!</em></p>
+<p><span class="math display">\[
+\begin{align*} \|Y-\hat{Y}_{\theta}\|^2 &amp; = (Y-\hat{Y}_{\theta})^T (Y-\hat{Y}_{\theta}) \\ &amp; = (Y-X\theta)^T(Y-X\theta)\\ &amp; = (\theta^TX^T-Y^T)(Y-X\theta) \\ &amp; = \theta^TX^TY - Y^TY -\theta^TX^TX\theta + Y^TX\theta \\ &amp; = \theta^TX^TY - Y^TY -\theta^TX^TX\theta + (\theta^TX^TY)^T\end{align*}
+\]</span></p>
+<p>Since <span class="math inline">\(\theta^TX^TY\)</span> is a<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> <span class="math inline">\(1\times 1\)</span> matrix, <span class="math inline">\(\theta^TX^TY = (\theta^TX^TY)^T\)</span>. Thus</p>
+<p><span class="math display">\[
+\|Y-\hat{Y}_{\theta}\|^2 = - Y^TY -\theta^TX^TX\theta + 2\theta^TX^TY
+\]</span>.</p>
+<p>Since <span class="math inline">\(Y^TY\)</span> doesn’t depend on <span class="math inline">\(\theta\)</span>, we may as well minimize the following function</p>
+<p><span class="math display">\[
+f(\theta) = 2\theta^TX^TY -\theta^TX^TX\theta
+\]</span></p>
+<p>Taking gradient with respect to <span class="math inline">\(\theta\)</span>, we get <span class="math inline">\(\nabla_{\theta}f = 2X^TY - 2X^TX\theta\)</span>. Remember we want the gradient to be 0 since we are trying to find extrema of <span class="math inline">\(f(\theta)\)</span>. So we want <span class="math inline">\(2X^TY - 2X^TX\theta = 0\)</span>.</p>
+<p>That is, we want <span class="math inline">\(\theta\)</span> so that <span class="math inline">\(X^TX\theta = X^TY\)</span>.</p>
+</section>
+<section id="normal-equation" class="level2">
+<h2 class="anchored" data-anchor-id="normal-equation">Normal equation</h2>
+<p>The matrix equation <span class="math inline">\(X^TX\theta=X^TY\)</span> is called the <em>normal equation</em> of <span class="math inline">\(X\theta=Y\)</span>. And from our discussion above, it should be more or less clear that a solution <span class="math inline">\(\theta\)</span> of the normal equation gives a least-squares solution of <span class="math inline">\(X\theta=Y\)</span>.</p>
+<p>This is good, but how do we know a solution of the normal equation <em>actually exists</em> ? Also how do we check that the extrema we get are actually minima ? These can of course be shown with some further computation. Instead, we present a geometric approach which avoids derivatives altogether and uses some geometric insight to derive the normal equation and show the existence of a least-squares solution!</p>
+</section>
+<section id="a-geometric-approach" class="level2">
+<h2 class="anchored" data-anchor-id="a-geometric-approach">A geometric approach</h2>
+<p>Let’s go back to the equation <span class="math inline">\(X\theta = Y\)</span>. Since we can’t always solve this equation on the nose, we are content with an approximate solution <span class="math inline">\(\theta\)</span> so that <span class="math inline">\(X\theta \simeq Y\)</span>. If we define <span class="math inline">\(\hat{Y}_\theta = X\theta\)</span>, then out of all possible approximate solutions <span class="math inline">\(\theta\)</span>, we want to pick the one so that <span class="math inline">\(\| Y-\hat{Y}_{\theta}\|\)</span> is minimum.</p>
+<p>Let’s consider the space of ALL possible values for <span class="math inline">\(\theta\)</span>. This is just <span class="math inline">\(\mathbb{R}^{k+1}\)</span>, i.e <span class="math inline">\(\theta\)</span> can be any <span class="math inline">\(k+1\)</span> column vector. Let’s now look at the set <span class="math inline">\(V\)</span> which consists of all possible predictions <span class="math inline">\(\hat{Y}_{\theta}\)</span>. That is,</p>
+<p><span class="math display">\[
+V = \{ X\theta \mid \theta \in \mathbb{R}^{k+1}\}
+\]</span></p>
+<p>Let’s view <span class="math inline">\(X\)</span> as a linear map <span class="math inline">\(X: \mathbb{R}^{k+1}\to \mathbb{R}^n\)</span>, that is <span class="math inline">\(X\)</span> is a linear map from the space of possible <span class="math inline">\(\theta\)</span>s to the space of all possible values of the target variable.</p>
+<p>Then <span class="math inline">\(V\)</span> is just the image of <span class="math inline">\(X\)</span>. In particular, it is a subspace of <span class="math inline">\(\mathbb{R}^n\)</span>. To reiterate, <span class="math inline">\(\mathbb{R}^n\)</span> is the space of all possible values of the target variable, <span class="math inline">\(Y\)</span> is the particular value of the target variable that we are trying to hit and <span class="math inline">\(V\)</span> is the subspace of all our possible predictions.</p>
+<p>Now if <span class="math inline">\(Y\)</span> lies in <span class="math inline">\(V\)</span>, we can hit it on the nose, that is we can find a solution <span class="math inline">\(\theta\)</span> that actually solves <span class="math inline">\(X\theta=Y\)</span>. If we can’t, we are trying to find the vector <span class="math inline">\(\hat{Y}_{\theta}\)</span> in <span class="math inline">\(V\)</span> which is <em>closest</em><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> to <span class="math inline">\(Y\)</span>.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="../assets/2023-07-26-dot-product-def.png" class="img-fluid figure-img"></p>
-<figcaption>Dot product definition</figcaption>
-</figure>
-</div>
-<p>Thus for <span class="math inline">\(i=0, \ldots, n-1\)</span></p>
-<p><span class="math display">\[
-f\star g(i) = \sum_{j=0}^{2m’} f(j)g(i+m’-j) = \sum_{j=0}^{m-1} f(j)g(i-j+\lfloor{m/2}\rfloor)
-\]</span></p>
-</section>
-<section id="padding" class="level2">
-<h2 class="anchored" data-anchor-id="padding">Padding</h2>
-<p>What happens for <span class="math inline">\(i\)</span> near the edges of the signal <span class="math inline">\(g\)</span>, where you can’t really fit the filter so that its center is aligned with <span class="math inline">\(g(i)\)</span> ?</p>
-<p>We can pad the ends of the signal with constant values!</p>
-<p>One option is to pad the either end of the signal with constant <span class="math inline">\(c\)</span> (zero/non-zero value)</p>
-<p><span class="math display">\[
-\begin{matrix} c &amp; c &amp; \ldots &amp; c &amp; g_0 &amp; g_1 &amp; \ldots &amp; g_{m'} &amp; \ldots &amp; g_{n-2} &amp; g_{n-1} \\
-f_{2m'} &amp; f_{2m'-1} &amp; \ldots &amp; f_{m'+1} &amp; f_{m’} &amp; f_{m’-1} &amp; \ldots &amp; f_0 &amp; &amp; &amp; &amp; &amp; \end{matrix}
-\]</span></p>
-<p>Another option is to wrap around the filter (see below on how to compute <span class="math inline">\(f\star g(0)\)</span> for instance) - provided the filter length is at most the signal length</p>
-<p><span class="math display">\[
-\begin{matrix} g_0 &amp; g_1 &amp; \ldots &amp; g_{m'} &amp; \ldots &amp; g_{n-m'} &amp; \ldots &amp; g_{n-2} &amp; g_{n-1} \\
-f_{m’} &amp; f_{m’-1} &amp; \ldots &amp; f_0 &amp; \ldots &amp; f_{2m'} &amp; \ldots &amp;f_{m’+2}&amp; f_{m’+1}\end{matrix}
-\]</span></p>
-<p>Equivalently, think of <span class="math inline">\(g\)</span> as a repeating signal to impute the <span class="math inline">\(g(k)\)</span> values in the formula above for <span class="math inline">\(k\)</span> outside <span class="math inline">\([0,n-1]\)</span></p>
-<p><span class="math display">\[
-\begin{matrix} \ldots &amp; g_{n-m'} &amp; g_{n-(m'-1)} &amp; \ldots &amp; g_{n-1} &amp; g_0 &amp; g_1 &amp; \ldots &amp; g_{m'} &amp; \ldots &amp; g_{n-2} &amp; g_{n-1} \\
-&amp;  f_{2m'} &amp; f_{2m'-1} &amp; \ldots &amp; f_{m'+1} &amp; f_{m’} &amp; f_{m’-1} &amp; \ldots &amp; f_0 &amp; &amp; &amp; &amp; &amp; \end{matrix}
-\]</span></p>
-<p>The repeating signal makes the convolution work even when the filter length is larger than the original signal length.</p>
-</section>
-<section id="an-example" class="level2">
-<h2 class="anchored" data-anchor-id="an-example">An example</h2>
-<ul>
-<li>Let <span class="math inline">\(f = [1, 0, -1]\)</span></li>
-<li>Let <span class="math inline">\(g = [g_0, g_1, g_2, g_2, g_4, g_5]\)</span></li>
-</ul>
-<p>Let’s go with the wrapping around approach to compute the convolved signal at the edges.</p>
-<p><span class="math display">\[
-f\star g(0) \rightarrow \begin{matrix} g_0 &amp; g_1 &amp; g_2 &amp; g_3 &amp; g_4 &amp; g_5 \\ 0 &amp; 1 &amp;  &amp; &amp; &amp; -1 \end{matrix}
-\]</span></p>
-<p><span class="math display">\[
-f\star g(1) \rightarrow \begin{matrix} g_0 &amp; g_1 &amp; g_2 &amp; g_3 &amp; g_4 &amp; g_5 \\ -1 &amp; 0 &amp; 1 &amp; &amp; &amp; \end{matrix}
-\]</span></p>
-<p><span class="math display">\[
-f\star g(2) \rightarrow \begin{matrix} g_0 &amp; g_1 &amp; g_2 &amp; g_3 &amp; g_4 &amp; g_5 \\ &amp; -1 &amp; 0 &amp; 1 &amp; &amp; \end{matrix}
-\]</span></p>
-<p><span class="math display">\[
-f\star g(3) \rightarrow \begin{matrix} g_0 &amp; g_1 &amp; g_2 &amp; g_3 &amp; g_4 &amp; g_5 \\  &amp;  &amp; -1 &amp; 0 &amp; 1 &amp; \end{matrix}
-\]</span></p>
-<p><span class="math display">\[
-f\star g(4) \rightarrow \begin{matrix} g_0 &amp; g_1 &amp; g_2 &amp; g_3 &amp; g_4 &amp; g_5 \\  &amp;  &amp;  &amp; -1 &amp; 0 &amp;  1\end{matrix}
-\]</span></p>
-<p><span class="math display">\[
-f\star g(5) \rightarrow \begin{matrix} g_0 &amp; g_1 &amp; g_2 &amp; g_2 &amp; g_4 &amp; g_5 \\ 1 &amp; &amp;  &amp; &amp; -1 &amp; 0\end{matrix}
-\]</span></p>
-<p><span class="math display">\[
-f\star g = [g_1-g_5, g_2-g_0, g_3-g_1, g_4-g_2, g_5-g_3, g_0-g_4]
-\]</span></p>
-</section>
-<section id="trivia-the-toeplitz-matrix" class="level2">
-<h2 class="anchored" data-anchor-id="trivia-the-toeplitz-matrix">Trivia: The Toeplitz matrix</h2>
-<ul>
-<li>We can combine the above convolution into a matrix product as follows</li>
-</ul>
-<p><span class="math display">\[
-f\star g = \left( \begin{matrix}0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; -1 \\
--1 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 \\
-0 &amp; -1 &amp; 0 &amp; 1 &amp; 0 &amp; 0 \\
-0 &amp; 0 &amp; -1 &amp; 0 &amp; 1 &amp; 0 \\
-0 &amp; 0 &amp; 0 &amp; -1 &amp; 0 &amp; 1 \\
-1 &amp; 0 &amp; 0 &amp; 0 &amp; -1 &amp; 0 \\
-\end{matrix}\right) \left(\begin{matrix}g_0 \\ g_1 \\ g_2 \\g_3 \\g_4 \\ g_5 \end{matrix}\right)
-\]</span></p>
-<ul>
-<li>The matrix constructed is an example of a <a href="https://en.wikipedia.org/wiki/Toeplitz_matrix"><strong><em>Toeplitz matrix</em></strong></a> or a <strong><em>diagonal-constant matrix</em></strong> where the diagonals are constant</li>
-</ul>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="../assets/2023-07-26-Toeplitz-matrix.png" class="img-fluid figure-img" style="width:30.0%"></p>
-<figcaption>The Toeplitz matrix</figcaption>
+<p><img src="../assets/2020-09-13-geometric-approach-least-squares.png" class="img-fluid figure-img"></p>
+<figcaption>A geometric approach to least squares</figcaption>
 </figure>
 </div>
 </section>
-<section id="code" class="level2">
-<h2 class="anchored" data-anchor-id="code">Code</h2>
-<p>Use <code>np.convolve(signal, filter, mode)</code> where mode = <code>valid</code>, <code>same</code> or <code>full</code></p>
-<p>If the filter length is greater than signal length signal, the command <code>np.convolve(signal, filter, mode)</code> simply computes <code>np.convolve(filter,signal, mode)</code>. Hence <code>np.convolve(g,f,mode) = np.convolve(f,g,mode)</code>.</p>
-<p>Hence let us assume without loss of generality that filter length is atmost the signal length.</p>
-<section id="valid-mode" class="level4">
-<h4 class="anchored" data-anchor-id="valid-mode"><code>valid</code> mode</h4>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Valid mode only computes dot product where flipped filter sits completely inside signal</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Thus output array length is len(signal) - len(filter) + 1</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">0</span>,<span class="op">-</span><span class="dv">1</span>] <span class="co">#filter</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>] <span class="co">#signal</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># -1 0 1</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#   -1 0 1</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">#     -1 0 1</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">#       -1 0 1</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>np.convolve(g,f,<span class="st">"valid"</span>) </span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Output = array([2, 2, 2, 2])</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="finding-the-vector-in-a-subspace-closest-to-a-given-target" class="level2">
+<h2 class="anchored" data-anchor-id="finding-the-vector-in-a-subspace-closest-to-a-given-target">Finding the vector in a subspace closest to a given target</h2>
+<p><span class="math inline">\(V\)</span> is a subspace of <span class="math inline">\(\mathbb{R}^n\)</span> and <span class="math inline">\(Y\)</span> is a given vector in <span class="math inline">\(\mathbb{R}^n\)</span>. We want to find <span class="math inline">\(\hat{Y}_{\theta}\in V\)</span> which is closest to <span class="math inline">\(Y\)</span>. How do we do that ? Let’s visualize these vectors and also the vector <span class="math inline">\(Y-\hat{Y}_{\theta}\)</span>. Remember we are trying to make <span class="math inline">\(\|Y-\hat{Y}_{\theta}\|\)</span> as small as possible</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../assets/2020-09-13-projection.png" class="img-fluid figure-img"></p>
+<figcaption>Projection of <span class="math inline">\(Y\)</span></figcaption>
+</figure>
+</div>
+<p>Since the shortest distance between a point and a subspace is the perpendicular from the point to the subspace, we aim to make <span class="math inline">\(Y-\hat{Y}_{\theta}\)</span> to be perpendicular to <span class="math inline">\(V\)</span> ! Note that this is the same thing as saying that the closest prediction <span class="math inline">\(\hat{Y}_{\theta}\)</span> is simply the <em>orthogonal projection</em> of <span class="math inline">\(Y\)</span> to <span class="math inline">\(V\)</span>.</p>
 </section>
-<section id="same-mode" class="level4">
-<h4 class="anchored" data-anchor-id="same-mode"><code>same</code> mode</h4>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Same mode pads signal ends with 0s and computes dot product where you align </span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># flipped filter's center with each signal value</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Thus output array length is len(signal)</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">0</span>,<span class="op">-</span><span class="dv">1</span>] <span class="co">#filter</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>] <span class="co">#signal</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#    0 1 2 3 4 5</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># -1 0 1</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># -1 0 1</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">#   -1 0 1</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co">#     -1 0 1</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co">#       -1 0 1</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co">#         -1 0 1</span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>np.convolve(g,f,<span class="st">"same"</span>) </span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Output = array([1, 2, 2, 2, 2, -4])</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="images-and-kernels-and-transposes" class="level2">
+<h2 class="anchored" data-anchor-id="images-and-kernels-and-transposes">Images and kernels and transposes</h2>
+<p>Now there is a really nice relation<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> between images of a linear map <span class="math inline">\(X\)</span> and the kernel of its transpose <span class="math inline">\(X^T\)</span>. Vectors perpendicular to <span class="math inline">\(\mathrm{Image}(X)\)</span> are actually in the kernel of <span class="math inline">\(X^T\)</span> and vice-versa. In symbols, this is written as</p>
+<p><span class="math display">\[
+\mathrm{Image}(X)^{\perp} = \mathrm{Kernel}(X^T)
+\]</span></p>
+<p>Now we want <span class="math inline">\(Y-\hat{Y}_{\theta}\)</span> to be perpendicular to <span class="math inline">\(V = Image(X)\)</span>. So we want <span class="math inline">\(Y-\hat{Y}_{\theta}\)</span> to be in the kernel of <span class="math inline">\(X^T\)</span>. That is, we want</p>
+<p><span class="math display">\[
+\begin{align*} &amp; \phantom{\implies} X^T(Y-\hat{Y}_{\theta}) = 0 \\ &amp; \implies X^T(Y-X\theta) = 0 \\ &amp;\implies X^TX\theta = X^TY \end{align*}
+\]</span></p>
+<p>Voila! We want a solution <span class="math inline">\(\theta\)</span> to the normal equation <span class="math inline">\(X^TX\theta = X^TY\)</span></p>
 </section>
-<section id="full-mode" class="level4">
-<h4 class="anchored" data-anchor-id="full-mode"><code>full</code> mode</h4>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Full mode pads signal ends with 0s and computes dot product where you align</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># flipped filter (in all possible overlaps) with the signal</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Thus output array length is len(signal) + len(filter) - 1</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">0</span>,<span class="op">-</span><span class="dv">1</span>] <span class="co">#filter</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>] <span class="co">#signal</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#      0 1 2 3 4 5</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># -1 0 1</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#    0 1 2 3 4 5</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"># -1 0 1</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co"># -1 0 1</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#   -1 0 1</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co">#     -1 0 1</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co">#       -1 0 1</span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="co">#          -1 0 1</span></span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="co">#            -1 0 1</span></span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>np.convolve(g,f,<span class="st">"full"</span>) </span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Output = array([ 0,  1,  2,  2,  2,  2, -4, -5])</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="solutions-of-the-normal-equation" class="level2">
+<h2 class="anchored" data-anchor-id="solutions-of-the-normal-equation">Solutions of the normal equation</h2>
+<p>The geometric approach immediately tells you why a solution <span class="math inline">\(\theta\)</span> exists for <span class="math inline">\(X^TX\theta = X^TY\)</span>. As we have already figured out, <span class="math inline">\(\theta\)</span> is a solution precisely when <span class="math inline">\(X\theta = \hat{Y}_{\theta}\)</span> is the orthogonal projection of <span class="math inline">\(Y\)</span> onto <span class="math inline">\(V = \mathrm{Image}(X)\)</span>.</p>
+<p>So backtracking, take <span class="math inline">\(Y\)</span>, project it to <span class="math inline">\(V = \mathrm{Image}(X)\)</span>. The projection will have to look like <span class="math inline">\(X\theta\)</span> for some <span class="math inline">\(\theta\)</span> because the projection is <em>in</em> the image subspace <span class="math inline">\(V\)</span>. That <span class="math inline">\(\theta\)</span> is a solution of the normal equation and hence a least-squares solution to the equation <span class="math inline">\(X\theta=Y\)</span> we are after!</p>
+</section>
+<section id="uniqueness-of-the-least-squares-solution" class="level2">
+<h2 class="anchored" data-anchor-id="uniqueness-of-the-least-squares-solution">Uniqueness of the least-squares solution</h2>
+<p>There is one point that we have glossed over, namely, <strong>is the <span class="math inline">\(\theta\)</span> we are after unique ?</strong> Using our geometric approach, the projection of <span class="math inline">\(Y\)</span> onto <span class="math inline">\(V\)</span> (which is <span class="math inline">\(\hat{Y}_{\theta}\)</span>) is unique. But there could be several <span class="math inline">\(\theta\)</span> such that <span class="math inline">\(X\theta = \hat{Y}_{\theta}\)</span></p>
+<p>But further suppose, <span class="math inline">\(X\)</span> is an injective map, i.e.&nbsp;it has zero kernel, then the <span class="math inline">\(\theta\)</span> we get is unique. And actually, <em>it turns out</em><a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> that if <span class="math inline">\(X\)</span> is injective, so is <span class="math inline">\(X^TX\)</span>. Since <span class="math inline">\(X^TX\)</span> is a square matrix, this means <span class="math inline">\(X^TX\)</span> is invertible. So we can actually solve for <span class="math inline">\(\theta\)</span> as follows:</p>
+<p><span class="math display">\[
+X^TX\theta = X^TY \implies \theta = (X^TX)^{-1}X^TY
+\]</span></p>
+</section>
+<section id="summary" class="level2">
+<h2 class="anchored" data-anchor-id="summary">Summary</h2>
+<ul>
+<li>The least-squares solutions <span class="math inline">\(\theta\)</span> of the equation <span class="math inline">\(X\theta = Y\)</span> are the same as the solutions of the <em>normal equation</em> <span class="math inline">\(X^TX\theta = X^TY\)</span>.</li>
+<li>The normal equation always has at least one solution. And further if <span class="math inline">\(\theta\)</span> is a solution, then <span class="math inline">\(X\theta\)</span>, the closest prediction, is just the orthogonal projection of <span class="math inline">\(Y\)</span> to <span class="math inline">\(\mathrm{Image}(X)\)</span>.</li>
+<li>There <em>could</em> be multiple solutions to the normal equation and hence there could be multiple least-squares solutions. However if <span class="math inline">\(X\)</span> is injective (i.e.&nbsp;has zero kernel), then the solution is unique and given by <span class="math inline">\(\theta = (X^TX)^{-1}X^TY\)</span></li>
+</ul>
 
 
-</section>
 </section>
 
 
 <div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
 
 <ol>
-<li id="fn1"><p>For simplicity in writing down the convolution equations, let us assume <span class="math inline">\(m=2m'+1\)</span> is odd.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>Let <span class="math inline">\(\hat{Y}_{\theta} = \left(\begin{array}{c} \hat{y_1} \\ \hat{y_2} \\. \\ \hat{y_n} \end{array}\right)\)</span><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p><span class="math inline">\(\theta^TX^TY\)</span> is an <span class="math inline">\((1\times (k+1))((k+1)\times n)(n\times 1) = 1\times 1\)</span> matrix<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Distance between <span class="math inline">\(\hat{Y}_{\theta}\)</span> and <span class="math inline">\(Y\)</span> is <span class="math inline">\(\|Y-\hat{Y}_{\theta}\|\)</span><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Consult your favorite Linear Algebra textbook for this fact<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>We can actually show <span class="math inline">\(\mathrm{Kernel}(X)\)</span> is the same as <span class="math inline">\(\mathrm{Kernel}(X^TX)\)</span>. A little thought should convince you that <span class="math inline">\(\mathrm{Kernel}(X)\subseteq \mathrm{Kernel}(X^TX)\)</span>. <br><br> For the other way around, take an arbitrary element <span class="math inline">\(a\in \mathrm{Kernel}(X^TX)\)</span>. Thus, <span class="math inline">\(X^TXa = 0\)</span>. This would mean <span class="math inline">\(Xa\in \mathrm{Kernel}(X^T) = \mathrm{Image}(X)^{\perp}\)</span> by the fact stated in the post. Thus <span class="math inline">\(Xa\)</span> is perpendicular to <span class="math inline">\(\mathrm{Image}(X)\)</span>. But <span class="math inline">\(Xa\)</span> is <em>in</em> <span class="math inline">\(\mathrm{Image}(X)\)</span>. <br><br>How can a vector be in a subspace <em>and</em> be perpendicular to the subspace ? Only if the said vector is 0, is this possible. Thus <span class="math inline">\(Xa=0\)</span> and hence <span class="math inline">\(a\in \mathrm{Kernel}(X)\)</span><a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-</section><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{bhaskhar2023,
+</section><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{bhaskhar2020,
   author = {Bhaskhar, Nivedita},
-  title = {1D Convolution},
-  date = {2023-07-26},
-  url = {https://nivbhaskhar.github.io/blog/posts/2023-07-26-1d-convolution.html},
+  title = {Linear Regression and the Normal Equation},
+  date = {2020-09-13},
+  url = {https://nivbhaskhar.github.io/blog/posts/2020-09-13-least-squares.html},
   langid = {en}
 }
-</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-bhaskhar2023" class="csl-entry quarto-appendix-citeas" role="listitem">
-Bhaskhar, Nivedita. 2023. <span>“1D Convolution.”</span> July 26. <a href="https://nivbhaskhar.github.io/blog/posts/2023-07-26-1d-convolution.html">https://nivbhaskhar.github.io/blog/posts/2023-07-26-1d-convolution.html</a>.
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-bhaskhar2020" class="csl-entry quarto-appendix-citeas" role="listitem">
+Bhaskhar, Nivedita. 2020. <span>“Linear Regression and the Normal
+Equation.”</span> September 13. <a href="https://nivbhaskhar.github.io/blog/posts/2020-09-13-least-squares.html">https://nivbhaskhar.github.io/blog/posts/2020-09-13-least-squares.html</a>.
 </div></div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {

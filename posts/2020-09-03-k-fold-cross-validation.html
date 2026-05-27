@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2023-07-26">
+<meta name="dcterms.date" content="2020-09-03">
 
-<title>1D convolution – Nivedita Bhaskhar</title>
+<title>k-fold cross-validation – Nivedita Bhaskhar</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -192,11 +192,12 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">1D convolution</h1>
+<h1 class="title">k-fold cross-validation</h1>
   <div class="quarto-categories">
     <div class="quarto-category">ML</div>
-    <div class="quarto-category">CV</div>
-    <div class="quarto-category">Notes</div>
+    <div class="quarto-category">Statistics</div>
+    <div class="quarto-category">Python libraries</div>
+    <div class="quarto-category">Exposition</div>
   </div>
   </div>
 
@@ -208,7 +209,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">July 26, 2023</p>
+      <p class="date">September 03, 2020</p>
     </div>
   </div>
   
@@ -264,250 +265,237 @@ Lists:
 * `inline code`
 * **bold**
 * *italic*,
-* _italic_
-
-Lists:
-
-- `inline code`
-- **bold**
-- *italic*,
-- _italic_
 
 ======================================================================
 -->
-<p><em>References</em>:</p>
-<ul>
-<li><em>Numpy documentation</em>: <a href="https://numpy.org/doc/stable/reference/generated/numpy.convolve.html">numpy.convolve.html</a></li>
-<li><em>Video lecture</em>: <a href="https://www.youtube.com/watch?v=Al-TsPNXXwg">Dr Hamprecht, Lecture 1.2 CVF20, Heidelberg University</a></li>
-</ul>
-<section id="theory-convolving-sequences" class="level2">
-<h2 class="anchored" data-anchor-id="theory-convolving-sequences">Theory: Convolving sequences</h2>
-<p>Let <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> be infinite sequences. Then the convolution <span class="math inline">\(f\star g\)</span> is an infinite sequence with</p>
-<p><span class="math display">\[
-f\star g(i) = \sum_{j=-\infty}^{\infty}f(j)g(i-j)
-\]</span></p>
+<section id="to-train-or-to-test-that-is-the-question.." class="level2">
+<h2 class="anchored" data-anchor-id="to-train-or-to-test-that-is-the-question..">To train or to test, that is the question..</h2>
+<p><a href="../posts/2020-09-01-decision-tree-regressor.html">Previously</a>, we built a decision tree regressor to predict the precipitation, given the other weather parameters. To do so, we split our dataset into 70% training data and 30% test data and fit a decision tree on the training data and evaluated it on the test data. However, this meant that the data reserved for testing could not be used for training and vice-versa.</p>
+<p>This poses a problem if you only have very limited data to work with. Do you train with all your data and give up on evaluation, or do you reserve a chunk for testing, making your training data set even smaller ?</p>
+<p>In this post, we’ll see how to use all the data available for training <em>and</em> testing by using a method called <em>k-fold cross-validation</em>.</p>
 </section>
-<section id="in-practice-finite-filters-and-signals" class="level2">
-<h2 class="anchored" data-anchor-id="in-practice-finite-filters-and-signals">In practice: Finite filters and signals</h2>
-<p>The basic idea is to superimpose the (flipped) filter on part of the signal and calculate the dot product of the two aligned bits, then move the filter ahead and repeat.</p>
-<p>More formally,</p>
+<section id="what-is-k-fold-cross-validation" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-k-fold-cross-validation">What is k-fold cross-validation ?</h2>
+<p>The basic idea is to split up your dataset into <span class="math inline">\(k\)</span> chunks or <em>folds</em>. Let’s call the folds <span class="math inline">\(F_1, F_2, ...F_k\)</span>. We’ll proceed to train <span class="math inline">\(k\)</span> models <span class="math inline">\(M_1,\ldots, M_k\)</span> on different training and test-data splits as follows:</p>
 <ul>
-<li>Let <span class="math inline">\(f = [f_0, f_1, \ldots, f_{m-1}]\)</span> be the <em>filter</em> or <em>kernel</em> or <em>window</em> which is an <span class="math inline">\(m\times 1\)</span> vector<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></li>
-<li>Let <span class="math inline">\(g = [g_0, g_1, \ldots, g_{n-1}]\)</span> be the <em>signal</em> or <em>image</em> which is an <span class="math inline">\(n\times 1\)</span> vector</li>
+<li>Train the <span class="math inline">\(i\)</span>-th model <span class="math inline">\(M_i\)</span> on training data comprising of all folds except the <span class="math inline">\(i\)</span>-th fold <span class="math inline">\(F_i\)</span>.</li>
+<li>Evaluate model <span class="math inline">\(M_i\)</span> on test data = <span class="math inline">\(F_i\)</span></li>
 </ul>
-<p>One way of convolution is to make the convolved image or signal <span class="math inline">\(f\star g\)</span> also be an <span class="math inline">\(n\times 1\)</span> vector. To find the <span class="math inline">\(i^{th}\)</span> value of the convolved signal, i.e.&nbsp;<span class="math inline">\(f\star g(i)\)</span>:</p>
-<ul>
-<li>Flip the kernel <span class="math inline">\([f_{m-1}, f_{m-2}, \ldots, f_{1}, f_{0}]\)</span> → <span class="math inline">\([f_{m-1}=(f_{2m'}), f_{2m'-1}, \ldots, f_{1}, f_0]\)</span></li>
-<li>Line the flipped kernel against the signal <span class="math inline">\(g\)</span> so that the center <span class="math inline">\(f_{m'}\)</span> is aligned with <span class="math inline">\(g_i\)</span></li>
-</ul>
-<p><span class="math display">\[
-\begin{matrix} g_0 &amp; g_1 &amp; \ldots  &amp; g_{i-m’} &amp; g_{i-(m’-1)} &amp; \ldots &amp; g_{i-1} &amp; g_i &amp; g_{i+1} &amp; \ldots &amp; g_{i+(m'-1)} &amp; g_{i+m’} &amp; g_{i+(m’+1)} &amp; \ldots \\
-&amp; &amp; &amp; f_{2m'} &amp; f_{2m'-1} &amp; \ldots &amp; f_{m'+1} &amp; f_{m'} &amp; f_{m'-1} &amp; \ldots &amp; f_{1} &amp; f_{0}\end{matrix}
-\]</span></p>
-<ul>
-<li>Take the dot product of the flipped kernel and the portion of the signal it aligns with</li>
-</ul>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="../assets/2023-07-26-dot-product-def.png" class="img-fluid figure-img"></p>
-<figcaption>Dot product definition</figcaption>
-</figure>
-</div>
-<p>Thus for <span class="math inline">\(i=0, \ldots, n-1\)</span></p>
-<p><span class="math display">\[
-f\star g(i) = \sum_{j=0}^{2m’} f(j)g(i+m’-j) = \sum_{j=0}^{m-1} f(j)g(i-j+\lfloor{m/2}\rfloor)
-\]</span></p>
+<p>Thus, for each of the <span class="math inline">\(k\)</span> models <span class="math inline">\(M_i\)</span>, we get a validation-error estimate <span class="math inline">\(E_i\)</span>. We report the <span class="math inline">\(k\)</span> validation-error estimates as <em>cross-validation scores</em><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<p>The average of these <span class="math inline">\(k\)</span> error-estimates tells us how biased our model is. If the average error is low, this implies our model has <em>low bias</em>. Broadly speaking, this means our model is <em>flexible</em> enough to get a good notion of the actual <em>truth</em> underlying the data.</p>
+<p>The standard deviation of these <span class="math inline">\(k\)</span> error-estimates tells us how our model’s performance varies with the training dataset used. If the standard deviation is high, this means our model has <em>high variance</em>. That is, our model’s performance is varying a lot with the training dataset. This is behaviour which we would like to avoid as it doesn’t generalize well on unseen data.</p>
 </section>
-<section id="padding" class="level2">
-<h2 class="anchored" data-anchor-id="padding">Padding</h2>
-<p>What happens for <span class="math inline">\(i\)</span> near the edges of the signal <span class="math inline">\(g\)</span>, where you can’t really fit the filter so that its center is aligned with <span class="math inline">\(g(i)\)</span> ?</p>
-<p>We can pad the ends of the signal with constant values!</p>
-<p>One option is to pad the either end of the signal with constant <span class="math inline">\(c\)</span> (zero/non-zero value)</p>
-<p><span class="math display">\[
-\begin{matrix} c &amp; c &amp; \ldots &amp; c &amp; g_0 &amp; g_1 &amp; \ldots &amp; g_{m'} &amp; \ldots &amp; g_{n-2} &amp; g_{n-1} \\
-f_{2m'} &amp; f_{2m'-1} &amp; \ldots &amp; f_{m'+1} &amp; f_{m’} &amp; f_{m’-1} &amp; \ldots &amp; f_0 &amp; &amp; &amp; &amp; &amp; \end{matrix}
-\]</span></p>
-<p>Another option is to wrap around the filter (see below on how to compute <span class="math inline">\(f\star g(0)\)</span> for instance) - provided the filter length is at most the signal length</p>
-<p><span class="math display">\[
-\begin{matrix} g_0 &amp; g_1 &amp; \ldots &amp; g_{m'} &amp; \ldots &amp; g_{n-m'} &amp; \ldots &amp; g_{n-2} &amp; g_{n-1} \\
-f_{m’} &amp; f_{m’-1} &amp; \ldots &amp; f_0 &amp; \ldots &amp; f_{2m'} &amp; \ldots &amp;f_{m’+2}&amp; f_{m’+1}\end{matrix}
-\]</span></p>
-<p>Equivalently, think of <span class="math inline">\(g\)</span> as a repeating signal to impute the <span class="math inline">\(g(k)\)</span> values in the formula above for <span class="math inline">\(k\)</span> outside <span class="math inline">\([0,n-1]\)</span></p>
-<p><span class="math display">\[
-\begin{matrix} \ldots &amp; g_{n-m'} &amp; g_{n-(m'-1)} &amp; \ldots &amp; g_{n-1} &amp; g_0 &amp; g_1 &amp; \ldots &amp; g_{m'} &amp; \ldots &amp; g_{n-2} &amp; g_{n-1} \\
-&amp;  f_{2m'} &amp; f_{2m'-1} &amp; \ldots &amp; f_{m'+1} &amp; f_{m’} &amp; f_{m’-1} &amp; \ldots &amp; f_0 &amp; &amp; &amp; &amp; &amp; \end{matrix}
-\]</span></p>
-<p>The repeating signal makes the convolution work even when the filter length is larger than the original signal length.</p>
-</section>
-<section id="an-example" class="level2">
-<h2 class="anchored" data-anchor-id="an-example">An example</h2>
-<ul>
-<li>Let <span class="math inline">\(f = [1, 0, -1]\)</span></li>
-<li>Let <span class="math inline">\(g = [g_0, g_1, g_2, g_2, g_4, g_5]\)</span></li>
-</ul>
-<p>Let’s go with the wrapping around approach to compute the convolved signal at the edges.</p>
-<p><span class="math display">\[
-f\star g(0) \rightarrow \begin{matrix} g_0 &amp; g_1 &amp; g_2 &amp; g_3 &amp; g_4 &amp; g_5 \\ 0 &amp; 1 &amp;  &amp; &amp; &amp; -1 \end{matrix}
-\]</span></p>
-<p><span class="math display">\[
-f\star g(1) \rightarrow \begin{matrix} g_0 &amp; g_1 &amp; g_2 &amp; g_3 &amp; g_4 &amp; g_5 \\ -1 &amp; 0 &amp; 1 &amp; &amp; &amp; \end{matrix}
-\]</span></p>
-<p><span class="math display">\[
-f\star g(2) \rightarrow \begin{matrix} g_0 &amp; g_1 &amp; g_2 &amp; g_3 &amp; g_4 &amp; g_5 \\ &amp; -1 &amp; 0 &amp; 1 &amp; &amp; \end{matrix}
-\]</span></p>
-<p><span class="math display">\[
-f\star g(3) \rightarrow \begin{matrix} g_0 &amp; g_1 &amp; g_2 &amp; g_3 &amp; g_4 &amp; g_5 \\  &amp;  &amp; -1 &amp; 0 &amp; 1 &amp; \end{matrix}
-\]</span></p>
-<p><span class="math display">\[
-f\star g(4) \rightarrow \begin{matrix} g_0 &amp; g_1 &amp; g_2 &amp; g_3 &amp; g_4 &amp; g_5 \\  &amp;  &amp;  &amp; -1 &amp; 0 &amp;  1\end{matrix}
-\]</span></p>
-<p><span class="math display">\[
-f\star g(5) \rightarrow \begin{matrix} g_0 &amp; g_1 &amp; g_2 &amp; g_2 &amp; g_4 &amp; g_5 \\ 1 &amp; &amp;  &amp; &amp; -1 &amp; 0\end{matrix}
-\]</span></p>
-<p><span class="math display">\[
-f\star g = [g_1-g_5, g_2-g_0, g_3-g_1, g_4-g_2, g_5-g_3, g_0-g_4]
-\]</span></p>
-</section>
-<section id="trivia-the-toeplitz-matrix" class="level2">
-<h2 class="anchored" data-anchor-id="trivia-the-toeplitz-matrix">Trivia: The Toeplitz matrix</h2>
-<ul>
-<li>We can combine the above convolution into a matrix product as follows</li>
-</ul>
-<p><span class="math display">\[
-f\star g = \left( \begin{matrix}0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 &amp; -1 \\
--1 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 \\
-0 &amp; -1 &amp; 0 &amp; 1 &amp; 0 &amp; 0 \\
-0 &amp; 0 &amp; -1 &amp; 0 &amp; 1 &amp; 0 \\
-0 &amp; 0 &amp; 0 &amp; -1 &amp; 0 &amp; 1 \\
-1 &amp; 0 &amp; 0 &amp; 0 &amp; -1 &amp; 0 \\
-\end{matrix}\right) \left(\begin{matrix}g_0 \\ g_1 \\ g_2 \\g_3 \\g_4 \\ g_5 \end{matrix}\right)
-\]</span></p>
-<ul>
-<li>The matrix constructed is an example of a <a href="https://en.wikipedia.org/wiki/Toeplitz_matrix"><strong><em>Toeplitz matrix</em></strong></a> or a <strong><em>diagonal-constant matrix</em></strong> where the diagonals are constant</li>
-</ul>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="../assets/2023-07-26-Toeplitz-matrix.png" class="img-fluid figure-img" style="width:30.0%"></p>
-<figcaption>The Toeplitz matrix</figcaption>
-</figure>
-</div>
-</section>
-<section id="code" class="level2">
-<h2 class="anchored" data-anchor-id="code">Code</h2>
-<p>Use <code>np.convolve(signal, filter, mode)</code> where mode = <code>valid</code>, <code>same</code> or <code>full</code></p>
-<p>If the filter length is greater than signal length signal, the command <code>np.convolve(signal, filter, mode)</code> simply computes <code>np.convolve(filter,signal, mode)</code>. Hence <code>np.convolve(g,f,mode) = np.convolve(f,g,mode)</code>.</p>
-<p>Hence let us assume without loss of generality that filter length is atmost the signal length.</p>
-<section id="valid-mode" class="level4">
-<h4 class="anchored" data-anchor-id="valid-mode"><code>valid</code> mode</h4>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Valid mode only computes dot product where flipped filter sits completely inside signal</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Thus output array length is len(signal) - len(filter) + 1</span></span>
+<section id="imports" class="level2">
+<h2 class="anchored" data-anchor-id="imports">Imports</h2>
+<p>As before, we’ll be using the pandas library as well as scikit-learn. So you’ll have to preface your code with the following import statements.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">0</span>,<span class="op">-</span><span class="dv">1</span>] <span class="co">#filter</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>] <span class="co">#signal</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.tree <span class="im">import</span> DecisionTreeRegressor</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># -1 0 1</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#   -1 0 1</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">#     -1 0 1</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">#       -1 0 1</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>np.convolve(g,f,<span class="st">"valid"</span>) </span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Output = array([2, 2, 2, 2])</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> cross_val_score</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> cross_val_predict</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="same-mode" class="level4">
-<h4 class="anchored" data-anchor-id="same-mode"><code>same</code> mode</h4>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Same mode pads signal ends with 0s and computes dot product where you align </span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># flipped filter's center with each signal value</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Thus output array length is len(signal)</span></span>
+<section id="revisiting-the-weather-dataset" class="level2">
+<h2 class="anchored" data-anchor-id="revisiting-the-weather-dataset">Revisiting the weather dataset</h2>
+<p>As <a href="../posts/2020-09-01-decision-tree-regressor.html">before</a>, let’s use the weather dataset and prepare our <em>weather_features</em> which has three attributes, namely <em>avgtemp</em>, <em>wind-gut</em> and <em>sunshine</em>. Let’s also prepare the <em>precipitation_targets</em> (which is the amount of precipitation recorded for each datapoint.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>col_names <span class="op">=</span> [<span class="st">'date'</span>,<span class="st">'avgtemp'</span>, <span class="st">'mintemp'</span>, <span class="st">'pp'</span>, <span class="st">'snow'</span>, <span class="st">'wind-dir'</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>             <span class="st">'wind-speed'</span>, <span class="st">'wind-gut'</span>, <span class="st">'air-pressure'</span>, <span class="st">'sunshine'</span>, <span class="st">'dummy'</span>]</span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">0</span>,<span class="op">-</span><span class="dv">1</span>] <span class="co">#filter</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>] <span class="co">#signal</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#    0 1 2 3 4 5</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># -1 0 1</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># -1 0 1</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">#   -1 0 1</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co">#     -1 0 1</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="co">#       -1 0 1</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Reads the comma separated csv into a pandas dataframe</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>daily_weather_df <span class="op">=</span> pd.read_csv(<span class="st">'KCQT0.csv'</span>, sep<span class="op">=</span><span class="st">','</span>,names<span class="op">=</span>col_names, header <span class="op">=</span> <span class="va">None</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Delete irrelevant cols</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="kw">del</span> daily_weather_df[<span class="st">'dummy'</span>]</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="kw">del</span> daily_weather_df[<span class="st">'air-pressure'</span>]</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="kw">del</span> daily_weather_df[<span class="st">'wind-speed'</span>]</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="kw">del</span> daily_weather_df[<span class="st">'snow'</span>]</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="kw">del</span> daily_weather_df[<span class="st">'wind-dir'</span>]</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="kw">del</span> daily_weather_df[<span class="st">'date'</span>]</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="kw">del</span> daily_weather_df[<span class="st">'mintemp'</span>]</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Delete rows with NaN entries</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>daily_weather_df.dropna(inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Drop precipitation column to get weather_features</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>weather_features <span class="op">=</span> daily_weather_df.drop([<span class="st">'pp'</span>], axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>precipitation_targets <span class="op">=</span> daily_weather_df[<span class="st">'pp'</span>]</span>
 <span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co">#         -1 0 1</span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>np.convolve(g,f,<span class="st">"same"</span>) </span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Output = array([1, 2, 2, 2, 2, -4])</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(weather_features.head())</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(precipitation_targets.head())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+Features:
+<div>
+<table class="dataframe table table-sm table-striped small">
+<thead>
+<tr>
+<th>
+</th>
+<th>
+avgtemp
+</th>
+<th>
+wind-gut
+</th>
+<th>
+sunshine
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>
+0
+</th>
+<td>
+10.4
+</td>
+<td>
+2.0
+</td>
+<td>
+1018.9
+</td>
+</tr>
+<tr>
+<th>
+1
+</th>
+<td>
+12.0
+</td>
+<td>
+8.1
+</td>
+<td>
+1021.0
+</td>
+</tr>
+<tr>
+<th>
+2
+</th>
+<td>
+11.4
+</td>
+<td>
+1.3
+</td>
+<td>
+1026.5
+</td>
+</tr>
+<tr>
+<th>
+3
+</th>
+<td>
+12.6
+</td>
+<td>
+3.0
+</td>
+<td>
+1024.9
+</td>
+</tr>
+<tr>
+<th>
+4
+</th>
+<td>
+13.3
+</td>
+<td>
+1.9
+</td>
+<td>
+1018.0
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Target:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span>    <span class="fl">13.9</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>    <span class="fl">15.6</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="dv">2</span>    <span class="fl">18.9</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="dv">3</span>    <span class="fl">20.0</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="dv">4</span>    <span class="fl">21.7</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    Name: pp, dtype: float64</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="full-mode" class="level4">
-<h4 class="anchored" data-anchor-id="full-mode"><code>full</code> mode</h4>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Full mode pads signal ends with 0s and computes dot product where you align</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># flipped filter (in all possible overlaps) with the signal</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Thus output array length is len(signal) + len(filter) - 1</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">0</span>,<span class="op">-</span><span class="dv">1</span>] <span class="co">#filter</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>g <span class="op">=</span> [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>] <span class="co">#signal</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#      0 1 2 3 4 5</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># -1 0 1</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">#    0 1 2 3 4 5</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co"># -1 0 1</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co"># -1 0 1</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#   -1 0 1</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co">#     -1 0 1</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co">#       -1 0 1</span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="co">#          -1 0 1</span></span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co">#  0 1 2 3 4 5</span></span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="co">#            -1 0 1</span></span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>np.convolve(g,f,<span class="st">"full"</span>) </span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Output = array([ 0,  1,  2,  2,  2,  2, -4, -5])</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="regression-tree" class="level2">
+<h2 class="anchored" data-anchor-id="regression-tree">Regression tree</h2>
+<p>Let’s set up our regression tree.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>tree_reg <span class="op">=</span> DecisionTreeRegressor(max_depth<span class="op">=</span><span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="cross-validation-scores" class="level2">
+<h2 class="anchored" data-anchor-id="cross-validation-scores">Cross validation scores</h2>
+<p>The syntax for computing cross validation scores over <span class="math inline">\(k\)</span> folds is</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>cross_val_score(model, features, labels, scoring<span class="op">=</span>scoring_method, cv<span class="op">=</span>k)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><strong>model</strong> refers to our decision tree regressor</li>
+<li><strong>features</strong> refers to the <em>weather_features</em></li>
+<li><strong>labels</strong> refers to the <em>precipitation_targets</em></li>
+<li><strong>scoring</strong> refers to the scoring method being used</li>
+<li><strong>cv</strong> is the number of folds we want to split our data into</li>
+</ul>
+<p>One thing to note is that the <em>scoring</em> expects a scoring_method/function for which <em>greater is better</em> (i.e.&nbsp;it wants to maximize the score). So you should not give it a loss function for which <em>lesser is better</em>.</p>
+<p>We used <em>mean_squared_error</em> as a loss function when we evaluated our Decision Tree regressor for just one training-test split. Here, we’ll use <em>neg_mean_squared_error</em>, which is just the negative of the <em>mean_squared_error</em>. Minimizing mean_squared_error is maximizing <em>neg_mean_squared_error</em>, so we are good to go!</p>
+<p>All this translates to the following code:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>scores <span class="op">=</span> cross_val_score(tree_reg, weather_features, precipitation_targets,</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                             scoring<span class="op">=</span><span class="st">"neg_mean_squared_error"</span>, cv<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(scores)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Mean is </span><span class="sc">{</span>scores<span class="sc">.</span>mean()<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Standard deviation is </span><span class="sc">{</span>scores<span class="sc">.</span>std()<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Output:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>[<span class="op">-</span><span class="fl">4.21900535</span> <span class="op">-</span><span class="fl">3.27126449</span> <span class="op">-</span><span class="fl">3.13457551</span> <span class="op">-</span><span class="fl">3.14451502</span> <span class="op">-</span><span class="fl">3.38513429</span>]</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>Mean <span class="kw">is</span> <span class="op">-</span><span class="fl">3.430898932367797</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>Standard deviation <span class="kw">is</span> <span class="fl">0.40460168118423745</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>As you can see, the cross validation scores are negative. So the bigger they are, the better.</p>
+</section>
+<section id="comparison-to-earlier-validation-error-estimate" class="level2">
+<h2 class="anchored" data-anchor-id="comparison-to-earlier-validation-error-estimate">Comparison to earlier validation-error estimate</h2>
+<p>The mean squared error on our test-data set from <a href="../posts/2020-09-01-decision-tree-regressor.html">earlier</a> was 3.13. (We reported the root-mean square error to be around 1.77). We see that the average cross validation score is -3.43, or the average mean-square error of test-datasets across the <span class="math inline">\(k=5\)</span> folds is 3.43.</p>
+<p>The average of the cross-validation score gives a much better estimate of the error, as it uses every element in the dataset as a test-input (exactly once in some fold).</p>
+</section>
+<section id="predictions" class="level2">
+<h2 class="anchored" data-anchor-id="predictions">Predictions</h2>
+<p>The syntax for cross validation predictions over <span class="math inline">\(k\)</span> folds is</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>cross_val_predict(model, features, labels, cv<span class="op">=</span>k)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Note that every input datapoint is part of exactly one test-data split in exactly one fold. <em>cross_val_predict</em> returns this prediction for every input datapoint for when it was part of the test-dataset.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>predictions <span class="op">=</span> cross_val_predict(tree_reg, weather_features, precipitation_labels, cv<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(predictions.shape)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(predictions[:<span class="dv">10</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Output:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>(<span class="dv">1866</span>,)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>array([<span class="fl">16.495</span>     , <span class="fl">17.51790123</span>, <span class="fl">16.495</span>     , <span class="fl">17.51790123</span>, <span class="fl">17.51790123</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>        <span class="fl">17.51790123</span>, <span class="fl">17.51790123</span>, <span class="fl">16.495</span>     , <span class="fl">16.495</span>     , <span class="fl">17.51790123</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 
-</section>
 </section>
 
 
 <div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
 
 <ol>
-<li id="fn1"><p>For simplicity in writing down the convolution equations, let us assume <span class="math inline">\(m=2m'+1\)</span> is odd.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>A slight technicality that you’ll see later on in the post - the cross validation scores are thought of as the values taken on by the utility function. That is, the bigger the scores, the better. So we try to maximize cross validation scores, or at least scikit-learn does. However, errors have to be minimized. So usually, cross validation scores are taken to be the negative of the errors.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-</section><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{bhaskhar2023,
+</section><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{bhaskhar2020,
   author = {Bhaskhar, Nivedita},
-  title = {1D Convolution},
-  date = {2023-07-26},
-  url = {https://nivbhaskhar.github.io/blog/posts/2023-07-26-1d-convolution.html},
+  title = {K-Fold Cross-Validation},
+  date = {2020-09-03},
+  url = {https://nivbhaskhar.github.io/blog/posts/2020-09-03-k-fold-cross-validation.html},
   langid = {en}
 }
-</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-bhaskhar2023" class="csl-entry quarto-appendix-citeas" role="listitem">
-Bhaskhar, Nivedita. 2023. <span>“1D Convolution.”</span> July 26. <a href="https://nivbhaskhar.github.io/blog/posts/2023-07-26-1d-convolution.html">https://nivbhaskhar.github.io/blog/posts/2023-07-26-1d-convolution.html</a>.
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-bhaskhar2020" class="csl-entry quarto-appendix-citeas" role="listitem">
+Bhaskhar, Nivedita. 2020. <span>“K-Fold Cross-Validation.”</span>
+September 3. <a href="https://nivbhaskhar.github.io/blog/posts/2020-09-03-k-fold-cross-validation.html">https://nivbhaskhar.github.io/blog/posts/2020-09-03-k-fold-cross-validation.html</a>.
 </div></div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {

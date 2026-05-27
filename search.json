@@ -84,81 +84,242 @@
     "text": "Footnotes\n\n\n\\(x_0\\) lies in the interior of \\(X\\) if you can fit an open ball in \\(\\mathbb{R}^n\\) around \\(x_0\\) so that the ball also lies inside \\(X\\).↩︎\nIntuitively, the gradient \\(\\nabla f(x_0)\\) points in the direction of steepest ascent of \\(f\\) at \\(x_0\\). So any \\(x\\) which makes a negative inner product with it is a direction of descent↩︎\nIntuitively, since \\(g_i(x_0)=0\\), moving in a direction where \\(\\langle x, \\nabla g_i(x_0)\\rangle &lt; 0\\) ensures the constraint function decreases, keeping it \\(\\leq 0\\). If \\(g_j(x_0)\\) is already \\(&lt;0\\), moving a bit will not violate the constraint.↩︎\nIntuitively, the theorem tells us there is no direction in which we can move from \\(x_0\\) which will keep the constraints but minimize \\(f\\) further↩︎\nIf the hyperplane looks like \\(\\{x \\mid \\langle x, v \\rangle = c\\}\\) for some \\(c\\), and \\(F'\\) lies on one side of it, so say \\(\\langle f', v\\rangle \\geq c\\) for all \\(f'\\in F'\\). You can positively scale \\(f'\\) to make it break this inequality unless \\(c\\) is \\(0\\)↩︎\nSay \\(F'\\) also lies below the hyperplane \\(H\\) defined by \\(v\\) and \\(v = a \\nabla f(x_0) + h\\) where \\(h\\in H\\). Since we want \\(\\langle f', v \\rangle &lt; 0\\) for \\(f'\\in F\\), using \\(\\langle f', \\nabla f(x_0) \\rangle  &lt; 0\\) and \\(\\langle f', h \\rangle =0\\), we have \\(a &gt;0\\). Now construct this problematic vector \\(-\\epsilon \\nabla f(x_0) + h\\) in \\(F'\\). It needs to lie below the hyperplane perpendicular to \\(v\\) for any \\(\\epsilon &gt; 0\\). We can make \\(\\epsilon\\) tiny and nudge it above the hyperplane defined by \\(v\\)↩︎\ni.e. every coordinate is \\(&lt;0\\)↩︎\n\\(\\{Ax\\mid x\\in\\mathbb{R}^n\\}\\subset\\mathbb{R}^{|I|+1}\\)↩︎\nRemember \\(K\\) has all the vectors \\(k&lt;\\bar{0}\\)↩︎\nThe \\(\\geq\\) is because the Image of \\(A\\) can cease to be open↩︎\nsimply because \\(p\\) is not the \\(\\bar{0}\\) vector↩︎\nThe reason why it is called dual feasibility will be a dual story for another time↩︎"
   },
   {
-    "objectID": "posts/2020-08-03-SVD-details.html",
-    "href": "posts/2020-08-03-SVD-details.html",
-    "title": "SVD - The details",
+    "objectID": "posts/2020-09-13-least-squares.html",
+    "href": "posts/2020-09-13-least-squares.html",
+    "title": "Linear regression and the normal equation",
     "section": "",
-    "text": "We’ll assume you that you have read this introductory post on singular value decomposition a.k.a SVD."
+    "text": "Basic linear algebra, derivatives, orthogonal projections and a will to think abstractly!"
   },
   {
-    "objectID": "posts/2020-08-03-SVD-details.html#prerequisites",
-    "href": "posts/2020-08-03-SVD-details.html#prerequisites",
-    "title": "SVD - The details",
+    "objectID": "posts/2020-09-13-least-squares.html#prerequisites",
+    "href": "posts/2020-09-13-least-squares.html#prerequisites",
+    "title": "Linear regression and the normal equation",
     "section": "",
-    "text": "We’ll assume you that you have read this introductory post on singular value decomposition a.k.a SVD."
+    "text": "Basic linear algebra, derivatives, orthogonal projections and a will to think abstractly!"
   },
   {
-    "objectID": "posts/2020-08-03-SVD-details.html#the-theorem",
-    "href": "posts/2020-08-03-SVD-details.html#the-theorem",
-    "title": "SVD - The details",
-    "section": "The theorem",
-    "text": "The theorem\nIn this post, we’ll get our hands dirty and examine how and why SVD works. But let’s first recall what it is.\n\n\n\n\n\n\nNoteTheorem : SVD\n\n\n\nLet \\(A\\) be an \\(n \\times m\\) real matrix. Then \\(A = U\\Sigma V^T\\) where:\n\n\\(U\\) is an \\(n \\times n\\) orthogonal1 matrix\n\\(V\\) is an \\(m \\times m\\) orthogonal matrix\n\\(\\Sigma\\) is an \\(n\\times m\\) matrix where every entry except the first \\(r\\) diagonal entries is zero where \\(r\\) is the rank of \\(A\\)\nFurther the non-zero diagonal entries of \\(\\Sigma\\) are precisely the so-called singular values2 of \\(A\\) arranged in descending order.\n\n\n\nWe saw in the introductory post that the columns of \\(V\\) (let’s call them \\(v_1, v_2, \\ldots v_m\\)) are mutually perpendicular unit vectors which form a basis of \\(\\mathbb{R}^m\\) (a.k.a an orthonormal basis of \\(\\mathbb{R}^m\\)).\nFurther \\(\\{A(v_i)\\}\\) still remain perpendicular to each other in \\(\\mathbb{R}^n\\). The length of the vectors \\(\\{A(v_i)\\}\\) are encoded by the diagonal entries of \\(\\Sigma\\). The unit vectors along \\(\\{A(v_i)\\}\\) can be completed to an orthonormal basis of \\(\\mathbb{R}^n\\), which are precisely given by the columns of \\(U\\)."
+    "objectID": "posts/2020-09-13-least-squares.html#what-is-linear-regression",
+    "href": "posts/2020-09-13-least-squares.html#what-is-linear-regression",
+    "title": "Linear regression and the normal equation",
+    "section": "What is linear regression ?",
+    "text": "What is linear regression ?\nIn an experiment, we observe the values of some features or attributes. We would like to predict the value of a target variable based on the observed features. Linear regression tries to guess a linear relationship between the features and the target.\nTo continue with our weather example from before, say we have access to the average daily temperature \\(T\\), the wind-gut \\(W\\) , and the total minutes of sunshine \\(S\\) per day. These will be our features. We would like to predict the amount of precipitation \\(P\\) each day. This will be our target variable.\nWe are trying to find a linear relationship between \\(P, T, W, S\\). That is, we’d like to find \\(\\theta_0, \\theta_1, \\theta_2, \\theta_3\\) so that\n\\[\nP = \\theta_0 + \\theta_1 T + \\theta_2 W + \\theta_3 S\n\\]"
   },
   {
-    "objectID": "posts/2020-08-03-SVD-details.html#a-blackbox",
-    "href": "posts/2020-08-03-SVD-details.html#a-blackbox",
-    "title": "SVD - The details",
-    "section": "A blackbox",
-    "text": "A blackbox\nBefore jumping to the proof, let’s reveal our secret weapon, the spectral theorem. This theorem, applied to real matrices states the following:\n\n\n\n\n\n\nNoteSpectral theorem\n\n\n\nLet \\(B\\) be an \\(m\\times m\\) real and symmetric matrix. Then there exists an orthonormal eigenbasis for \\(B\\).\n\n\nWait, what ? Let’s unravel that sentence again and take the result in, bit by bit.\nYou give me any real square matrix \\(B\\) such that it is symmetric, i.e. \\(B_{i,j} = B_{j,i}\\). We know that \\(B\\) is really representing a linear map \\(Q: \\mathbb{R}^m \\to \\mathbb{R}^m\\) with respect to the standard basis. But the images of the standard basis under \\(Q\\) of course might get distorted. So the images might no longer remain perpendicular to each other, much less continue being the standard basis.\nThe spectral theorem assures us however that if \\(B\\) is symmetric, there is a much nicer basis available, an orthonormal basis of \\(\\mathbb{R}^m\\) in fact, which \\(Q\\) simply scales to different lengths!\nMore precisely, we can find unit mutually perpendicular vectors \\(w_1, w_2, \\ldots, w_m\\) so that \\(Q(w_i) = \\lambda_i w_i\\) for some scalars \\(\\lambda_i\\). Of course these scalars are by definition the eigen-values of \\(Q\\), or equivalently of \\(B\\)."
+    "objectID": "posts/2020-09-13-least-squares.html#linear-regression-abstracted-out",
+    "href": "posts/2020-09-13-least-squares.html#linear-regression-abstracted-out",
+    "title": "Linear regression and the normal equation",
+    "section": "Linear regression abstracted out",
+    "text": "Linear regression abstracted out\nLet’s say we have weather data over \\(n\\) days. For day \\(i\\), we collect that day’s feature values \\(T, W, S\\) into a row vector \\(x_i = (x_i^1, x_i^2, x_i^3)\\). That day’s precipitation value becomes the target value \\(y_i\\).\nAbstracting out this set up, we can assume we are given data points \\(x_1, x_2, \\ldots x_n\\) where each data point \\(x_i\\) has \\(k\\) features and has target \\(y_i\\). That is, each data point \\(x_i\\) looks like the row vector \\(x_i = (x_i^1, x_i^2, \\ldots, x_i^k)\\) and the target variable in which we are interested in has value \\(y_i\\) for the data point \\(x_i\\).\nLinear regression tries to find a linear relationship between the data points \\(x_i\\) and their targets \\(y_i\\). That is, we want to find real numbers \\(\\theta_0, \\theta_1, \\ldots , \\theta_k\\) so that for each \\(i\\), we have\n\\[\n\\theta_0 + \\theta_1 x_i^1+ \\theta_2 x_i^2 + \\ldots + \\theta_k x_i^k = y_i\n\\]\n\nIntroducing dummies\nThe \\(\\theta_0\\) stands out without a binding feature \\(x_i^0\\), so to make it uniform, we introduce a dummy feature \\(x_i^0 = 1\\) for each datapoint \\(x_i\\). That is, each data point \\(x_i\\) now looks like the row vector\n\\[\nx_i = (x_i^0=1, x_i^1, x_i^2, \\ldots, x_i^k)\n\\]\nSo we want to find real numbers \\(\\theta_0, \\theta_1, \\ldots , \\theta_k\\) so that for each \\(i\\), we have\n\\[\n\\theta_0 x_i^0 + \\theta_1 x_i^1+ \\theta_2 x_i^2 + \\ldots + \\theta_k x_i^k = y_i\n\\]"
   },
   {
-    "objectID": "posts/2020-08-03-SVD-details.html#a-running-example-and-a-proof",
-    "href": "posts/2020-08-03-SVD-details.html#a-running-example-and-a-proof",
-    "title": "SVD - The details",
-    "section": "A running example and a proof",
-    "text": "A running example and a proof\n\nIf only I had the theorems! Then I should find the proofs easily enough - Riemann”\n\nRemember \\(A\\), our very down to earth \\(2 \\times 2\\) matrix from last time\n\\[\nA  =  \\left( \\begin{array}{cc}\n      6 & 2  \\\\\n      -7 & 6\n    \\end{array} \\right)\n\\]\nNow unfortunately, we cannot use the spectral theorem directly on a general \\(A\\) because it is not symmetric. So instead, we first manufacture a symmetric matrix \\(B\\) from \\(A\\) by letting \\(B = A^TA\\). In our running example,\n\\[\nB  = \\left( \\begin{array}{cc}\n      6 & -7 \\\\\n      2 & 6\n    \\end{array} \\right)   \\left( \\begin{array}{cc}\n      6 & 2  \\\\\n      -7 & 6\n    \\end{array} \\right) = \\left( \\begin{array}{cc}\n       85 & -30  \\\\\n      -30 & 40\n    \\end{array} \\right)\n\\]\nSpectral theorem applied to \\(B\\) guarantees that there are two perpendicular unit vectors which are simply scaled by the action of \\(B\\). We’ll not get into how you can find these vectors but wave the spectral theorem wand and give them to you.\n\\[\n\\begin{align*}\nv_1 = \\left( \\begin{array}{c}\n      \\frac{-2}{\\sqrt{5}} \\\\\n      \\frac{1}{\\sqrt{5}}\n      \\end{array} \\right) \\  & \\mathrm{ and} \\hspace{2mm} Bv_1 = 100 v_1 \\\\\nv_2 = \\left( \\begin{array}{c}\n      \\frac{1}{\\sqrt{5}} \\\\\n      \\frac{2}{\\sqrt{5}}\n      \\end{array} \\right) \\ & \\mathrm{ and} \\hspace{2mm}  Bv_2 = 25 v_2\n\\end{align*}\n\\]\nHere’s a visualization of the action of \\(B\\) on the standard basis and on \\(V = (v_1,v_2)\\). Both the bases’ lengths are scaled up a bit for clarity in the picture\n\n\n\nAction of symmetric B\n\n\nSo we have found an orthonormal basis \\(v_1, v_2\\) of \\(\\mathbb{R}^2\\), which is very nice for \\(B\\). How does \\(A\\) act on it ?\n\\[\n\\begin{align*}\nAv_1 = \\left( \\begin{array}{c}\n      \\frac{-10}{\\sqrt{5}} \\\\\n      \\frac{20}{\\sqrt{5}}\n      \\end{array} \\right) \\  & \\mathrm{ and} \\hspace{2mm} \\| Av_1 \\| = 10\\\\\nAv_2 = \\left( \\begin{array}{c}\n      \\frac{10}{\\sqrt{5}} \\\\\n      \\frac{5}{\\sqrt{5}}\n      \\end{array} \\right) \\ & \\mathrm{ and} \\hspace{2mm}  \\|Av_2\\| = 5\\\\\n\\end{align*}\n\\]\nWe see that \\(Av_1\\) is perpendicular to \\(Av_2\\) ! Further the length of \\(Av_1, Av_2\\) are \\(\\sqrt{100} = 10, \\sqrt{25} = 5\\), which are precisely the singular values of \\(A\\) by definition.\nThis is not a coincidence. For starters, we know \\(v_1\\) perpendicular to \\(v_2\\), i.e. \\(v_1^Tv_2 = 0\\). Let’s see why \\(Av_1\\) is perpendicular to \\(Av_2\\)\n\\[\n\\begin{align*}\nAv_1 \\cdot Av_2 &= (Av_1)^T Av_2 = v_1^T A^T A v_2\\\\\n& = v_1^T Bv_2 = v_1^T 25v_2\\\\\n& = 25 v_1^Tv_2 = 0\\\\\n\\end{align*}\n\\]\nThus \\(Av_1, Av_2\\) are perpendicular to each other. As an exercise, using the fact that length of a vector \\(\\|x \\|= x^T x\\), try computing the lengths of \\(Av_i\\).\nMore generally, the same reasoning tells us the following:\n\n\n\n\n\n\nIf \\(v_1, v_2\\) are perpendicular eigenvectors of \\(B=A^TA\\) for eigenvalues \\(\\lambda_1, \\lambda_2\\), then \\(Av_1, Av_2\\) are still perpendicular and have lengths \\(\\sqrt{\\lambda_1}, \\sqrt{\\lambda_2}\\).\n\n\n\nThus, the orthonormal eigenbasis of \\(B=A^TA\\) given by the spectral theorem is exactly \\(V\\) in the SVD of \\(A = U\\Sigma V^T\\) !"
+    "objectID": "posts/2020-09-13-least-squares.html#a-matrix-equation",
+    "href": "posts/2020-09-13-least-squares.html#a-matrix-equation",
+    "title": "Linear regression and the normal equation",
+    "section": "A matrix equation",
+    "text": "A matrix equation\nLet’s bundle up \\(\\theta_0, \\theta_1, \\theta_2, \\ldots, \\theta_k\\) into a column vector \\(\\theta\\), \\(y_1, y_2, \\ldots, y_n\\) into a column vector \\(Y\\) and the row vectors \\(x_1, x_2, \\ldots , x_n\\) into a \\(n\\times (k+1)\\) matrix \\(X\\)\n\\[\nX = \\left(\\begin{array}{ccccc} x_1^0 & x_1^1 & x_1^2 & \\ldots & x_1^k \\\\ x_2^0 & x_2^1 & x_2^2 & \\ldots & x_2^k \\\\ . & . & . & \\ldots & .  \\\\ x_n^0 & x_n^1 & x_n^2 & \\ldots & x_n^k \\end{array}\\right)\\ ; \\ \\theta = \\left(\\begin{array}{c} \\theta_0 \\\\ \\theta_1 \\\\ . \\\\ . \\\\ \\theta_k \\end{array}\\right) \\ ; \\ Y = \\left(\\begin{array}{c} y_1 \\\\ y_2 \\\\. \\\\ y_n \\end{array}\\right)\n\\]\nThen solving the \\(n\\) linear regression equations above simultaneously is the same as solving the matrix equation \\(X\\theta = Y\\)"
   },
   {
-    "objectID": "posts/2020-08-03-SVD-details.html#summary",
-    "href": "posts/2020-08-03-SVD-details.html#summary",
-    "title": "SVD - The details",
+    "objectID": "posts/2020-09-13-least-squares.html#an-approximate-solution-using-least-squares",
+    "href": "posts/2020-09-13-least-squares.html#an-approximate-solution-using-least-squares",
+    "title": "Linear regression and the normal equation",
+    "section": "An approximate solution using least-squares",
+    "text": "An approximate solution using least-squares\nUnfortunately, you might not always be able to solve this system of linear equations on the nose. Then we aim for an approximate solution which is the best among other approximate solutions in the following sense:\nLet \\(X\\theta = \\hat{Y}_{\\theta}\\). That is, our predicted values for the target variable is 1 \\(\\hat{Y}_{\\theta}\\). We would like our predictions to be as close to the real truth as possible. So we want \\(\\hat{Y}_{\\theta}\\) to be as close to \\(Y\\) as possible. That is, we want the norm \\(\\|Y-\\hat{Y}_{\\theta}\\|\\) to be minimal.\nSince this is the same as demanding minimality of \\(\\|Y-\\hat{Y}_{\\theta}\\|^2\\), we want to minimize the following sum of squares\n\\[\n(y_1-\\hat{y}_1)^2 + (y_2-\\hat{y}_2)^2 + \\ldots (y_n - \\hat{y}_n^2)\n\\]\nThat is, we want a least-squares solution of the matrix equation \\(X\\theta = Y\\)"
+  },
+  {
+    "objectID": "posts/2020-09-13-least-squares.html#an-analytic-approach",
+    "href": "posts/2020-09-13-least-squares.html#an-analytic-approach",
+    "title": "Linear regression and the normal equation",
+    "section": "An analytic approach",
+    "text": "An analytic approach\nIf you are uncomfortable with multivariable derivatives, skip ahead to the geometric approach!\n\\[\n\\begin{align*} \\|Y-\\hat{Y}_{\\theta}\\|^2 & = (Y-\\hat{Y}_{\\theta})^T (Y-\\hat{Y}_{\\theta}) \\\\ & = (Y-X\\theta)^T(Y-X\\theta)\\\\ & = (\\theta^TX^T-Y^T)(Y-X\\theta) \\\\ & = \\theta^TX^TY - Y^TY -\\theta^TX^TX\\theta + Y^TX\\theta \\\\ & = \\theta^TX^TY - Y^TY -\\theta^TX^TX\\theta + (\\theta^TX^TY)^T\\end{align*}\n\\]\nSince \\(\\theta^TX^TY\\) is a2 \\(1\\times 1\\) matrix, \\(\\theta^TX^TY = (\\theta^TX^TY)^T\\). Thus\n\\[\n\\|Y-\\hat{Y}_{\\theta}\\|^2 = - Y^TY -\\theta^TX^TX\\theta + 2\\theta^TX^TY\n\\].\nSince \\(Y^TY\\) doesn’t depend on \\(\\theta\\), we may as well minimize the following function\n\\[\nf(\\theta) = 2\\theta^TX^TY -\\theta^TX^TX\\theta\n\\]\nTaking gradient with respect to \\(\\theta\\), we get \\(\\nabla_{\\theta}f = 2X^TY - 2X^TX\\theta\\). Remember we want the gradient to be 0 since we are trying to find extrema of \\(f(\\theta)\\). So we want \\(2X^TY - 2X^TX\\theta = 0\\).\nThat is, we want \\(\\theta\\) so that \\(X^TX\\theta = X^TY\\)."
+  },
+  {
+    "objectID": "posts/2020-09-13-least-squares.html#normal-equation",
+    "href": "posts/2020-09-13-least-squares.html#normal-equation",
+    "title": "Linear regression and the normal equation",
+    "section": "Normal equation",
+    "text": "Normal equation\nThe matrix equation \\(X^TX\\theta=X^TY\\) is called the normal equation of \\(X\\theta=Y\\). And from our discussion above, it should be more or less clear that a solution \\(\\theta\\) of the normal equation gives a least-squares solution of \\(X\\theta=Y\\).\nThis is good, but how do we know a solution of the normal equation actually exists ? Also how do we check that the extrema we get are actually minima ? These can of course be shown with some further computation. Instead, we present a geometric approach which avoids derivatives altogether and uses some geometric insight to derive the normal equation and show the existence of a least-squares solution!"
+  },
+  {
+    "objectID": "posts/2020-09-13-least-squares.html#a-geometric-approach",
+    "href": "posts/2020-09-13-least-squares.html#a-geometric-approach",
+    "title": "Linear regression and the normal equation",
+    "section": "A geometric approach",
+    "text": "A geometric approach\nLet’s go back to the equation \\(X\\theta = Y\\). Since we can’t always solve this equation on the nose, we are content with an approximate solution \\(\\theta\\) so that \\(X\\theta \\simeq Y\\). If we define \\(\\hat{Y}_\\theta = X\\theta\\), then out of all possible approximate solutions \\(\\theta\\), we want to pick the one so that \\(\\| Y-\\hat{Y}_{\\theta}\\|\\) is minimum.\nLet’s consider the space of ALL possible values for \\(\\theta\\). This is just \\(\\mathbb{R}^{k+1}\\), i.e \\(\\theta\\) can be any \\(k+1\\) column vector. Let’s now look at the set \\(V\\) which consists of all possible predictions \\(\\hat{Y}_{\\theta}\\). That is,\n\\[\nV = \\{ X\\theta \\mid \\theta \\in \\mathbb{R}^{k+1}\\}\n\\]\nLet’s view \\(X\\) as a linear map \\(X: \\mathbb{R}^{k+1}\\to \\mathbb{R}^n\\), that is \\(X\\) is a linear map from the space of possible \\(\\theta\\)s to the space of all possible values of the target variable.\nThen \\(V\\) is just the image of \\(X\\). In particular, it is a subspace of \\(\\mathbb{R}^n\\). To reiterate, \\(\\mathbb{R}^n\\) is the space of all possible values of the target variable, \\(Y\\) is the particular value of the target variable that we are trying to hit and \\(V\\) is the subspace of all our possible predictions.\nNow if \\(Y\\) lies in \\(V\\), we can hit it on the nose, that is we can find a solution \\(\\theta\\) that actually solves \\(X\\theta=Y\\). If we can’t, we are trying to find the vector \\(\\hat{Y}_{\\theta}\\) in \\(V\\) which is closest3 to \\(Y\\).\n\n\n\nA geometric approach to least squares"
+  },
+  {
+    "objectID": "posts/2020-09-13-least-squares.html#finding-the-vector-in-a-subspace-closest-to-a-given-target",
+    "href": "posts/2020-09-13-least-squares.html#finding-the-vector-in-a-subspace-closest-to-a-given-target",
+    "title": "Linear regression and the normal equation",
+    "section": "Finding the vector in a subspace closest to a given target",
+    "text": "Finding the vector in a subspace closest to a given target\n\\(V\\) is a subspace of \\(\\mathbb{R}^n\\) and \\(Y\\) is a given vector in \\(\\mathbb{R}^n\\). We want to find \\(\\hat{Y}_{\\theta}\\in V\\) which is closest to \\(Y\\). How do we do that ? Let’s visualize these vectors and also the vector \\(Y-\\hat{Y}_{\\theta}\\). Remember we are trying to make \\(\\|Y-\\hat{Y}_{\\theta}\\|\\) as small as possible\n\n\n\nProjection of \\(Y\\)\n\n\nSince the shortest distance between a point and a subspace is the perpendicular from the point to the subspace, we aim to make \\(Y-\\hat{Y}_{\\theta}\\) to be perpendicular to \\(V\\) ! Note that this is the same thing as saying that the closest prediction \\(\\hat{Y}_{\\theta}\\) is simply the orthogonal projection of \\(Y\\) to \\(V\\)."
+  },
+  {
+    "objectID": "posts/2020-09-13-least-squares.html#images-and-kernels-and-transposes",
+    "href": "posts/2020-09-13-least-squares.html#images-and-kernels-and-transposes",
+    "title": "Linear regression and the normal equation",
+    "section": "Images and kernels and transposes",
+    "text": "Images and kernels and transposes\nNow there is a really nice relation4 between images of a linear map \\(X\\) and the kernel of its transpose \\(X^T\\). Vectors perpendicular to \\(\\mathrm{Image}(X)\\) are actually in the kernel of \\(X^T\\) and vice-versa. In symbols, this is written as\n\\[\n\\mathrm{Image}(X)^{\\perp} = \\mathrm{Kernel}(X^T)\n\\]\nNow we want \\(Y-\\hat{Y}_{\\theta}\\) to be perpendicular to \\(V = Image(X)\\). So we want \\(Y-\\hat{Y}_{\\theta}\\) to be in the kernel of \\(X^T\\). That is, we want\n\\[\n\\begin{align*} & \\phantom{\\implies} X^T(Y-\\hat{Y}_{\\theta}) = 0 \\\\ & \\implies X^T(Y-X\\theta) = 0 \\\\ &\\implies X^TX\\theta = X^TY \\end{align*}\n\\]\nVoila! We want a solution \\(\\theta\\) to the normal equation \\(X^TX\\theta = X^TY\\)"
+  },
+  {
+    "objectID": "posts/2020-09-13-least-squares.html#solutions-of-the-normal-equation",
+    "href": "posts/2020-09-13-least-squares.html#solutions-of-the-normal-equation",
+    "title": "Linear regression and the normal equation",
+    "section": "Solutions of the normal equation",
+    "text": "Solutions of the normal equation\nThe geometric approach immediately tells you why a solution \\(\\theta\\) exists for \\(X^TX\\theta = X^TY\\). As we have already figured out, \\(\\theta\\) is a solution precisely when \\(X\\theta = \\hat{Y}_{\\theta}\\) is the orthogonal projection of \\(Y\\) onto \\(V = \\mathrm{Image}(X)\\).\nSo backtracking, take \\(Y\\), project it to \\(V = \\mathrm{Image}(X)\\). The projection will have to look like \\(X\\theta\\) for some \\(\\theta\\) because the projection is in the image subspace \\(V\\). That \\(\\theta\\) is a solution of the normal equation and hence a least-squares solution to the equation \\(X\\theta=Y\\) we are after!"
+  },
+  {
+    "objectID": "posts/2020-09-13-least-squares.html#uniqueness-of-the-least-squares-solution",
+    "href": "posts/2020-09-13-least-squares.html#uniqueness-of-the-least-squares-solution",
+    "title": "Linear regression and the normal equation",
+    "section": "Uniqueness of the least-squares solution",
+    "text": "Uniqueness of the least-squares solution\nThere is one point that we have glossed over, namely, is the \\(\\theta\\) we are after unique ? Using our geometric approach, the projection of \\(Y\\) onto \\(V\\) (which is \\(\\hat{Y}_{\\theta}\\)) is unique. But there could be several \\(\\theta\\) such that \\(X\\theta = \\hat{Y}_{\\theta}\\)\nBut further suppose, \\(X\\) is an injective map, i.e. it has zero kernel, then the \\(\\theta\\) we get is unique. And actually, it turns out5 that if \\(X\\) is injective, so is \\(X^TX\\). Since \\(X^TX\\) is a square matrix, this means \\(X^TX\\) is invertible. So we can actually solve for \\(\\theta\\) as follows:\n\\[\nX^TX\\theta = X^TY \\implies \\theta = (X^TX)^{-1}X^TY\n\\]"
+  },
+  {
+    "objectID": "posts/2020-09-13-least-squares.html#summary",
+    "href": "posts/2020-09-13-least-squares.html#summary",
+    "title": "Linear regression and the normal equation",
     "section": "Summary",
-    "text": "Summary\nGiven an \\(n\\times m\\) matrix A, here are the steps to find the SVD of \\(A\\):\n\nForm the \\(m \\times m\\) symmetric matrix \\(B= A^TA\\)\nThe spectral theorem gives us an orthogonal eigen-basis \\(v_1,v_2, \\ldots, v_m\\) for \\(B\\) of \\(\\mathbb{R}^m\\) with eigenvalues \\(\\lambda_1 \\geq \\lambda_2 \\geq \\ldots \\lambda_m\\)\n\\(V\\) is just the \\(m\\times m\\) matrix \\(\\left(\\begin{array}{cccc}v_1 & v_2 & \\ldots & v_m \\end{array}\\right)\\)\n\\(\\Sigma\\) is the \\(n\\times m\\) matrix where all non-diagonal entries are 0 and \\(\\Sigma_{i,i} = \\sqrt{\\lambda_i}\\)\n\\(AV\\) is an \\(n\\times m\\) matrix made of mutually perpendicular columns\nScaling the columns of \\(AV\\) to unit vectors, complete it to an orthonormal basis of \\(\\mathbb{R^n}\\). This orthonormal basis gives you the \\(n\\times n\\) matrix \\(U\\).\nFinally,\n\n\\[A = U \\Sigma V^T \\]\nFor our running example, we see that this corresponds to\n\\[ \\left( \\begin{array}{cc}\n      6 & 2  \\\\\n      -7 & 6\n    \\end{array} \\right)=\n    \\left( \\begin{array}{cc}\n      \\frac{-1}{\\sqrt{5}}  & \\frac{2}{\\sqrt{5}} \\\\\n       \\frac{2}{\\sqrt{5}} & \\frac{1}{\\sqrt{5}} \\\\\n    \\end{array} \\right)\n  \\left( \\begin{array}{cc}\n      10  &  0 \\\\\n       0 & 5  \\\\\n    \\end{array} \\right)\n  \\left( \\begin{array}{cc}\n\\frac{-2}{\\sqrt{5}} & \\frac{1}{\\sqrt{5}} \\\\\n\\frac{1}{\\sqrt{5}} &  \\frac{2}{\\sqrt{5}} \\\\\n\\end{array}\\right)\n\\]"
+    "text": "Summary\n\nThe least-squares solutions \\(\\theta\\) of the equation \\(X\\theta = Y\\) are the same as the solutions of the normal equation \\(X^TX\\theta = X^TY\\).\nThe normal equation always has at least one solution. And further if \\(\\theta\\) is a solution, then \\(X\\theta\\), the closest prediction, is just the orthogonal projection of \\(Y\\) to \\(\\mathrm{Image}(X)\\).\nThere could be multiple solutions to the normal equation and hence there could be multiple least-squares solutions. However if \\(X\\) is injective (i.e. has zero kernel), then the solution is unique and given by \\(\\theta = (X^TX)^{-1}X^TY\\)"
   },
   {
-    "objectID": "posts/2020-08-03-SVD-details.html#footnotes",
-    "href": "posts/2020-08-03-SVD-details.html#footnotes",
-    "title": "SVD - The details",
+    "objectID": "posts/2020-09-13-least-squares.html#footnotes",
+    "href": "posts/2020-09-13-least-squares.html#footnotes",
+    "title": "Linear regression and the normal equation",
     "section": "Footnotes",
-    "text": "Footnotes\n\n\nA square matrix \\(X\\) is orthogonal iff \\(X^TX = XX^T\\) is the identity matrix.↩︎\nThe singular values of an \\(n\\times m\\) matrix A are the square roots of the eigenvalues of \\(A^TA\\) listed with their algebraic multiplicities.↩︎"
+    "text": "Footnotes\n\n\nLet \\(\\hat{Y}_{\\theta} = \\left(\\begin{array}{c} \\hat{y_1} \\\\ \\hat{y_2} \\\\. \\\\ \\hat{y_n} \\end{array}\\right)\\)↩︎\n\\(\\theta^TX^TY\\) is an \\((1\\times (k+1))((k+1)\\times n)(n\\times 1) = 1\\times 1\\) matrix↩︎\nDistance between \\(\\hat{Y}_{\\theta}\\) and \\(Y\\) is \\(\\|Y-\\hat{Y}_{\\theta}\\|\\)↩︎\nConsult your favorite Linear Algebra textbook for this fact↩︎\nWe can actually show \\(\\mathrm{Kernel}(X)\\) is the same as \\(\\mathrm{Kernel}(X^TX)\\). A little thought should convince you that \\(\\mathrm{Kernel}(X)\\subseteq \\mathrm{Kernel}(X^TX)\\).  For the other way around, take an arbitrary element \\(a\\in \\mathrm{Kernel}(X^TX)\\). Thus, \\(X^TXa = 0\\). This would mean \\(Xa\\in \\mathrm{Kernel}(X^T) = \\mathrm{Image}(X)^{\\perp}\\) by the fact stated in the post. Thus \\(Xa\\) is perpendicular to \\(\\mathrm{Image}(X)\\). But \\(Xa\\) is in \\(\\mathrm{Image}(X)\\). How can a vector be in a subspace and be perpendicular to the subspace ? Only if the said vector is 0, is this possible. Thus \\(Xa=0\\) and hence \\(a\\in \\mathrm{Kernel}(X)\\)↩︎"
   },
   {
-    "objectID": "posts/2020-07-20-GifsInPython.html",
-    "href": "posts/2020-07-20-GifsInPython.html",
-    "title": "Making GIFs in Python",
+    "objectID": "posts/2020-09-01-decision-tree-regressor.html",
+    "href": "posts/2020-09-01-decision-tree-regressor.html",
+    "title": "Decision tree regressor",
     "section": "",
-    "text": "UnPuzzler in action\nIf you’re searching for a quick way to make GIFs out of a folder full of images, the Pillow library in Python does the trick for you!"
+    "text": "Let’s continue to work with our weather dataset from last time. Our goal is to analyze the weather data from the past and develop a model to predict the amount of rainfall, given the other weather parameters.\nWe are going to do this by building a decision tree regressor. This model sort of works like playing Twenty Questions. You build a tree of relevant queries about the accessible parameters of the dataset^[[Is the average temperature &gt; 30 C”. If yes, ask query1, if not ask query2…] so that, going down a path leads you to a reasonable prediction of the target.\nIn this post, we’ll concentrate on learning how to use scikit-learn’s implementation of the decision tree regressor and leave the actual theoretical analysis of how the algorithm works to a later date."
   },
   {
-    "objectID": "posts/2020-07-20-GifsInPython.html#main-parameters-of-image.save",
-    "href": "posts/2020-07-20-GifsInPython.html#main-parameters-of-image.save",
-    "title": "Making GIFs in Python",
-    "section": "Main parameters of Image.save()",
-    "text": "Main parameters of Image.save()\n\nloop : loop=0 makes the GIF loop infinitely. loop=n makes the GIF loop n times.\n\nduration : time in milliseconds each image will be displayed for"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Web 🪵",
+    "objectID": "posts/2020-09-01-decision-tree-regressor.html#will-it-rain-today",
+    "href": "posts/2020-09-01-decision-tree-regressor.html#will-it-rain-today",
+    "title": "Decision tree regressor",
     "section": "",
-    "text": "Looking for technical deep dives ? Check out my notes →\n\n\n\nHello there! My name is Nivedita Bhaskhar and I am a Machine Learning Engineer. In my past avatar as a pure mathematician, I worked with mathematical structures called algebraic groups. To know more, visit my main website.\nI like to write about mathematics, machine learning and quantum computing. I hope these pieces provide some appetizing food for thought!\nPlease do include a backlink and cite these articles if you use them in any form. Each post features a copyable BibTeX entry and standard format attribution at the end.\nQuestions, comments, error-spotting? Drop me an email. I’d love to hear from you!\n\n\n\n\n\n\n\n\n\n\nDate\n\n\n\nTitle\n\n\n\n\n\n\n\n\nAugust 26, 2020\n\n\nMean and Variance\n\n\n\n\n\n\nAugust 03, 2020\n\n\nSVD - The details\n\n\n\n\n\n\nJuly 27, 2020\n\n\nSVD - A geometric view point\n\n\n\n\n\n\nJuly 20, 2020\n\n\nMaking GIFs in Python\n\n\n\n\n\n\nNo matching items"
+    "text": "Let’s continue to work with our weather dataset from last time. Our goal is to analyze the weather data from the past and develop a model to predict the amount of rainfall, given the other weather parameters.\nWe are going to do this by building a decision tree regressor. This model sort of works like playing Twenty Questions. You build a tree of relevant queries about the accessible parameters of the dataset^[[Is the average temperature &gt; 30 C”. If yes, ask query1, if not ask query2…] so that, going down a path leads you to a reasonable prediction of the target.\nIn this post, we’ll concentrate on learning how to use scikit-learn’s implementation of the decision tree regressor and leave the actual theoretical analysis of how the algorithm works to a later date."
   },
   {
-    "objectID": "notes.html",
-    "href": "notes.html",
-    "title": "♫ Notes",
+    "objectID": "posts/2020-09-01-decision-tree-regressor.html#imports",
+    "href": "posts/2020-09-01-decision-tree-regressor.html#imports",
+    "title": "Decision tree regressor",
+    "section": "Imports",
+    "text": "Imports\nWe’ll be using the pandas library as well as scikit-learn. So you’ll have to preface your code with the following import statements.\nimport pandas as pd\nimport matplotlib.pyplot as plt\nplt.style.use('classic')\nimport numpy as np\n\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.tree import DecisionTreeRegressor\nfrom sklearn import tree\nfrom sklearn.tree import export_graphviz\nimport graphviz \nfrom sklearn.metrics import mean_squared_error"
+  },
+  {
+    "objectID": "posts/2020-09-01-decision-tree-regressor.html#the-dataset-from-before",
+    "href": "posts/2020-09-01-decision-tree-regressor.html#the-dataset-from-before",
+    "title": "Decision tree regressor",
+    "section": "The dataset from before",
+    "text": "The dataset from before\nRecall the daily_weather_df data frame we had created last time by wrangling some data from https://dev.meteostat.net/.\nimport pandas as pd\n\n# Make a list of column names \n# Since each row in the csv file ends with a comma, pandas thinks there is a col entry there.\n# So we create a column called dummy\ncol_names = ['date','avgtemp', 'mintemp', 'pp', 'snow', 'wind-dir', 'wind-speed',\n            'wind-gut', 'air-pressure', 'sunshine', 'dummy']\n\n\n# Reads the comma separated csv into a pandas dataframe\ndaily_weather_df =pd.read_csv('KCQT0.csv', sep=',',names=col_names, header = None)\n# Delete dummy col\ndel daily_weather_df['dummy']\n\n\nprint(\"Weather dataframe looks like:\")\nprint(daily_weather_df.head())\nOutput:\n\n    Weather dataframe looks like:\n             date  avgtemp  mintemp    pp  snow  wind-dir  wind-speed  wind-gut  \\\n    0  2000-01-01     10.4      7.8  13.9   NaN       NaN         NaN       2.0   \n    1  2000-01-02     12.0      7.2  15.6   NaN       NaN         NaN       8.1   \n    2  2000-01-03     11.4      5.6  18.9   NaN       NaN         NaN       1.3   \n    3  2000-01-04     12.6      7.2  20.0   NaN       NaN         NaN       3.0   \n    4  2000-01-05     13.3      5.6  21.7   NaN       NaN         NaN       1.9   \n    \n       air-pressure  sunshine  \n    0           NaN    1018.9  \n    1           NaN    1021.0  \n    2           NaN    1026.5  \n    3           NaN    1024.9  \n    4           NaN    1018.0  \nThe API docs again tell you that the columns correspond to\n\ndate, average air temperature in celsius, minimum air temperature in celsius, daily precipitation total in mm, snow depth in mm, average wind direction in degrees, average wind speed in km/hr, peak wind gut in km/hr, average sea-level air pressure in hPa, the daily sunshine total in minutes."
+  },
+  {
+    "objectID": "posts/2020-09-01-decision-tree-regressor.html#pruning-the-dataset",
+    "href": "posts/2020-09-01-decision-tree-regressor.html#pruning-the-dataset",
+    "title": "Decision tree regressor",
+    "section": "Pruning the dataset",
+    "text": "Pruning the dataset\nAs you might remember, some of the entries of this data frame were NaNs. Let’s get rid of some of the irrelevant columns and also any row that might contain a NaN entry.\n# Delete irrelevant cols\ndel daily_weather_df['air-pressure']\ndel daily_weather_df['wind-speed']\ndel daily_weather_df['snow']\ndel daily_weather_df['wind-dir']\ndel daily_weather_df['date']\ndel daily_weather_df['mintemp']\n\n# Delete rows with NaN entries\ndaily_weather_df.dropna(inplace=True)\n\n\nprint(daily_weather_df.shape)\nprint(daily_weather_df.columns)\nOutput:\n(1866, 4)\nIndex(['avgtemp', 'pp', 'windgut', 'sunshine'], dtype='object')\nThat is, we have 1866 datapoints and each datapoint has four attributes, namely, avgtemp, pp, windgut, sunshine. These stand for daily average temperature in celsius, precipitation in mm, peak wind gut in km/hr, the daily sunshine total in minutes"
+  },
+  {
+    "objectID": "posts/2020-09-01-decision-tree-regressor.html#features-and-targets",
+    "href": "posts/2020-09-01-decision-tree-regressor.html#features-and-targets",
+    "title": "Decision tree regressor",
+    "section": "Features and targets",
+    "text": "Features and targets\nLet’s first demark the data into features and target variables. Features represent the weather attributes we have access to. Target represents the attribute we are trying to predict.\n# Drop precipitation column to get weather_features\nweather_features = daily_weather_df.drop(['pp'], axis=1)\n\n# Isolate precipitation targets\nprecipitation_targets = daily_weather_df['pp']\n\nprint(weather_features.head())\nprint(precipitation_targets.head())\nFeatures:\n\n\n\n\n\n\n\navgtemp\n\n\nwind-gut\n\n\nsunshine\n\n\n\n\n\n\n0\n\n\n10.4\n\n\n2.0\n\n\n1018.9\n\n\n\n\n1\n\n\n12.0\n\n\n8.1\n\n\n1021.0\n\n\n\n\n2\n\n\n11.4\n\n\n1.3\n\n\n1026.5\n\n\n\n\n3\n\n\n12.6\n\n\n3.0\n\n\n1024.9\n\n\n\n\n4\n\n\n13.3\n\n\n1.9\n\n\n1018.0\n\n\n\n\n\nTarget:\n0    13.9\n1    15.6\n2    18.9\n3    20.0\n4    21.7\nName: pp, dtype: float64"
+  },
+  {
+    "objectID": "posts/2020-09-01-decision-tree-regressor.html#training-and-test-data-split",
+    "href": "posts/2020-09-01-decision-tree-regressor.html#training-and-test-data-split",
+    "title": "Decision tree regressor",
+    "section": "Training and test data split",
+    "text": "Training and test data split\nNow we will split up our dataset into training data and test data. As you might have guessed, we’ll use the training data to train our model (i.e. build it up). And we’ll evaluate the model’s performance on the test-data. We go with a 70-30 split, i.e we’ll use 70% of the dataset for training and keep the rest for evaluation.\n# Declare random state to be an int to get reproducible output, shuffle is True by default\nX_train, X_test, y_train, y_test = train_test_split(weather_features,\n                                                    precipitation_targets,\n                                                    test_size=0.30,\n                                                    random_state=10,\n                                                    shuffle=True)\n\nprint(f\"Training data : {X_train.shape}, {y_train.shape}\")\nprint(f\"Test data : {X_test.shape}, {y_test.shape}\")\nOutput:\nTraining data : (1306, 3), (1306,)\nTest data : (560, 3), (560,)"
+  },
+  {
+    "objectID": "posts/2020-09-01-decision-tree-regressor.html#building-the-regression-tree",
+    "href": "posts/2020-09-01-decision-tree-regressor.html#building-the-regression-tree",
+    "title": "Decision tree regressor",
+    "section": "Building the Regression Tree",
+    "text": "Building the Regression Tree\nUsing scikit-learn, building a decision tree regressor translates to two-lines of code!\ntree_reg = DecisionTreeRegressor(max_depth=4)\ntree_reg.fit(X_train, y_train)\nOutput:\nDecisionTreeRegressor(ccp_alpha=0.0, criterion='mse', max_depth=4,\n                      max_features=None, max_leaf_nodes=None,\n                      min_impurity_decrease=0.0, min_impurity_split=None,\n                      min_samples_leaf=1, min_samples_split=2,\n                      min_weight_fraction_leaf=0.0, presort='deprecated',\n                      random_state=None, splitter='best')"
+  },
+  {
+    "objectID": "posts/2020-09-01-decision-tree-regressor.html#visualization",
+    "href": "posts/2020-09-01-decision-tree-regressor.html#visualization",
+    "title": "Decision tree regressor",
+    "section": "Visualization",
+    "text": "Visualization\nOK, so we have our tree! But what does it look like ?\ntree.plot_tree(tree_reg) \n\n\n\nDecision tree regressor\n\n\nUm, alright. This picture tells us something despite not being very readable. For instance, it tells us that our binary tree has max-depth 4 (which if you look in the code, was a hyper parameter we had fixed). That is, with our model and maximum four questions, we should arrive at a prediction for any test-input.\nHowever, let’s aim for some better visuals so as to actually see what these questions are!"
+  },
+  {
+    "objectID": "posts/2020-09-01-decision-tree-regressor.html#prettier-visuals",
+    "href": "posts/2020-09-01-decision-tree-regressor.html#prettier-visuals",
+    "title": "Decision tree regressor",
+    "section": "Prettier visuals",
+    "text": "Prettier visuals\ndot_data = export_graphviz(\n            tree_reg,\n            out_file=None,\n            feature_names=weather_features.columns,\n            rounded=True,\n            filled=True\n        )\n    \n    \nprettier_graph = graphviz.Source(dot_data)  \nprettier_graph\n\n\n\nA prettier regressor\n\n\nIf you zoom in, the regression tree should be self-explanatory. By the way, a few words about the labels in the graph.\n\nSamples refer to the number of data points which have satisfied all the queries up to that point. So for instance, samples = 1306 = size of the entire training data for the very first question (because there have been no previous queries). However samples = 683 when you look at the second row, left node. That is only 683 data points satisfied the previous query “Is avg-temp &lt;= 17.95” etc.\nValue refers to the prediction of the target, i.e. the predicted amount of precipitation in mm, up to that point.\nMSE refers to the mean-square error."
+  },
+  {
+    "objectID": "posts/2020-09-01-decision-tree-regressor.html#predictions",
+    "href": "posts/2020-09-01-decision-tree-regressor.html#predictions",
+    "title": "Decision tree regressor",
+    "section": "Predictions",
+    "text": "Predictions\nSo, how do we use our tree for predictions ? Let’s first predict the precipitation for a single test-input\n# Picks the datapoint from X_test, y_test with index = 646 (some random index!)\n\nx_sample_point = X_test.loc[646]\ny_sample_point = y_test.loc[646]\nprint(x_sample_point)\nprint(f\"True precipitation is : {y_sample_point}\")\nprint(f\"Prediction precipitation is  {tree_reg.predict([x_sample_point])}\")\nOutput:\navgtemp       17.3\nwind-gut       2.9\nsunshine    1015.1\nName: 646, dtype: float64\n\n\nTrue precipitation is : 20.6\nPrediction precipitation is  [21.40639535]\nLet’s now turn to predictions in bulk.\n## Test set predictions\ny_pred = tree_reg.predict(X_test)\n\n# Print type and shape of y_pred\nprint(type(y_pred), y_pred.shape)\n\n#Print the first ten predictions\nprint(y_pred[:10])\nOutput:\n(numpy.ndarray, (560,))\n\narray([21.40639535, 18.92619048, 14.2745098 , 18.92619048, 21.40639535,\n        28.44464286, 18.92619048, 30.725     , 28.44464286, 18.92619048])"
+  },
+  {
+    "objectID": "posts/2020-09-01-decision-tree-regressor.html#evaluation-of-test-predictions",
+    "href": "posts/2020-09-01-decision-tree-regressor.html#evaluation-of-test-predictions",
+    "title": "Decision tree regressor",
+    "section": "Evaluation of test-predictions",
+    "text": "Evaluation of test-predictions\nNote that y_pred is the numpy array with our predictions while y_test is a pandas series object with the actual precipitations for the test-data. We compute the root-mean square error (i.e. sqrt(sum of the squares of the differences between actual precipitations and predicted values))\ny_test_numpy = y_test.to_numpy()\n\n# Root mean squared error between predictions and test values\nprint(f\"Root mean squared error : {mean_squared_error(y_test_numpy,y_pred,squared=False)}\")\nOutput:\nRoot mean squared error : 1.7764921365123483\nLet’s go further and draw a simple plot of reality versus the predictions.\n# Plot of y_test and y_pred\n\nevaluation_of_predictions = plt.figure()\nplt.scatter(range(1,561),y_test, color=\"red\", label=\"Reality\");\nplt.step(range(1,561),y_pred, color=\"green\",label=\"Predictions\");\nplt.xlim(-10,570)\nplt.title(\"Predictions versus reality\")\nplt.xlabel(\"Day number\")\nplt.ylabel(\"Precipitation in mm\");\nplt.legend();\n\n\n\nViz of predictions"
+  },
+  {
+    "objectID": "posts/2020-08-26-Mean-Variance.html",
+    "href": "posts/2020-08-26-Mean-Variance.html",
+    "title": "Mean and Variance",
     "section": "",
-    "text": "This page records an assortment of technical notes I make for myself, mostly around math and machine learning. The prerequisites vary for each note and they tell no new tales, but I share them hoping you might find a glimmer of inspiration within the rabbit holes.\nPlease do include a backlink and cite these notes if you use them in any form. Each post features a copyable BibTeX entry and standard format attribution at the end.\nQuestions, comments, error-spotting? Drop me an email. I’d love to hear from you!\n\n\n\n\n\n\n\n\n\n\nDate\n\n\n\nTitle\n\n\n\n\n\n\n\n\nJuly 26, 2023\n\n\n1D convolution\n\n\n\n\n\n\nSeptember 10, 2021\n\n\nKarush–Kuhn–Tucker conditions\n\n\n\n\n\n\nNo matching items"
+    "text": "Let’s assume we are working with a dataset whose data-points \\(x_1, x_2, \\ldots, x_N\\) are one dimensional.\nThe mean of the dataset is defined to be \\[\n\\mu = \\frac{x_1 + x_2 + \\ldots x_N}{N}.\n\\]\nThe variance is defined to be \\[\n\\sigma^2 = \\frac{(x_1-\\mu)^2 + (x_2-\\mu)^2 + \\ldots (x_N-\\mu)^2}{N}.\n\\]\nCode:\nimport numpy as np\n\n# x is the 1-d numpy array of your 1 dimensional datapoints\nx = np.array([1,2,3,4,-1,-2,-3,-4])\n\nprint(f\" The mean is {x.mean()}\")\nprint(f\" The mean is also given by {np.mean(x)}\")\nprint(f\" The variance is {x.var()}\")\nprint(f\" The variance is also given by{np.var(x)}\")\nOutput:\nThe mean is 0.0\nThe mean is also given by 0.0\nThe variance is 7.5\nThe variance is also given by 7.5"
+  },
+  {
+    "objectID": "posts/2020-08-26-Mean-Variance.html#one-dimensional-data",
+    "href": "posts/2020-08-26-Mean-Variance.html#one-dimensional-data",
+    "title": "Mean and Variance",
+    "section": "",
+    "text": "Let’s assume we are working with a dataset whose data-points \\(x_1, x_2, \\ldots, x_N\\) are one dimensional.\nThe mean of the dataset is defined to be \\[\n\\mu = \\frac{x_1 + x_2 + \\ldots x_N}{N}.\n\\]\nThe variance is defined to be \\[\n\\sigma^2 = \\frac{(x_1-\\mu)^2 + (x_2-\\mu)^2 + \\ldots (x_N-\\mu)^2}{N}.\n\\]\nCode:\nimport numpy as np\n\n# x is the 1-d numpy array of your 1 dimensional datapoints\nx = np.array([1,2,3,4,-1,-2,-3,-4])\n\nprint(f\" The mean is {x.mean()}\")\nprint(f\" The mean is also given by {np.mean(x)}\")\nprint(f\" The variance is {x.var()}\")\nprint(f\" The variance is also given by{np.var(x)}\")\nOutput:\nThe mean is 0.0\nThe mean is also given by 0.0\nThe variance is 7.5\nThe variance is also given by 7.5"
+  },
+  {
+    "objectID": "posts/2020-08-26-Mean-Variance.html#higher-dimensional-data",
+    "href": "posts/2020-08-26-Mean-Variance.html#higher-dimensional-data",
+    "title": "Mean and Variance",
+    "section": "Higher dimensional data",
+    "text": "Higher dimensional data\nSay now we are working with a dataset whose data-points \\(x_1, x_2, \\ldots, x_N\\) are \\(d\\) dimensional, i.e. each \\(x_i\\) is a \\(d\\times 1\\) column vector.\nThe mean of the dataset is defined to be \\[\n\\mu = \\frac{x_1 + x_2 + \\ldots x_N}{N}.\n\\]\nThe covariance matrix is defined to be \\[\nS= \\frac{(x_1-\\mu)(x_1-\\mu)^T + (x_2-\\mu)(x_2-\\mu)^T + \\ldots (x_N-\\mu)(x_N-\\mu)^T}{N}.\n\\]\nNote that since \\(x_i, \\mu\\) have shape \\(d\\times 1\\), \\((x_i-\\mu)(x_i-\\mu)^T\\) has shape \\(d\\times d\\). Thus the covariance matrix \\(S\\) is a \\(d\\times d\\) matrix."
+  },
+  {
+    "objectID": "posts/2020-08-26-Mean-Variance.html#a-more-compact-formula",
+    "href": "posts/2020-08-26-Mean-Variance.html#a-more-compact-formula",
+    "title": "Mean and Variance",
+    "section": "A more compact formula",
+    "text": "A more compact formula\nTo make the definition of the variance neater, let’s assemble our data-points into a \\(d\\times N\\) matrix \\(X\\).\n\\[\nX= \\left(\n\\begin{array}{cccc}\n. & . & \\ldots & . \\\\\n. & . & \\ldots & . \\\\\nx_1 & x_2 & \\ldots & x_N \\\\\n. & . & \\ldots & . \\\\\n. & . & \\ldots & . \\\\\n\\end{array}\n\\right)\n\\]\nDefine \\(\\tilde{X} = X-\\mu\\), i.e. subtract \\(\\mu\\) from every column of \\(X\\).\n\\[\n\\tilde{X}= \\left(\n\\begin{array}{cccc}\n. & . & \\ldots & . \\\\\n. & . & \\ldots & . \\\\\nx_1-\\mu & x_2-\\mu & \\ldots & x_N-\\mu \\\\\n. & . & \\ldots & . \\\\\n. & . & \\ldots & . \\\\\n\\end{array}\\right)\n\\]\nBy some matrix manipulation 1, the covariance matrix turns out to be nothing but \\(S = \\frac{1}{N}\\tilde{X}\\tilde{X}^T\\)"
+  },
+  {
+    "objectID": "posts/2020-08-26-Mean-Variance.html#computation",
+    "href": "posts/2020-08-26-Mean-Variance.html#computation",
+    "title": "Mean and Variance",
+    "section": "Computation",
+    "text": "Computation\nSay we have 3 data-points, each of which is two-dimensional. Then we can represent the dataset as\n\\[\nX = \\left(\\begin{array}{ccc}1 & -1 & 1 \\\\ 2 & -2 & 2 \\end{array}\\right)\n\\]\nThe mean would be \\[\n\\mu = \\left(\\begin{array}{c}\\frac{1 + -1 + 1}{3} \\\\ \\frac{2 + -2 + 2}{3} \\end{array}\\right) = \\left(\\begin{array}{c}\\frac{1}{3} \\\\ \\frac{2}{3} \\end{array}\\right)\n\\]\nFurther, \\[\n\\tilde{X} = \\left(\\begin{array}{ccc}1- \\frac{1}{3} & -1 - \\frac{1}{3} & 1-\\frac{1}{3} \\\\ 2-\\frac{2}{3} & -2-\\frac{2}{3} & 2-\\frac{2}{3} \\end{array}\\right) = \\left(\\begin{array}{ccc}\\frac{2}{3} & - \\frac{4}{3} & \\frac{2}{3} \\\\ \\frac{4}{3} & -\\frac{8}{3} & \\frac{4}{3} \\end{array}\\right)\n\\]\nThe covariance-matrix would be \\(\\frac{1}{N}\\tilde{X}\\tilde{X}^T\\) which is \\[\n\\begin{align*} S &= \\frac{1}{3}\\begin{pmatrix}\\frac{2}{3} & - \\frac{4}{3} & \\frac{2}{3} \\\\ \\frac{4}{3} & -\\frac{8}{3} & \\frac{4}{3} \\end{pmatrix}\\begin{pmatrix}\\frac{2}{3} & \\frac{4}{3} \\\\ -\\frac{4}{3} & -\\frac{8}{3} \\\\  \\frac{2}{3} & \\frac{4}{3} \\end{pmatrix}\\\\ & = \\frac{1}{3}\\begin{pmatrix}\\frac{24}{9} & \\frac{48}{9} \\\\ \\frac{48}{9} & \\frac{96}{9} \\end{pmatrix}\\\\\n& = \\begin{pmatrix}\\frac{8}{9} & \\frac{16}{9} \\\\ \\frac{16}{9} & \\frac{32}{9} \\end{pmatrix}\\end{align*}\n\\]\nCode:\nimport numpy as np\n\n# x is the d x N numpy array of your d-dimensional datapoints\nx = np.array([[1,-1,1], [2,-2,2]])\n\nprint(f\" The mean is  {np.mean(x, axis=1)}\")\nprint(f\" The covariance matrix is {np.cov(x,bias=True)}\")\nOutput:\nThe mean is [0.33333333 0.66666667]\nThe covariance matrix is  \n     [[0.88888889 1.77777778]\n     [1.77777778 3.55555556]]\n\n\n\n\n\n\nImportantCaution\n\n\n\n\nIn this post, we use the convention that the columns of the data matrix \\(X\\) correspond to the data points and the rows, the attributes of each data point. Some people might switch the rows and columns when constructing \\(X\\). So take a moment to look at the notations used!\nBy default, bias is set to False in np.cov. This would give the so-called sample-covariance matrix. If you want the usual covariance, remember to set bias=True"
+  },
+  {
+    "objectID": "posts/2020-08-26-Mean-Variance.html#symmetry",
+    "href": "posts/2020-08-26-Mean-Variance.html#symmetry",
+    "title": "Mean and Variance",
+    "section": "Symmetry",
+    "text": "Symmetry\nNotice that the covariance matrix in the previous example is symmetric. This is in fact true for every covariance matrix. Why ?\nWell, a matrix \\(M\\) is symmetric provided \\(M=M^T\\). The covariance matrix looks like \\(S = \\frac{1}{N}\\tilde{X}\\tilde{X}^T\\). Then,\n\\[\nS^T = \\frac{1}{N}\\left(\\tilde{X}\\tilde{X}^T\\right)^T = \\frac{1}{N} (\\tilde{X}^T)^T\\tilde{X}^T = S !\n\\]\nEt voila!"
+  },
+  {
+    "objectID": "posts/2020-08-26-Mean-Variance.html#footnotes",
+    "href": "posts/2020-08-26-Mean-Variance.html#footnotes",
+    "title": "Mean and Variance",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\n\\[\\begin{align*} \\tilde{X}\\tilde{X^T} &= \\sum_{i=1}^{N}  \\left(\\begin{array}{ccccc} \\overline{0} &  \\ldots &  \\overline{0} & x_i-\\mu & \\overline{0} \\ldots & \\overline{0} \\\\ \\end{array}\\right)\\tilde{X}^T  \\\\  & = \\sum_{i=1}^N \\left(\\begin{array}{ccccc} \\overline{0} &  \\ldots &  \\overline{0} & x_i-\\mu & \\overline{0} \\ldots & \\overline{0} \\end{array}\\right)\\left[\\sum_{j=1}^{N} \\left(\\begin{array}{c} \\overline{0} \\\\  \\ldots \\\\ \\overline{0} \\\\ (x_j-\\mu)^T \\\\ \\overline{0}^T \\\\ \\ldots \\\\ \\overline{0}^T \\end{array}\\right) \\right] \\\\ &= \\sum_{i=1}^{N} (x_i-\\mu)(x_i-\\mu)^T  = NS \\end{align*}\\]↩︎"
   },
   {
     "objectID": "posts/2020-07-27-SVD.html",
@@ -238,53 +399,277 @@
     "text": "Footnotes\n\n\nA square matrix \\(X\\) is orthogonal iff \\(X^TX = XX^T\\) is the identity matrix.↩︎\nThe singular values of an \\(n\\times m\\) matrix A are the square roots of the eigenvalues of \\(A^TA\\) listed with their algebraic multiplicities.↩︎\nBy definition, the zero vector, \\(\\overline{0}\\), is perpendicular to every vector↩︎\nSince rotation preserves angles, any set of perpendicular vectors remain perpendicular (and unstretched) after the action of the matrix!↩︎"
   },
   {
-    "objectID": "posts/2020-08-26-Mean-Variance.html",
-    "href": "posts/2020-08-26-Mean-Variance.html",
-    "title": "Mean and Variance",
+    "objectID": "notes.html",
+    "href": "notes.html",
+    "title": "♫ Notes",
     "section": "",
-    "text": "Let’s assume we are working with a dataset whose data-points \\(x_1, x_2, \\ldots, x_N\\) are one dimensional.\nThe mean of the dataset is defined to be \\[\n\\mu = \\frac{x_1 + x_2 + \\ldots x_N}{N}.\n\\]\nThe variance is defined to be \\[\n\\sigma^2 = \\frac{(x_1-\\mu)^2 + (x_2-\\mu)^2 + \\ldots (x_N-\\mu)^2}{N}.\n\\]\nCode:\nimport numpy as np\n\n# x is the 1-d numpy array of your 1 dimensional datapoints\nx = np.array([1,2,3,4,-1,-2,-3,-4])\n\nprint(f\" The mean is {x.mean()}\")\nprint(f\" The mean is also given by {np.mean(x)}\")\nprint(f\" The variance is {x.var()}\")\nprint(f\" The variance is also given by{np.var(x)}\")\nOutput:\nThe mean is 0.0\nThe mean is also given by 0.0\nThe variance is 7.5\nThe variance is also given by 7.5"
+    "text": "This page records an assortment of technical notes I make for myself, mostly around math and machine learning. The prerequisites vary for each note and they tell no new tales, but I share them hoping you might find a glimmer of inspiration within the rabbit holes.\nPlease do include a backlink and cite these notes if you use them in any form. Each post features a copyable BibTeX entry and standard format attribution at the end.\nQuestions, comments, error-spotting? Drop me an email. I’d love to hear from you!\n\n\n\n\n\n\n\n\n\n\nDate\n\n\n\nTitle\n\n\n\n\n\n\n\n\nJuly 26, 2023\n\n\n1D convolution\n\n\n\n\n\n\nSeptember 10, 2021\n\n\nKarush–Kuhn–Tucker conditions\n\n\n\n\n\n\nNo matching items"
   },
   {
-    "objectID": "posts/2020-08-26-Mean-Variance.html#one-dimensional-data",
-    "href": "posts/2020-08-26-Mean-Variance.html#one-dimensional-data",
-    "title": "Mean and Variance",
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Web 🪵",
     "section": "",
-    "text": "Let’s assume we are working with a dataset whose data-points \\(x_1, x_2, \\ldots, x_N\\) are one dimensional.\nThe mean of the dataset is defined to be \\[\n\\mu = \\frac{x_1 + x_2 + \\ldots x_N}{N}.\n\\]\nThe variance is defined to be \\[\n\\sigma^2 = \\frac{(x_1-\\mu)^2 + (x_2-\\mu)^2 + \\ldots (x_N-\\mu)^2}{N}.\n\\]\nCode:\nimport numpy as np\n\n# x is the 1-d numpy array of your 1 dimensional datapoints\nx = np.array([1,2,3,4,-1,-2,-3,-4])\n\nprint(f\" The mean is {x.mean()}\")\nprint(f\" The mean is also given by {np.mean(x)}\")\nprint(f\" The variance is {x.var()}\")\nprint(f\" The variance is also given by{np.var(x)}\")\nOutput:\nThe mean is 0.0\nThe mean is also given by 0.0\nThe variance is 7.5\nThe variance is also given by 7.5"
+    "text": "Looking for technical deep dives ? Check out my notes →\n\n\n\nHello there! My name is Nivedita Bhaskhar and I am a Machine Learning Engineer. In my past avatar as a pure mathematician, I worked with mathematical structures called algebraic groups. To know more, visit my main website.\nI like to write about mathematics, machine learning and quantum computing. I hope these pieces provide some appetizing food for thought!\nPlease do include a backlink and cite these articles if you use them in any form. Each post features a copyable BibTeX entry and standard format attribution at the end.\nQuestions, comments, error-spotting? Drop me an email. I’d love to hear from you!\n\n\n\n\n\n\n\n\n\n\nDate\n\n\n\nTitle\n\n\n\n\n\n\n\n\nSeptember 14, 2020\n\n\nFinding least-squares solutions\n\n\n\n\n\n\nSeptember 13, 2020\n\n\nLinear regression and the normal equation\n\n\n\n\n\n\nSeptember 03, 2020\n\n\nk-fold cross-validation\n\n\n\n\n\n\nSeptember 01, 2020\n\n\nDecision tree regressor\n\n\n\n\n\n\nAugust 27, 2020\n\n\nWorking with real data - baby steps\n\n\n\n\n\n\nAugust 26, 2020\n\n\nMean and Variance\n\n\n\n\n\n\nAugust 03, 2020\n\n\nSVD - The details\n\n\n\n\n\n\nJuly 27, 2020\n\n\nSVD - A geometric view point\n\n\n\n\n\n\nJuly 20, 2020\n\n\nMaking GIFs in Python\n\n\n\n\n\n\nNo matching items"
   },
   {
-    "objectID": "posts/2020-08-26-Mean-Variance.html#higher-dimensional-data",
-    "href": "posts/2020-08-26-Mean-Variance.html#higher-dimensional-data",
-    "title": "Mean and Variance",
-    "section": "Higher dimensional data",
-    "text": "Higher dimensional data\nSay now we are working with a dataset whose data-points \\(x_1, x_2, \\ldots, x_N\\) are \\(d\\) dimensional, i.e. each \\(x_i\\) is a \\(d\\times 1\\) column vector.\nThe mean of the dataset is defined to be \\[\n\\mu = \\frac{x_1 + x_2 + \\ldots x_N}{N}.\n\\]\nThe covariance matrix is defined to be \\[\nS= \\frac{(x_1-\\mu)(x_1-\\mu)^T + (x_2-\\mu)(x_2-\\mu)^T + \\ldots (x_N-\\mu)(x_N-\\mu)^T}{N}.\n\\]\nNote that since \\(x_i, \\mu\\) have shape \\(d\\times 1\\), \\((x_i-\\mu)(x_i-\\mu)^T\\) has shape \\(d\\times d\\). Thus the covariance matrix \\(S\\) is a \\(d\\times d\\) matrix."
+    "objectID": "posts/2020-07-20-GifsInPython.html",
+    "href": "posts/2020-07-20-GifsInPython.html",
+    "title": "Making GIFs in Python",
+    "section": "",
+    "text": "UnPuzzler in action\nIf you’re searching for a quick way to make GIFs out of a folder full of images, the Pillow library in Python does the trick for you!"
   },
   {
-    "objectID": "posts/2020-08-26-Mean-Variance.html#a-more-compact-formula",
-    "href": "posts/2020-08-26-Mean-Variance.html#a-more-compact-formula",
-    "title": "Mean and Variance",
-    "section": "A more compact formula",
-    "text": "A more compact formula\nTo make the definition of the variance neater, let’s assemble our data-points into a \\(d\\times N\\) matrix \\(X\\).\n\\[\nX= \\left(\n\\begin{array}{cccc}\n. & . & \\ldots & . \\\\\n. & . & \\ldots & . \\\\\nx_1 & x_2 & \\ldots & x_N \\\\\n. & . & \\ldots & . \\\\\n. & . & \\ldots & . \\\\\n\\end{array}\n\\right)\n\\]\nDefine \\(\\tilde{X} = X-\\mu\\), i.e. subtract \\(\\mu\\) from every column of \\(X\\).\n\\[\n\\tilde{X}= \\left(\n\\begin{array}{cccc}\n. & . & \\ldots & . \\\\\n. & . & \\ldots & . \\\\\nx_1-\\mu & x_2-\\mu & \\ldots & x_N-\\mu \\\\\n. & . & \\ldots & . \\\\\n. & . & \\ldots & . \\\\\n\\end{array}\\right)\n\\]\nBy some matrix manipulation 1, the covariance matrix turns out to be nothing but \\(S = \\frac{1}{N}\\tilde{X}\\tilde{X}^T\\)"
+    "objectID": "posts/2020-07-20-GifsInPython.html#main-parameters-of-image.save",
+    "href": "posts/2020-07-20-GifsInPython.html#main-parameters-of-image.save",
+    "title": "Making GIFs in Python",
+    "section": "Main parameters of Image.save()",
+    "text": "Main parameters of Image.save()\n\nloop : loop=0 makes the GIF loop infinitely. loop=n makes the GIF loop n times.\n\nduration : time in milliseconds each image will be displayed for"
   },
   {
-    "objectID": "posts/2020-08-26-Mean-Variance.html#computation",
-    "href": "posts/2020-08-26-Mean-Variance.html#computation",
-    "title": "Mean and Variance",
-    "section": "Computation",
-    "text": "Computation\nSay we have 3 data-points, each of which is two-dimensional. Then we can represent the dataset as\n\\[\nX = \\left(\\begin{array}{ccc}1 & -1 & 1 \\\\ 2 & -2 & 2 \\end{array}\\right)\n\\]\nThe mean would be \\[\n\\mu = \\left(\\begin{array}{c}\\frac{1 + -1 + 1}{3} \\\\ \\frac{2 + -2 + 2}{3} \\end{array}\\right) = \\left(\\begin{array}{c}\\frac{1}{3} \\\\ \\frac{2}{3} \\end{array}\\right)\n\\]\nFurther, \\[\n\\tilde{X} = \\left(\\begin{array}{ccc}1- \\frac{1}{3} & -1 - \\frac{1}{3} & 1-\\frac{1}{3} \\\\ 2-\\frac{2}{3} & -2-\\frac{2}{3} & 2-\\frac{2}{3} \\end{array}\\right) = \\left(\\begin{array}{ccc}\\frac{2}{3} & - \\frac{4}{3} & \\frac{2}{3} \\\\ \\frac{4}{3} & -\\frac{8}{3} & \\frac{4}{3} \\end{array}\\right)\n\\]\nThe covariance-matrix would be \\(\\frac{1}{N}\\tilde{X}\\tilde{X}^T\\) which is \\[\n\\begin{align*} S &= \\frac{1}{3}\\begin{pmatrix}\\frac{2}{3} & - \\frac{4}{3} & \\frac{2}{3} \\\\ \\frac{4}{3} & -\\frac{8}{3} & \\frac{4}{3} \\end{pmatrix}\\begin{pmatrix}\\frac{2}{3} & \\frac{4}{3} \\\\ -\\frac{4}{3} & -\\frac{8}{3} \\\\  \\frac{2}{3} & \\frac{4}{3} \\end{pmatrix}\\\\ & = \\frac{1}{3}\\begin{pmatrix}\\frac{24}{9} & \\frac{48}{9} \\\\ \\frac{48}{9} & \\frac{96}{9} \\end{pmatrix}\\\\\n& = \\begin{pmatrix}\\frac{8}{9} & \\frac{16}{9} \\\\ \\frac{16}{9} & \\frac{32}{9} \\end{pmatrix}\\end{align*}\n\\]\nCode:\nimport numpy as np\n\n# x is the d x N numpy array of your d-dimensional datapoints\nx = np.array([[1,-1,1], [2,-2,2]])\n\nprint(f\" The mean is  {np.mean(x, axis=1)}\")\nprint(f\" The covariance matrix is {np.cov(x,bias=True)}\")\nOutput:\nThe mean is [0.33333333 0.66666667]\nThe covariance matrix is  \n     [[0.88888889 1.77777778]\n     [1.77777778 3.55555556]]\n\n\n\n\n\n\nImportantCaution\n\n\n\n\nIn this post, we use the convention that the columns of the data matrix \\(X\\) correspond to the data points and the rows, the attributes of each data point. Some people might switch the rows and columns when constructing \\(X\\). So take a moment to look at the notations used!\nBy default, bias is set to False in np.cov. This would give the so-called sample-covariance matrix. If you want the usual covariance, remember to set bias=True"
+    "objectID": "posts/2020-08-03-SVD-details.html",
+    "href": "posts/2020-08-03-SVD-details.html",
+    "title": "SVD - The details",
+    "section": "",
+    "text": "We’ll assume you that you have read this introductory post on singular value decomposition a.k.a SVD."
   },
   {
-    "objectID": "posts/2020-08-26-Mean-Variance.html#symmetry",
-    "href": "posts/2020-08-26-Mean-Variance.html#symmetry",
-    "title": "Mean and Variance",
-    "section": "Symmetry",
-    "text": "Symmetry\nNotice that the covariance matrix in the previous example is symmetric. This is in fact true for every covariance matrix. Why ?\nWell, a matrix \\(M\\) is symmetric provided \\(M=M^T\\). The covariance matrix looks like \\(S = \\frac{1}{N}\\tilde{X}\\tilde{X}^T\\). Then,\n\\[\nS^T = \\frac{1}{N}\\left(\\tilde{X}\\tilde{X}^T\\right)^T = \\frac{1}{N} (\\tilde{X}^T)^T\\tilde{X}^T = S !\n\\]\nEt voila!"
+    "objectID": "posts/2020-08-03-SVD-details.html#prerequisites",
+    "href": "posts/2020-08-03-SVD-details.html#prerequisites",
+    "title": "SVD - The details",
+    "section": "",
+    "text": "We’ll assume you that you have read this introductory post on singular value decomposition a.k.a SVD."
   },
   {
-    "objectID": "posts/2020-08-26-Mean-Variance.html#footnotes",
-    "href": "posts/2020-08-26-Mean-Variance.html#footnotes",
-    "title": "Mean and Variance",
+    "objectID": "posts/2020-08-03-SVD-details.html#the-theorem",
+    "href": "posts/2020-08-03-SVD-details.html#the-theorem",
+    "title": "SVD - The details",
+    "section": "The theorem",
+    "text": "The theorem\nIn this post, we’ll get our hands dirty and examine how and why SVD works. But let’s first recall what it is.\n\n\n\n\n\n\nNoteTheorem : SVD\n\n\n\nLet \\(A\\) be an \\(n \\times m\\) real matrix. Then \\(A = U\\Sigma V^T\\) where:\n\n\\(U\\) is an \\(n \\times n\\) orthogonal1 matrix\n\\(V\\) is an \\(m \\times m\\) orthogonal matrix\n\\(\\Sigma\\) is an \\(n\\times m\\) matrix where every entry except the first \\(r\\) diagonal entries is zero where \\(r\\) is the rank of \\(A\\)\nFurther the non-zero diagonal entries of \\(\\Sigma\\) are precisely the so-called singular values2 of \\(A\\) arranged in descending order.\n\n\n\nWe saw in the introductory post that the columns of \\(V\\) (let’s call them \\(v_1, v_2, \\ldots v_m\\)) are mutually perpendicular unit vectors which form a basis of \\(\\mathbb{R}^m\\) (a.k.a an orthonormal basis of \\(\\mathbb{R}^m\\)).\nFurther \\(\\{A(v_i)\\}\\) still remain perpendicular to each other in \\(\\mathbb{R}^n\\). The length of the vectors \\(\\{A(v_i)\\}\\) are encoded by the diagonal entries of \\(\\Sigma\\). The unit vectors along \\(\\{A(v_i)\\}\\) can be completed to an orthonormal basis of \\(\\mathbb{R}^n\\), which are precisely given by the columns of \\(U\\)."
+  },
+  {
+    "objectID": "posts/2020-08-03-SVD-details.html#a-blackbox",
+    "href": "posts/2020-08-03-SVD-details.html#a-blackbox",
+    "title": "SVD - The details",
+    "section": "A blackbox",
+    "text": "A blackbox\nBefore jumping to the proof, let’s reveal our secret weapon, the spectral theorem. This theorem, applied to real matrices states the following:\n\n\n\n\n\n\nNoteSpectral theorem\n\n\n\nLet \\(B\\) be an \\(m\\times m\\) real and symmetric matrix. Then there exists an orthonormal eigenbasis for \\(B\\).\n\n\nWait, what ? Let’s unravel that sentence again and take the result in, bit by bit.\nYou give me any real square matrix \\(B\\) such that it is symmetric, i.e. \\(B_{i,j} = B_{j,i}\\). We know that \\(B\\) is really representing a linear map \\(Q: \\mathbb{R}^m \\to \\mathbb{R}^m\\) with respect to the standard basis. But the images of the standard basis under \\(Q\\) of course might get distorted. So the images might no longer remain perpendicular to each other, much less continue being the standard basis.\nThe spectral theorem assures us however that if \\(B\\) is symmetric, there is a much nicer basis available, an orthonormal basis of \\(\\mathbb{R}^m\\) in fact, which \\(Q\\) simply scales to different lengths!\nMore precisely, we can find unit mutually perpendicular vectors \\(w_1, w_2, \\ldots, w_m\\) so that \\(Q(w_i) = \\lambda_i w_i\\) for some scalars \\(\\lambda_i\\). Of course these scalars are by definition the eigen-values of \\(Q\\), or equivalently of \\(B\\)."
+  },
+  {
+    "objectID": "posts/2020-08-03-SVD-details.html#a-running-example-and-a-proof",
+    "href": "posts/2020-08-03-SVD-details.html#a-running-example-and-a-proof",
+    "title": "SVD - The details",
+    "section": "A running example and a proof",
+    "text": "A running example and a proof\n\nIf only I had the theorems! Then I should find the proofs easily enough - Riemann”\n\nRemember \\(A\\), our very down to earth \\(2 \\times 2\\) matrix from last time\n\\[\nA  =  \\left( \\begin{array}{cc}\n      6 & 2  \\\\\n      -7 & 6\n    \\end{array} \\right)\n\\]\nNow unfortunately, we cannot use the spectral theorem directly on a general \\(A\\) because it is not symmetric. So instead, we first manufacture a symmetric matrix \\(B\\) from \\(A\\) by letting \\(B = A^TA\\). In our running example,\n\\[\nB  = \\left( \\begin{array}{cc}\n      6 & -7 \\\\\n      2 & 6\n    \\end{array} \\right)   \\left( \\begin{array}{cc}\n      6 & 2  \\\\\n      -7 & 6\n    \\end{array} \\right) = \\left( \\begin{array}{cc}\n       85 & -30  \\\\\n      -30 & 40\n    \\end{array} \\right)\n\\]\nSpectral theorem applied to \\(B\\) guarantees that there are two perpendicular unit vectors which are simply scaled by the action of \\(B\\). We’ll not get into how you can find these vectors but wave the spectral theorem wand and give them to you.\n\\[\n\\begin{align*}\nv_1 = \\left( \\begin{array}{c}\n      \\frac{-2}{\\sqrt{5}} \\\\\n      \\frac{1}{\\sqrt{5}}\n      \\end{array} \\right) \\  & \\mathrm{ and} \\hspace{2mm} Bv_1 = 100 v_1 \\\\\nv_2 = \\left( \\begin{array}{c}\n      \\frac{1}{\\sqrt{5}} \\\\\n      \\frac{2}{\\sqrt{5}}\n      \\end{array} \\right) \\ & \\mathrm{ and} \\hspace{2mm}  Bv_2 = 25 v_2\n\\end{align*}\n\\]\nHere’s a visualization of the action of \\(B\\) on the standard basis and on \\(V = (v_1,v_2)\\). Both the bases’ lengths are scaled up a bit for clarity in the picture\n\n\n\nAction of symmetric B\n\n\nSo we have found an orthonormal basis \\(v_1, v_2\\) of \\(\\mathbb{R}^2\\), which is very nice for \\(B\\). How does \\(A\\) act on it ?\n\\[\n\\begin{align*}\nAv_1 = \\left( \\begin{array}{c}\n      \\frac{-10}{\\sqrt{5}} \\\\\n      \\frac{20}{\\sqrt{5}}\n      \\end{array} \\right) \\  & \\mathrm{ and} \\hspace{2mm} \\| Av_1 \\| = 10\\\\\nAv_2 = \\left( \\begin{array}{c}\n      \\frac{10}{\\sqrt{5}} \\\\\n      \\frac{5}{\\sqrt{5}}\n      \\end{array} \\right) \\ & \\mathrm{ and} \\hspace{2mm}  \\|Av_2\\| = 5\\\\\n\\end{align*}\n\\]\nWe see that \\(Av_1\\) is perpendicular to \\(Av_2\\) ! Further the length of \\(Av_1, Av_2\\) are \\(\\sqrt{100} = 10, \\sqrt{25} = 5\\), which are precisely the singular values of \\(A\\) by definition.\nThis is not a coincidence. For starters, we know \\(v_1\\) perpendicular to \\(v_2\\), i.e. \\(v_1^Tv_2 = 0\\). Let’s see why \\(Av_1\\) is perpendicular to \\(Av_2\\)\n\\[\n\\begin{align*}\nAv_1 \\cdot Av_2 &= (Av_1)^T Av_2 = v_1^T A^T A v_2\\\\\n& = v_1^T Bv_2 = v_1^T 25v_2\\\\\n& = 25 v_1^Tv_2 = 0\\\\\n\\end{align*}\n\\]\nThus \\(Av_1, Av_2\\) are perpendicular to each other. As an exercise, using the fact that length of a vector \\(\\|x \\|= x^T x\\), try computing the lengths of \\(Av_i\\).\nMore generally, the same reasoning tells us the following:\n\n\n\n\n\n\nIf \\(v_1, v_2\\) are perpendicular eigenvectors of \\(B=A^TA\\) for eigenvalues \\(\\lambda_1, \\lambda_2\\), then \\(Av_1, Av_2\\) are still perpendicular and have lengths \\(\\sqrt{\\lambda_1}, \\sqrt{\\lambda_2}\\).\n\n\n\nThus, the orthonormal eigenbasis of \\(B=A^TA\\) given by the spectral theorem is exactly \\(V\\) in the SVD of \\(A = U\\Sigma V^T\\) !"
+  },
+  {
+    "objectID": "posts/2020-08-03-SVD-details.html#summary",
+    "href": "posts/2020-08-03-SVD-details.html#summary",
+    "title": "SVD - The details",
+    "section": "Summary",
+    "text": "Summary\nGiven an \\(n\\times m\\) matrix A, here are the steps to find the SVD of \\(A\\):\n\nForm the \\(m \\times m\\) symmetric matrix \\(B= A^TA\\)\nThe spectral theorem gives us an orthogonal eigen-basis \\(v_1,v_2, \\ldots, v_m\\) for \\(B\\) of \\(\\mathbb{R}^m\\) with eigenvalues \\(\\lambda_1 \\geq \\lambda_2 \\geq \\ldots \\lambda_m\\)\n\\(V\\) is just the \\(m\\times m\\) matrix \\(\\left(\\begin{array}{cccc}v_1 & v_2 & \\ldots & v_m \\end{array}\\right)\\)\n\\(\\Sigma\\) is the \\(n\\times m\\) matrix where all non-diagonal entries are 0 and \\(\\Sigma_{i,i} = \\sqrt{\\lambda_i}\\)\n\\(AV\\) is an \\(n\\times m\\) matrix made of mutually perpendicular columns\nScaling the columns of \\(AV\\) to unit vectors, complete it to an orthonormal basis of \\(\\mathbb{R^n}\\). This orthonormal basis gives you the \\(n\\times n\\) matrix \\(U\\).\nFinally,\n\n\\[A = U \\Sigma V^T \\]\nFor our running example, we see that this corresponds to\n\\[ \\left( \\begin{array}{cc}\n      6 & 2  \\\\\n      -7 & 6\n    \\end{array} \\right)=\n    \\left( \\begin{array}{cc}\n      \\frac{-1}{\\sqrt{5}}  & \\frac{2}{\\sqrt{5}} \\\\\n       \\frac{2}{\\sqrt{5}} & \\frac{1}{\\sqrt{5}} \\\\\n    \\end{array} \\right)\n  \\left( \\begin{array}{cc}\n      10  &  0 \\\\\n       0 & 5  \\\\\n    \\end{array} \\right)\n  \\left( \\begin{array}{cc}\n\\frac{-2}{\\sqrt{5}} & \\frac{1}{\\sqrt{5}} \\\\\n\\frac{1}{\\sqrt{5}} &  \\frac{2}{\\sqrt{5}} \\\\\n\\end{array}\\right)\n\\]"
+  },
+  {
+    "objectID": "posts/2020-08-03-SVD-details.html#footnotes",
+    "href": "posts/2020-08-03-SVD-details.html#footnotes",
+    "title": "SVD - The details",
     "section": "Footnotes",
-    "text": "Footnotes\n\n\n\\[\\begin{align*} \\tilde{X}\\tilde{X^T} &= \\sum_{i=1}^{N}  \\left(\\begin{array}{ccccc} \\overline{0} &  \\ldots &  \\overline{0} & x_i-\\mu & \\overline{0} \\ldots & \\overline{0} \\\\ \\end{array}\\right)\\tilde{X}^T  \\\\  & = \\sum_{i=1}^N \\left(\\begin{array}{ccccc} \\overline{0} &  \\ldots &  \\overline{0} & x_i-\\mu & \\overline{0} \\ldots & \\overline{0} \\end{array}\\right)\\left[\\sum_{j=1}^{N} \\left(\\begin{array}{c} \\overline{0} \\\\  \\ldots \\\\ \\overline{0} \\\\ (x_j-\\mu)^T \\\\ \\overline{0}^T \\\\ \\ldots \\\\ \\overline{0}^T \\end{array}\\right) \\right] \\\\ &= \\sum_{i=1}^{N} (x_i-\\mu)(x_i-\\mu)^T  = NS \\end{align*}\\]↩︎"
+    "text": "Footnotes\n\n\nA square matrix \\(X\\) is orthogonal iff \\(X^TX = XX^T\\) is the identity matrix.↩︎\nThe singular values of an \\(n\\times m\\) matrix A are the square roots of the eigenvalues of \\(A^TA\\) listed with their algebraic multiplicities.↩︎"
+  },
+  {
+    "objectID": "posts/2020-08-27-working-with-real-data.html",
+    "href": "posts/2020-08-27-working-with-real-data.html",
+    "title": "Working with real data - baby steps",
+    "section": "",
+    "text": "Let’s do a really simple analysis of the daily temperatures for a particular region, say an area in LA. Our goal is to collect a year’s worth of daily temperatures and find the dataset’s mean and variance."
+  },
+  {
+    "objectID": "posts/2020-08-27-working-with-real-data.html#hows-the-weather",
+    "href": "posts/2020-08-27-working-with-real-data.html#hows-the-weather",
+    "title": "Working with real data - baby steps",
+    "section": "",
+    "text": "Let’s do a really simple analysis of the daily temperatures for a particular region, say an area in LA. Our goal is to collect a year’s worth of daily temperatures and find the dataset’s mean and variance."
+  },
+  {
+    "objectID": "posts/2020-08-27-working-with-real-data.html#capturing-the-data",
+    "href": "posts/2020-08-27-working-with-real-data.html#capturing-the-data",
+    "title": "Working with real data - baby steps",
+    "section": "Capturing the data",
+    "text": "Capturing the data\nIf you head over to https://dev.meteostat.net/, you can get full data dumps of individual weather stations. A little browsing around tells you that the weather station at Los Angeles/Jefferson (coordinates point to here) has the id KCQT0.\nTo get a csv file of the daily data from this weather station, you can type the following command in your terminal\ncurl \"https://bulk.meteostat.net/daily/KCQT0.csv.gz\" --output \"KCQT0.csv.gz\"\nA typical entry in the csv file looks like\n\n2000-04-28,16.9,15.6,20.0, , , ,4.7, ,1014.3,\n\nThe API docs again tell you that this corresponds to\n\ndate, average air temperature in celsius, minimum air temperature in celsius, daily precipitation total in mm, snow depth in mm, average wind direction in degrees, average wind speed in km/hr, peak wind gut in km/hr, average sea-level air pressure in hPa, the daily sunshine total in minutes."
+  },
+  {
+    "objectID": "posts/2020-08-27-working-with-real-data.html#framing-the-data",
+    "href": "posts/2020-08-27-working-with-real-data.html#framing-the-data",
+    "title": "Working with real data - baby steps",
+    "section": "Framing the data",
+    "text": "Framing the data\nLet’s read the csv file and put the data into a pandas dataframe.\nimport pandas as pd\n\n# Make a list of column names \n\ncol_names = ['date','avgtemp', 'mintemp', 'pp', 'snow', 'wind-dir', \n    'wind-speed', 'wind-gut', 'air-pressure', 'sunshine']\n\n\n# Reads the comma separated csv into a pandas dataframe\ndaily_weather_df =pd.read_csv('KCQT0.csv', sep=',',names=col_names, header = None)\n\n\nprint(\"Weather dataframe looks like:\")\nprint(daily_weather_df.head())\nOutput:\n\n    Weather dataframe looks like:\n                date  avgtemp  mintemp  pp  snow  wind-dir  wind-speed  wind-gut  \n    2000-01-01  10.4      7.8     13.9 NaN   NaN       NaN         2.0       NaN   \n    2000-01-02  12.0      7.2     15.6 NaN   NaN       NaN         8.1       NaN   \n    2000-01-03  11.4      5.6     18.9 NaN   NaN       NaN         1.3       NaN   \n    2000-01-04  12.6      7.2     20.0 NaN   NaN       NaN         3.0       NaN   \n    2000-01-05  13.3      5.6     21.7 NaN   NaN       NaN         1.9       NaN   \n    \n                air-pressure  sunshine  \n    2000-01-01        1018.9       NaN  \n    2000-01-02        1021.0       NaN  \n    2000-01-03        1026.5       NaN  \n    2000-01-04        1024.9       NaN  \n    2000-01-05        1018.0       NaN  \nNow, wait a minute. That doesn’t seem right … the column labels seem off! What is going on ? This brings us to\n\n\n\n\n\n\nImportantLesson I\n\n\n\nPay attention to the formatting of the input!\n\n\nLet’s look again at a typical row in the csv file.\n\n2000-04-28,16.9,15.6,20.0, , , ,4.7, ,1014.3,\n\nNotice the comma at the end. This makes pandas think there is an extra column entry for every row…. which is why the column labels were off.\nHere’s the corrected code for creating the dataframe:\nimport pandas as pd\n\n# Make a list of column names \n# Since each row in the csv file ends with a comma, pandas thinks there is a col entry there.\n# So we create a column called dummy\ncol_names = ['date','avgtemp', 'mintemp', 'pp', 'snow', 'wind-dir',\n            'wind-speed', 'wind-gut', 'air-pressure', 'sunshine', 'dummy']\n\n# Reads the comma separated csv into a pandas dataframe\ndaily_weather_df =pd.read_csv('KCQT0.csv', sep=',',names=col_names, header = None)\n\n# Delete dummy col\ndel daily_weather_df['dummy']\n\nprint(\"Weather dataframe looks like:\")\nprint(daily_weather_df.head())\nOutput:\n\n    Weather dataframe looks like:\n             date  avgtemp  mintemp    pp  snow  wind-dir  wind-speed  wind-gut  \\\n    0  2000-01-01     10.4      7.8  13.9   NaN       NaN         NaN       2.0   \n    1  2000-01-02     12.0      7.2  15.6   NaN       NaN         NaN       8.1   \n    2  2000-01-03     11.4      5.6  18.9   NaN       NaN         NaN       1.3   \n    3  2000-01-04     12.6      7.2  20.0   NaN       NaN         NaN       3.0   \n    4  2000-01-05     13.3      5.6  21.7   NaN       NaN         NaN       1.9   \n    \n       air-pressure  sunshine  \n    0           NaN    1018.9  \n    1           NaN    1021.0  \n    2           NaN    1026.5  \n    3           NaN    1024.9  \n    4           NaN    1018.0  \nOK, that looks better."
+  },
+  {
+    "objectID": "posts/2020-08-27-working-with-real-data.html#to-numpy-and-beyond",
+    "href": "posts/2020-08-27-working-with-real-data.html#to-numpy-and-beyond",
+    "title": "Working with real data - baby steps",
+    "section": "To numpy and beyond",
+    "text": "To numpy and beyond\nWe’ll now take the avgtemp column of our daily_weather_df data frame and turn it into a numpy array. Since we only want a year’s worth of temperatures, we’ll only keep the last 365 values from the numpy array.\nimport numpy as np\n\n# Get a numpy array of the temperatures of the last 365 days\ndaily_temp = daily_weather_df['avgtemp'].to_numpy()[-365:]\n\nprint(f\"The first 10 entries in daily_temp are {daily_temp[:10]}\")\nOutput:\nThe first 10 entries in daily_temp are [22.2 21.9 21.2 21.2 21.7 21.9 21.8 23.2 24.  23.4]\nLet’s now find the mean and variance\nmean = np.mean(daily_temp)\nvariance = np.var(daily_temp)\n\nprint(f\"Mean temperature is {mean} celsius\")\nprint(f\"Variance is {variance}\")\nOutput:\nMean temperature is nan celsius\nVariance is nan\nOh dear, now what happened? This brings us to\n\n\n\n\n\n\nImportantLesson II\n\n\n\nPay attention to missing/invalid input values!\n\n\nIf you examine the numpy array, daily_temp, that we created, several entries might be NaNs1."
+  },
+  {
+    "objectID": "posts/2020-08-27-working-with-real-data.html#ignoring-nans",
+    "href": "posts/2020-08-27-working-with-real-data.html#ignoring-nans",
+    "title": "Working with real data - baby steps",
+    "section": "Ignoring NaNs",
+    "text": "Ignoring NaNs\nTo find the mean and variance, we need to work around the NaN values that are present in our numpy array. Fortunately, there are in-built functions to do exactly that. The corrected code would be\n# Find the mean and variance (ignore the NaN values)\nmean = np.nanmean(daily_temp)\nvariance = np.nanvar(daily_temp)\n\nprint(f\"Mean temperature is {mean} celsius\")\nprint(f\"Variance is {variance}\")\nOutput:\nMean temperature is 19.301098901098904 celsius\nVariance is 14.313350440768023"
+  },
+  {
+    "objectID": "posts/2020-08-27-working-with-real-data.html#footnotes",
+    "href": "posts/2020-08-27-working-with-real-data.html#footnotes",
+    "title": "Working with real data - baby steps",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\nNaN means Not a number↩︎"
+  },
+  {
+    "objectID": "posts/2020-09-03-k-fold-cross-validation.html",
+    "href": "posts/2020-09-03-k-fold-cross-validation.html",
+    "title": "k-fold cross-validation",
+    "section": "",
+    "text": "Previously, we built a decision tree regressor to predict the precipitation, given the other weather parameters. To do so, we split our dataset into 70% training data and 30% test data and fit a decision tree on the training data and evaluated it on the test data. However, this meant that the data reserved for testing could not be used for training and vice-versa.\nThis poses a problem if you only have very limited data to work with. Do you train with all your data and give up on evaluation, or do you reserve a chunk for testing, making your training data set even smaller ?\nIn this post, we’ll see how to use all the data available for training and testing by using a method called k-fold cross-validation."
+  },
+  {
+    "objectID": "posts/2020-09-03-k-fold-cross-validation.html#to-train-or-to-test-that-is-the-question..",
+    "href": "posts/2020-09-03-k-fold-cross-validation.html#to-train-or-to-test-that-is-the-question..",
+    "title": "k-fold cross-validation",
+    "section": "",
+    "text": "Previously, we built a decision tree regressor to predict the precipitation, given the other weather parameters. To do so, we split our dataset into 70% training data and 30% test data and fit a decision tree on the training data and evaluated it on the test data. However, this meant that the data reserved for testing could not be used for training and vice-versa.\nThis poses a problem if you only have very limited data to work with. Do you train with all your data and give up on evaluation, or do you reserve a chunk for testing, making your training data set even smaller ?\nIn this post, we’ll see how to use all the data available for training and testing by using a method called k-fold cross-validation."
+  },
+  {
+    "objectID": "posts/2020-09-03-k-fold-cross-validation.html#what-is-k-fold-cross-validation",
+    "href": "posts/2020-09-03-k-fold-cross-validation.html#what-is-k-fold-cross-validation",
+    "title": "k-fold cross-validation",
+    "section": "What is k-fold cross-validation ?",
+    "text": "What is k-fold cross-validation ?\nThe basic idea is to split up your dataset into \\(k\\) chunks or folds. Let’s call the folds \\(F_1, F_2, ...F_k\\). We’ll proceed to train \\(k\\) models \\(M_1,\\ldots, M_k\\) on different training and test-data splits as follows:\n\nTrain the \\(i\\)-th model \\(M_i\\) on training data comprising of all folds except the \\(i\\)-th fold \\(F_i\\).\nEvaluate model \\(M_i\\) on test data = \\(F_i\\)\n\nThus, for each of the \\(k\\) models \\(M_i\\), we get a validation-error estimate \\(E_i\\). We report the \\(k\\) validation-error estimates as cross-validation scores1.\nThe average of these \\(k\\) error-estimates tells us how biased our model is. If the average error is low, this implies our model has low bias. Broadly speaking, this means our model is flexible enough to get a good notion of the actual truth underlying the data.\nThe standard deviation of these \\(k\\) error-estimates tells us how our model’s performance varies with the training dataset used. If the standard deviation is high, this means our model has high variance. That is, our model’s performance is varying a lot with the training dataset. This is behaviour which we would like to avoid as it doesn’t generalize well on unseen data."
+  },
+  {
+    "objectID": "posts/2020-09-03-k-fold-cross-validation.html#imports",
+    "href": "posts/2020-09-03-k-fold-cross-validation.html#imports",
+    "title": "k-fold cross-validation",
+    "section": "Imports",
+    "text": "Imports\nAs before, we’ll be using the pandas library as well as scikit-learn. So you’ll have to preface your code with the following import statements.\nimport pandas as pd\nimport numpy as np\n\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.tree import DecisionTreeRegressor\nfrom sklearn.metrics import mean_squared_error\n\n\nfrom sklearn.model_selection import cross_val_score\nfrom sklearn.model_selection import cross_val_predict"
+  },
+  {
+    "objectID": "posts/2020-09-03-k-fold-cross-validation.html#revisiting-the-weather-dataset",
+    "href": "posts/2020-09-03-k-fold-cross-validation.html#revisiting-the-weather-dataset",
+    "title": "k-fold cross-validation",
+    "section": "Revisiting the weather dataset",
+    "text": "Revisiting the weather dataset\nAs before, let’s use the weather dataset and prepare our weather_features which has three attributes, namely avgtemp, wind-gut and sunshine. Let’s also prepare the precipitation_targets (which is the amount of precipitation recorded for each datapoint.\n\ncol_names = ['date','avgtemp', 'mintemp', 'pp', 'snow', 'wind-dir',\n             'wind-speed', 'wind-gut', 'air-pressure', 'sunshine', 'dummy']\n\n# Reads the comma separated csv into a pandas dataframe\ndaily_weather_df = pd.read_csv('KCQT0.csv', sep=',',names=col_names, header = None)\n\n# Delete irrelevant cols\ndel daily_weather_df['dummy']\ndel daily_weather_df['air-pressure']\ndel daily_weather_df['wind-speed']\ndel daily_weather_df['snow']\ndel daily_weather_df['wind-dir']\ndel daily_weather_df['date']\ndel daily_weather_df['mintemp']\n\n# Delete rows with NaN entries\ndaily_weather_df.dropna(inplace=True)\n\n# Drop precipitation column to get weather_features\nweather_features = daily_weather_df.drop(['pp'], axis=1)\nprecipitation_targets = daily_weather_df['pp']\n\n\nprint(weather_features.head())\nprint(precipitation_targets.head())\nFeatures:\n\n\n\n\n\n\n\navgtemp\n\n\nwind-gut\n\n\nsunshine\n\n\n\n\n\n\n0\n\n\n10.4\n\n\n2.0\n\n\n1018.9\n\n\n\n\n1\n\n\n12.0\n\n\n8.1\n\n\n1021.0\n\n\n\n\n2\n\n\n11.4\n\n\n1.3\n\n\n1026.5\n\n\n\n\n3\n\n\n12.6\n\n\n3.0\n\n\n1024.9\n\n\n\n\n4\n\n\n13.3\n\n\n1.9\n\n\n1018.0\n\n\n\n\n\nTarget:\n\n    0    13.9\n    1    15.6\n    2    18.9\n    3    20.0\n    4    21.7\n    Name: pp, dtype: float64"
+  },
+  {
+    "objectID": "posts/2020-09-03-k-fold-cross-validation.html#regression-tree",
+    "href": "posts/2020-09-03-k-fold-cross-validation.html#regression-tree",
+    "title": "k-fold cross-validation",
+    "section": "Regression tree",
+    "text": "Regression tree\nLet’s set up our regression tree.\ntree_reg = DecisionTreeRegressor(max_depth=4)"
+  },
+  {
+    "objectID": "posts/2020-09-03-k-fold-cross-validation.html#cross-validation-scores",
+    "href": "posts/2020-09-03-k-fold-cross-validation.html#cross-validation-scores",
+    "title": "k-fold cross-validation",
+    "section": "Cross validation scores",
+    "text": "Cross validation scores\nThe syntax for computing cross validation scores over \\(k\\) folds is\ncross_val_score(model, features, labels, scoring=scoring_method, cv=k)\n\nmodel refers to our decision tree regressor\nfeatures refers to the weather_features\nlabels refers to the precipitation_targets\nscoring refers to the scoring method being used\ncv is the number of folds we want to split our data into\n\nOne thing to note is that the scoring expects a scoring_method/function for which greater is better (i.e. it wants to maximize the score). So you should not give it a loss function for which lesser is better.\nWe used mean_squared_error as a loss function when we evaluated our Decision Tree regressor for just one training-test split. Here, we’ll use neg_mean_squared_error, which is just the negative of the mean_squared_error. Minimizing mean_squared_error is maximizing neg_mean_squared_error, so we are good to go!\nAll this translates to the following code:\nscores = cross_val_score(tree_reg, weather_features, precipitation_targets,\n                             scoring=\"neg_mean_squared_error\", cv=5)\nprint(scores)\nprint(f\"Mean is {scores.mean()}\")\nprint(f\"Standard deviation is {scores.std()}\")\nOutput:\n[-4.21900535 -3.27126449 -3.13457551 -3.14451502 -3.38513429]\nMean is -3.430898932367797\nStandard deviation is 0.40460168118423745\nAs you can see, the cross validation scores are negative. So the bigger they are, the better."
+  },
+  {
+    "objectID": "posts/2020-09-03-k-fold-cross-validation.html#comparison-to-earlier-validation-error-estimate",
+    "href": "posts/2020-09-03-k-fold-cross-validation.html#comparison-to-earlier-validation-error-estimate",
+    "title": "k-fold cross-validation",
+    "section": "Comparison to earlier validation-error estimate",
+    "text": "Comparison to earlier validation-error estimate\nThe mean squared error on our test-data set from earlier was 3.13. (We reported the root-mean square error to be around 1.77). We see that the average cross validation score is -3.43, or the average mean-square error of test-datasets across the \\(k=5\\) folds is 3.43.\nThe average of the cross-validation score gives a much better estimate of the error, as it uses every element in the dataset as a test-input (exactly once in some fold)."
+  },
+  {
+    "objectID": "posts/2020-09-03-k-fold-cross-validation.html#predictions",
+    "href": "posts/2020-09-03-k-fold-cross-validation.html#predictions",
+    "title": "k-fold cross-validation",
+    "section": "Predictions",
+    "text": "Predictions\nThe syntax for cross validation predictions over \\(k\\) folds is\ncross_val_predict(model, features, labels, cv=k)\nNote that every input datapoint is part of exactly one test-data split in exactly one fold. cross_val_predict returns this prediction for every input datapoint for when it was part of the test-dataset.\npredictions = cross_val_predict(tree_reg, weather_features, precipitation_labels, cv=5)\nprint(predictions.shape)\nprint(predictions[:10])\nOutput:\n(1866,)\narray([16.495     , 17.51790123, 16.495     , 17.51790123, 17.51790123,\n        17.51790123, 17.51790123, 16.495     , 16.495     , 17.51790123])"
+  },
+  {
+    "objectID": "posts/2020-09-03-k-fold-cross-validation.html#footnotes",
+    "href": "posts/2020-09-03-k-fold-cross-validation.html#footnotes",
+    "title": "k-fold cross-validation",
+    "section": "Footnotes",
+    "text": "Footnotes\n\n\nA slight technicality that you’ll see later on in the post - the cross validation scores are thought of as the values taken on by the utility function. That is, the bigger the scores, the better. So we try to maximize cross validation scores, or at least scikit-learn does. However, errors have to be minimized. So usually, cross validation scores are taken to be the negative of the errors.↩︎"
+  },
+  {
+    "objectID": "posts/2020-09-14-leastsquares-code.html",
+    "href": "posts/2020-09-14-leastsquares-code.html",
+    "title": "Finding least-squares solutions",
+    "section": "",
+    "text": "We’ll assume you that you have read this post on least-squares solution and the normal equation."
+  },
+  {
+    "objectID": "posts/2020-09-14-leastsquares-code.html#prerequisites",
+    "href": "posts/2020-09-14-leastsquares-code.html#prerequisites",
+    "title": "Finding least-squares solutions",
+    "section": "",
+    "text": "We’ll assume you that you have read this post on least-squares solution and the normal equation."
+  },
+  {
+    "objectID": "posts/2020-09-14-leastsquares-code.html#finding-least-squares-solutions",
+    "href": "posts/2020-09-14-leastsquares-code.html#finding-least-squares-solutions",
+    "title": "Finding least-squares solutions",
+    "section": "Finding least-squares solutions",
+    "text": "Finding least-squares solutions\nIn this post, we’ll see the numpy code for doing linear regression by solving the normal equation \\(X^TX\\theta = X^TY\\).\nIf there are \\(n\\) data points and \\(k\\) features for each data point, then \\(X\\) is an \\(n\\times (k+1)\\) matrix. Further if \\(X\\) has zero kernel, then there is a unique solution to the normal equation given by\n\\[\n\\theta = (X^TX)^{-1}X^TY\n\\]\nFinding \\(\\theta\\) in this manner would typically involve inverting \\(X^TX\\) which is an \\((k+1)\\times (k+1)\\) matrix. Inverting matrices is an expensive operation (the complexity of this inversion would be around \\(O(k^3)\\)), so ML packages use other methods to do linear regression like gradient descent etc. Nevertheless, it’s useful to know how to solve the normal equation, so we persevere ahead."
+  },
+  {
+    "objectID": "posts/2020-09-14-leastsquares-code.html#imports",
+    "href": "posts/2020-09-14-leastsquares-code.html#imports",
+    "title": "Finding least-squares solutions",
+    "section": "Imports",
+    "text": "Imports\nAs before, we’ll be using libraries like pandas, numpy, matplotlib and scikit-learn. So you’ll have to preface your code with the following import statements.\nimport pandas as pd\nimport matplotlib.pyplot as plt\nplt.style.use('classic')\nimport numpy as np\n\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import mean_squared_error"
+  },
+  {
+    "objectID": "posts/2020-09-14-leastsquares-code.html#the-weather-dataset-yet-again",
+    "href": "posts/2020-09-14-leastsquares-code.html#the-weather-dataset-yet-again",
+    "title": "Finding least-squares solutions",
+    "section": "The weather dataset yet again",
+    "text": "The weather dataset yet again\nLet’s continue with our weather example from before. Say we have access to the average daily temperature \\(T\\), the wind-gut \\(W\\) , and the total minutes of sunshine \\(S\\) per day. These will be our features. We would like to predict the amount of precipitation \\(P\\) each day using linear regression.\ncol_names = ['date','avgtemp', 'mintemp', 'pp', 'snow', 'wind-dir',\n            'wind-speed', 'wind-gut', 'air-pressure', 'sunshine', 'dummy']\n\n# Reads the comma separated csv into a pandas dataframe\ndaily_weather_df =pd.read_csv('KCQT0.csv', sep=',', names=col_names, header = None)\n\n# Delete irrelevant cols\ndel daily_weather_df['dummy']\ndel daily_weather_df['air-pressure']\ndel daily_weather_df['wind-speed']\ndel daily_weather_df['snow']\ndel daily_weather_df['wind-dir']\ndel daily_weather_df['date']\ndel daily_weather_df['mintemp']\n\n# Delete rows with NaN entries\ndaily_weather_df.dropna(inplace=True)\n\n# Drop precipitation column to get weather_features\nweather_features = daily_weather_df.drop(['pp'], axis=1)\nprecipitation_targets = daily_weather_df['pp']\n\n\nprint(weather_features.head())\nprint(precipitation_targets.head())\n\nFeatures:\n\n\n\n\n\n\n\navgtemp\n\n\nwind-gut\n\n\nsunshine\n\n\n\n\n\n\n0\n\n\n10.4\n\n\n2.0\n\n\n1018.9\n\n\n\n\n1\n\n\n12.0\n\n\n8.1\n\n\n1021.0\n\n\n\n\n2\n\n\n11.4\n\n\n1.3\n\n\n1026.5\n\n\n\n\n3\n\n\n12.6\n\n\n3.0\n\n\n1024.9\n\n\n\n\n4\n\n\n13.3\n\n\n1.9\n\n\n1018.0\n\n\n\n\n\nTarget:\n0    13.9\n1    15.6\n2    18.9\n3    20.0\n4    21.7\nName: pp, dtype: float64\nWe are trying to find a linear relationship between \\(P, T, W, S\\). That is, we’d like to find \\(\\theta_0, \\theta_1, \\theta_2, \\theta_3\\) so that\n\\[\nP = \\theta_0 + \\theta_1 T + \\theta_2 W + \\theta_3 S\n\\]"
+  },
+  {
+    "objectID": "posts/2020-09-14-leastsquares-code.html#splitting-into-training-and-test-data-sets",
+    "href": "posts/2020-09-14-leastsquares-code.html#splitting-into-training-and-test-data-sets",
+    "title": "Finding least-squares solutions",
+    "section": "Splitting into training and test data sets",
+    "text": "Splitting into training and test data sets\n# Declare random state to be an int to get reproducible output, shuffle is True by default\nX_train, X_test, y_train, y_test = train_test_split(weather_features,\n                                                    precipitation_targets,\n                                                    test_size=0.30,\n                                                    random_state=10,\n                                                    shuffle=True)\n\nprint(f\"Training data : {X_train.shape}, {y_train.shape}\")\nprint(f\"Test data : {X_test.shape}, {y_test.shape}\")\nOutput:\nTraining data : (1306, 3), (1306,)\nTest data : (560, 3), (560,)"
+  },
+  {
+    "objectID": "posts/2020-09-14-leastsquares-code.html#massaging-the-training-data-into-the-right-type-and-shape",
+    "href": "posts/2020-09-14-leastsquares-code.html#massaging-the-training-data-into-the-right-type-and-shape",
+    "title": "Finding least-squares solutions",
+    "section": "Massaging the training data into the right type and shape",
+    "text": "Massaging the training data into the right type and shape\nLet’s understand the types of our training and test data\nprint(f\"Training data type : {type(X_train)}, {type(y_train)}\")\nprint(f\"Test data type : {type(X_test)}, {type(y_test)}\")\nOutput\nTraining data type : &lt;class 'pandas.core.frame.DataFrame'&gt;, &lt;class 'pandas.core.series.Series'&gt;\nTest data type : &lt;class 'pandas.core.frame.DataFrame'&gt;, &lt;class 'pandas.core.series.Series'&gt;\nAh, they are Pandas dataframes. Let’s convert them to numpy arrays to make it easier to work with, with respect to the task of solving the normal equation.\nX_train_numpy = X_train.to_numpy()\nprint(type(X_train_numpy), X_train_numpy.shape)\nprint(X_train_numpy)\n&lt;class 'numpy.ndarray'&gt; (1306, 3)\n[[  19.4    4.8 1013. ]\n  [  18.3    2.  1017.6]\n  [  12.5    1.6 1024. ]\n  ...\n  [  19.9    4.4 1014.7]\n  [  14.7    4.2 1014.4]\n  [  19.9    3.4 1007.7]]\nRemember, we have to add the dummy feature \\(x_i^0=1\\) to each data point.\ntraining_data_points = X_train_numpy.shape[0]\n# Concatenate the dummy 0th feature x_i^0 = 1 for each training data point\nX = np.c_[np.ones((training_data_points,1)), X_train_numpy]\nprint(f\"Shape of X is {X.shape}\")\nprint(X)\nShape of X is (1306, 4)\n[[1.0000e+00 1.9400e+01 4.8000e+00 1.0130e+03]\n  [1.0000e+00 1.8300e+01 2.0000e+00 1.0176e+03]\n  [1.0000e+00 1.2500e+01 1.6000e+00 1.0240e+03]\n  ...\n  [1.0000e+00 1.9900e+01 4.4000e+00 1.0147e+03]\n  [1.0000e+00 1.4700e+01 4.2000e+00 1.0144e+03]\n  [1.0000e+00 1.9900e+01 3.4000e+00 1.0077e+03]]\nLet’s also convert the target variable values in the training dataset to a numpy array\nY = y_train.to_numpy()\nprint(type(Y), Y.shape)\n&lt;class 'numpy.ndarray'&gt; (1306,)"
+  },
+  {
+    "objectID": "posts/2020-09-14-leastsquares-code.html#solving-the-normal-equation",
+    "href": "posts/2020-09-14-leastsquares-code.html#solving-the-normal-equation",
+    "title": "Finding least-squares solutions",
+    "section": "Solving the normal equation",
+    "text": "Solving the normal equation\nThe numpy code to find transposes, inverses, take dot products or multiply matrices is easy. In particular,\n\nX.T is the transpose of \\(X\\)\nnp.linalg.inv(X) is \\(X^{-1}\\)\na.b is the dot-product of \\(a\\) and \\(b\\)\n\nLet’s convert the formula \\(\\theta = (X^TX)^{-1}X^TY\\) into python code now.\ntheta_best = np.linalg.inv(X.T.dot(X)).dot(X.T).dot(Y)\nprint(f\" Shape of theta_best is {theta_best.shape}\")\nprint(f\" theta_best is {theta_best}\")\nShape of theta_best is (4,)\ntheta_best is [-1.89711155e+02  1.28170996e+00 -3.04886864e-01  1.88450340e-01]"
+  },
+  {
+    "objectID": "posts/2020-09-14-leastsquares-code.html#predictions",
+    "href": "posts/2020-09-14-leastsquares-code.html#predictions",
+    "title": "Finding least-squares solutions",
+    "section": "Predictions",
+    "text": "Predictions\nLet’s now massage the test data into the right type and shape also!\nX_test_numpy = X_test.to_numpy()\ntest_data_points = X_test_numpy.shape[0]\n# Concatenate the dummy 0th feature x_i^0 = 1 for each test data point\nX_test_numpy = np.c_[np.ones((test_data_points,1)), X_test_numpy]\ny_test_numpy = y_test.to_numpy()\nLet’s look at how to predict the target variable for a single test data point.\n# Getting a single test data point\ny_test_singleton = y_test_numpy[0]\n# Prediction for a single test data point\ny_pred_singleton = X_test_numpy[0].dot(theta_best)\nprint(f\"The true value : {y_test_singleton}\")\nprint(f\"The predicted value : {y_pred_singleton}\")\nThe true value : 20.6\nThe predicted value : 22.874195641340407\nLet’s now predict the target variable for the entire test data set.\n# Predictions for the test data set\ny_pred = X_test_numpy.dot(theta_best)\nprint(f\"Shape of y_test_numpy is {y_test_numpy.shape}\")\nprint(f\"Shape of y_pred is {y_pred.shape}\")\nShape of y_test_numpy is (560,)\nShape of y_pred is (560,)"
+  },
+  {
+    "objectID": "posts/2020-09-14-leastsquares-code.html#evaluation-of-predictions",
+    "href": "posts/2020-09-14-leastsquares-code.html#evaluation-of-predictions",
+    "title": "Finding least-squares solutions",
+    "section": "Evaluation of predictions",
+    "text": "Evaluation of predictions\n# Root mean squared error between predictions and test values\nprint(f\"Root mean squared error : {mean_squared_error(y_test_numpy,y_pred,squared=False)}\")\nRoot mean squared error : 1.5578231355991063\nLike before, we also draw a simple plot of reality versus the predictions.\nevaluation_of_predictions=plt.figure()\nplt.scatter(range(1,561),y_test_numpy, color=\"red\", label=\"Reality\");\nplt.plot(range(1,561),y_predict, color=\"green\",label=\"Predictions\");\nplt.xlim(-10,570)\nplt.title(\"Predictions versus reality\")\nplt.xlabel(\"Day number\")\nplt.ylabel(\"Precipitation in mm\");\nplt.legend();\n\n\n\nViz of predictions"
+  },
+  {
+    "objectID": "posts/2020-09-14-leastsquares-code.html#comparison-to-earlier-validation-error-estimate",
+    "href": "posts/2020-09-14-leastsquares-code.html#comparison-to-earlier-validation-error-estimate",
+    "title": "Finding least-squares solutions",
+    "section": "Comparison to earlier validation-error estimate",
+    "text": "Comparison to earlier validation-error estimate\nThe root mean squared error on our test-data set from our decision tree regressor on the same dataset earlier was around 1.77. We see that the root mean squared error has gone down to 1.56 for our linear regressor."
   },
   {
     "objectID": "posts/2023-07-26-1d-convolution.html",

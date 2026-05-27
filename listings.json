@@ -4,19 +4,24 @@
     "items": []
   },
   {
-    "listing": "/index.html",
-    "items": [
-      "/posts/2020-08-26-Mean-Variance.html",
-      "/posts/2020-08-03-SVD-details.html",
-      "/posts/2020-07-27-SVD.html",
-      "/posts/2020-07-20-GifsInPython.html"
-    ]
-  },
-  {
     "listing": "/notes.html",
     "items": [
       "/posts/2023-07-26-1d-convolution.html",
       "/posts/2021-09-10-kkt-conditions.html"
+    ]
+  },
+  {
+    "listing": "/index.html",
+    "items": [
+      "/posts/2020-09-14-leastsquares-code.html",
+      "/posts/2020-09-13-least-squares.html",
+      "/posts/2020-09-03-k-fold-cross-validation.html",
+      "/posts/2020-09-01-decision-tree-regressor.html",
+      "/posts/2020-08-27-working-with-real-data.html",
+      "/posts/2020-08-26-Mean-Variance.html",
+      "/posts/2020-08-03-SVD-details.html",
+      "/posts/2020-07-27-SVD.html",
+      "/posts/2020-07-20-GifsInPython.html"
     ]
   }
 ]

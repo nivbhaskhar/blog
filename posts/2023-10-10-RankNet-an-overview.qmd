@@ -2,7 +2,7 @@
 layout: post
 title: "RankNet - an overview"
 date: 2023-10-10
-categories: [ML, Ranking and recommendations, Notes]
+categories: [ML, Retrieval and ranking, Notes]
 ---
 <!-- 
 ======================================================================

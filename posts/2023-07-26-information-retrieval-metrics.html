@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2020-08-26">
+<meta name="dcterms.date" content="2023-08-01">
 
-<title>Mean and Variance – Nivedita Bhaskhar</title>
+<title>Information retrieval metrics – Nivedita Bhaskhar</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -23,41 +23,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -192,11 +157,11 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Mean and Variance</h1>
+<h1 class="title">Information retrieval metrics</h1>
   <div class="quarto-categories">
-    <div class="quarto-category">Math</div>
-    <div class="quarto-category">Statistics</div>
-    <div class="quarto-category">Exposition</div>
+    <div class="quarto-category">ML</div>
+    <div class="quarto-category">Retrieval and ranking</div>
+    <div class="quarto-category">Notes</div>
   </div>
   </div>
 
@@ -208,7 +173,7 @@ window.Quarto = {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">August 26, 2020</p>
+      <p class="date">August 01, 2023</p>
     </div>
   </div>
   
@@ -264,126 +229,308 @@ Lists:
 * `inline code`
 * **bold**
 * *italic*,
+* _italic_
+
+Lists:
+
+- `inline code`
+- **bold**
+- *italic*,
+- _italic_
 
 ======================================================================
 -->
-<section id="one-dimensional-data" class="level2">
-<h2 class="anchored" data-anchor-id="one-dimensional-data">One dimensional data</h2>
-<p>Let’s assume we are working with a dataset whose data-points <span class="math inline">\(x_1, x_2, \ldots, x_N\)</span> are one dimensional.</p>
-<p>The <strong><em>mean</em></strong> of the dataset is defined to be <span class="math display">\[
-\mu = \frac{x_1 + x_2 + \ldots x_N}{N}.
-\]</span></p>
-<p>The <strong><em>variance</em></strong> is defined to be <span class="math display">\[
-\sigma^2 = \frac{(x_1-\mu)^2 + (x_2-\mu)^2 + \ldots (x_N-\mu)^2}{N}.
-\]</span></p>
-<p>Code:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># x is the 1-d numpy array of your 1 dimensional datapoints</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.array([<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="op">-</span><span class="dv">1</span>,<span class="op">-</span><span class="dv">2</span>,<span class="op">-</span><span class="dv">3</span>,<span class="op">-</span><span class="dv">4</span>])</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f" The mean is </span><span class="sc">{</span>x<span class="sc">.</span>mean()<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f" The mean is also given by </span><span class="sc">{</span>np<span class="sc">.</span>mean(x)<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f" The variance is </span><span class="sc">{</span>x<span class="sc">.</span>var()<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f" The variance is also given by</span><span class="sc">{</span>np<span class="sc">.</span>var(x)<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Output:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>The mean <span class="kw">is</span> <span class="fl">0.0</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>The mean <span class="kw">is</span> also given by <span class="fl">0.0</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>The variance <span class="kw">is</span> <span class="fl">7.5</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>The variance <span class="kw">is</span> also given by <span class="fl">7.5</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>References</em>:</p>
+<ul>
+<li><em>Introduction to Information Retrieval by C.Manning et al</em> <a href="(https://nlp.stanford.edu/IR-book/html/htmledition/evaluation-of-ranked-retrieval-results-1.html)">(link)</a></li>
+<li><em>Stanford CS 276 handout</em> <a href="https://web.stanford.edu/class/cs276/handouts/EvaluationNew-handout-1-per.pdf">(link)</a></li>
+</ul>
+<section id="context-and-goal" class="level2">
+<h2 class="anchored" data-anchor-id="context-and-goal">Context and goal</h2>
+<p>Let <span class="math inline">\(S\)</span> be the space of all documents. Given a query <span class="math inline">\(Q\)</span>,</p>
+<ul>
+<li>Let <span class="math inline">\(Retrieved(Q) \subseteq S\)</span> be the list of retrieved documents for the query</li>
+<li>Let <span class="math inline">\(Relevant(Q) \subseteq S\)</span> be the list of relevant documents for the query</li>
+</ul>
+<p><em>Note: <span class="math inline">\(Retrieved(Q)\)</span> and <span class="math inline">\(Relevant(Q)\)</span> are both lists, i.e.&nbsp;they are ordered</em></p>
+<p>Given a set of queries <span class="math inline">\(\mathcal{Q}\)</span>, we’d like to understand some useful metrics which can quantify how good/relevant our retrieved documents are.</p>
 </section>
-<section id="higher-dimensional-data" class="level2">
-<h2 class="anchored" data-anchor-id="higher-dimensional-data">Higher dimensional data</h2>
-<p>Say now we are working with a dataset whose data-points <span class="math inline">\(x_1, x_2, \ldots, x_N\)</span> are <span class="math inline">\(d\)</span> dimensional, i.e.&nbsp;each <span class="math inline">\(x_i\)</span> is a <span class="math inline">\(d\times 1\)</span> column vector.</p>
-<p>The <strong><em>mean</em></strong> of the dataset is defined to be <span class="math display">\[
-\mu = \frac{x_1 + x_2 + \ldots x_N}{N}.
-\]</span></p>
-<p>The <strong><em>covariance matrix</em></strong> is defined to be <span class="math display">\[
-S= \frac{(x_1-\mu)(x_1-\mu)^T + (x_2-\mu)(x_2-\mu)^T + \ldots (x_N-\mu)(x_N-\mu)^T}{N}.
-\]</span></p>
-<p>Note that since <span class="math inline">\(x_i, \mu\)</span> have shape <span class="math inline">\(d\times 1\)</span>, <span class="math inline">\((x_i-\mu)(x_i-\mu)^T\)</span> has shape <span class="math inline">\(d\times d\)</span>. Thus the covariance matrix <span class="math inline">\(S\)</span> is a <span class="math inline">\(d\times d\)</span> matrix.</p>
-</section>
-<section id="a-more-compact-formula" class="level2">
-<h2 class="anchored" data-anchor-id="a-more-compact-formula">A more compact formula</h2>
-<p>To make the definition of the variance neater, let’s assemble our data-points into a <span class="math inline">\(d\times N\)</span> matrix <span class="math inline">\(X\)</span>.</p>
-<p><span class="math display">\[
-X= \left(
-\begin{array}{cccc}
-. &amp; . &amp; \ldots &amp; . \\
-. &amp; . &amp; \ldots &amp; . \\
-x_1 &amp; x_2 &amp; \ldots &amp; x_N \\
-. &amp; . &amp; \ldots &amp; . \\
-. &amp; . &amp; \ldots &amp; . \\
-\end{array}
-\right)
-\]</span></p>
-<p>Define <span class="math inline">\(\tilde{X} = X-\mu\)</span>, i.e.&nbsp;subtract <span class="math inline">\(\mu\)</span> from every column of <span class="math inline">\(X\)</span>.</p>
-<p><span class="math display">\[
-\tilde{X}= \left(
-\begin{array}{cccc}
-. &amp; . &amp; \ldots &amp; . \\
-. &amp; . &amp; \ldots &amp; . \\
-x_1-\mu &amp; x_2-\mu &amp; \ldots &amp; x_N-\mu \\
-. &amp; . &amp; \ldots &amp; . \\
-. &amp; . &amp; \ldots &amp; . \\
-\end{array}\right)
-\]</span></p>
-<p>By some matrix manipulation <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, the covariance matrix turns out to be nothing but <span class="math inline">\(S = \frac{1}{N}\tilde{X}\tilde{X}^T\)</span></p>
-</section>
-<section id="computation" class="level2">
-<h2 class="anchored" data-anchor-id="computation">Computation</h2>
-<p>Say we have 3 data-points, each of which is two-dimensional. Then we can represent the dataset as</p>
-<p><span class="math display">\[
-X = \left(\begin{array}{ccc}1 &amp; -1 &amp; 1 \\ 2 &amp; -2 &amp; 2 \end{array}\right)
-\]</span></p>
-<p>The mean would be <span class="math display">\[
-\mu = \left(\begin{array}{c}\frac{1 + -1 + 1}{3} \\ \frac{2 + -2 + 2}{3} \end{array}\right) = \left(\begin{array}{c}\frac{1}{3} \\ \frac{2}{3} \end{array}\right)
-\]</span></p>
-<p>Further, <span class="math display">\[
-\tilde{X} = \left(\begin{array}{ccc}1- \frac{1}{3} &amp; -1 - \frac{1}{3} &amp; 1-\frac{1}{3} \\ 2-\frac{2}{3} &amp; -2-\frac{2}{3} &amp; 2-\frac{2}{3} \end{array}\right) = \left(\begin{array}{ccc}\frac{2}{3} &amp; - \frac{4}{3} &amp; \frac{2}{3} \\ \frac{4}{3} &amp; -\frac{8}{3} &amp; \frac{4}{3} \end{array}\right)
-\]</span></p>
-<p>The covariance-matrix would be <span class="math inline">\(\frac{1}{N}\tilde{X}\tilde{X}^T\)</span> which is <span class="math display">\[
-\begin{align*} S &amp;= \frac{1}{3}\begin{pmatrix}\frac{2}{3} &amp; - \frac{4}{3} &amp; \frac{2}{3} \\ \frac{4}{3} &amp; -\frac{8}{3} &amp; \frac{4}{3} \end{pmatrix}\begin{pmatrix}\frac{2}{3} &amp; \frac{4}{3} \\ -\frac{4}{3} &amp; -\frac{8}{3} \\  \frac{2}{3} &amp; \frac{4}{3} \end{pmatrix}\\ &amp; = \frac{1}{3}\begin{pmatrix}\frac{24}{9} &amp; \frac{48}{9} \\ \frac{48}{9} &amp; \frac{96}{9} \end{pmatrix}\\
-&amp; = \begin{pmatrix}\frac{8}{9} &amp; \frac{16}{9} \\ \frac{16}{9} &amp; \frac{32}{9} \end{pmatrix}\end{align*}
-\]</span></p>
-<p>Code:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># x is the d x N numpy array of your d-dimensional datapoints</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> np.array([[<span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>,<span class="dv">1</span>], [<span class="dv">2</span>,<span class="op">-</span><span class="dv">2</span>,<span class="dv">2</span>]])</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f" The mean is  </span><span class="sc">{</span>np<span class="sc">.</span>mean(x, axis<span class="op">=</span><span class="dv">1</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f" The covariance matrix is </span><span class="sc">{</span>np<span class="sc">.</span>cov(x,bias<span class="op">=</span><span class="va">True</span>)<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Output:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>The mean <span class="kw">is</span> [<span class="fl">0.33333333</span> <span class="fl">0.66666667</span>]</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>The covariance matrix <span class="kw">is</span>  </span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>     [[<span class="fl">0.88888889</span> <span class="fl">1.77777778</span>]</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>     [<span class="fl">1.77777778</span> <span class="fl">3.55555556</span>]]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="callout callout-style-default callout-important no-icon callout-titled">
+<section id="precisionk" class="level2">
+<h2 class="anchored" data-anchor-id="precisionk">Precision@K</h2>
+<p>Fix <span class="math inline">\(K ≤ |S|\)</span></p>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span>Caution
+<span class="screen-reader-only">Note</span>Definition
 </div>
 </div>
 <div class="callout-body-container callout-body">
+<p><span class="math display">\[
+Precision@K(Q) = \frac{|Relevant(Q)\cap Retrieved(Q)[:K]|}{|Retrieved(Q)[:K]|}
+\]</span></p>
+</div>
+</div>
+<p>Why is this called precision ?</p>
+<p>Recall in binary classification, precision = fraction of true positives amongst all predicted positives. If you think of a relevant document as a true positive, and retrieved document as a predicted positive, the terminology become clear</p>
+</section>
+<section id="precision-recall-curve" class="level2">
+<h2 class="anchored" data-anchor-id="precision-recall-curve">Precision-recall curve</h2>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Definition
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[
+Recall@K(Q) = \frac{|Relevant(Q)\cap Retrieved(Q)[:K]|}{|Relevant(Q)|}
+\]</span></p>
+</div>
+</div>
+<p>The plot of the recall vs precision for each <em>K</em> gives us a <em>saw-toothed</em> precision-recall curve.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="../assets/2023-08-01-precision-recall-sawtooth-curve.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption>Precision recall curve (Figure from Introduction to Retrieval <a href="https://nlp.stanford.edu/IR-book/html/htmledition/evaluation-of-ranked-retrieval-results-1.html">book</a>)</figcaption>
+</figure>
+</div>
+<p>&nbsp;<br>
+Let us try to understand why the curve is so jagged! Look at the retrieved <span class="math inline">\(K+1\)</span>th doc.</p>
+<p>If this <span class="math inline">\(K + 1\)</span>-th doc is not relevant:</p>
 <ul>
-<li>In this post, we use the convention that the columns of the data matrix <span class="math inline">\(X\)</span> correspond to the data points and the rows, the attributes of each data point. Some people might switch the rows and columns when constructing <span class="math inline">\(X\)</span>. So take a moment to look at the notations used!</li>
-<li>By default, bias is set to False in np.cov. This would give the so-called <em>sample-covariance matrix</em>. If you want the usual covariance, remember to set <code>bias=True</code></li>
+<li><span class="math inline">\(Recall@K(Q) = Recall@K + 1(Q)\)</span></li>
+<li><span class="math inline">\(Precision@K(Q) = p/K\)</span> and <span class="math inline">\(Precision@K + 1(Q) = p/K + 1\)</span></li>
+<li>This causes the vertical dips!</li>
+</ul>
+<p>If this <span class="math inline">\(K + 1\)</span>-th doc is relevant:</p>
+<ul>
+<li><span class="math inline">\(Recall@K(Q) = r/R\)</span> and <span class="math inline">\(Recall@K + 1(Q) = r + 1/R\)</span></li>
+<li><span class="math inline">\(Precision@K(Q) = p/K\)</span> and <span class="math inline">\(Precision@K + 1(Q) = p + 1/K + 1\)</span></li>
+<li><span class="math inline">\(p/K \leq p + 1/K + 1\)</span> because <span class="math inline">\(p \leq K\)</span></li>
+<li>This causes the up-and-right lifts!</li>
+</ul>
+<div class="callout callout-style-simple callout-note no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<ul>
+<li>Every time we retrieve an irrelevant document, precision drops while recall stays flat.</li>
+<li>Every time we retrieve a relevant document, both precision and recall increase.</li>
 </ul>
 </div>
 </div>
+</div>
 </section>
-<section id="symmetry" class="level2">
-<h2 class="anchored" data-anchor-id="symmetry">Symmetry</h2>
-<p>Notice that the covariance matrix in the previous example is symmetric. This is in fact true for every covariance matrix. Why ?</p>
-<p>Well, a matrix <span class="math inline">\(M\)</span> is symmetric provided <span class="math inline">\(M=M^T\)</span>. The covariance matrix looks like <span class="math inline">\(S = \frac{1}{N}\tilde{X}\tilde{X}^T\)</span>. Then,</p>
-<p><span class="math display">\[
-S^T = \frac{1}{N}\left(\tilde{X}\tilde{X}^T\right)^T = \frac{1}{N} (\tilde{X}^T)^T\tilde{X}^T = S !
+<section id="interpolated-precision" class="level2">
+<h2 class="anchored" data-anchor-id="interpolated-precision">Interpolated precision</h2>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Definition
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For recall <span class="math inline">\(r\)</span>, define<br>
+<span class="math display">\[
+interpolated − precision(r) = \max_{r'\geq r} \ precision(r’)
 \]</span></p>
-<p>Et voila!</p>
+</div>
+</div>
+<p>This is the red line in the precision-recall graph. It is a non-increasing function by definition. For each recall, we plot the max precision achieved to the right of it.</p>
+<p>This is a more useful metric than measuring the exact precision for a given recall. This is because of the fundamental assumption that a user is prepared to scan through more retrievals if precision will increase. For example:</p>
+<ul>
+<li>Say at 40% recall@<span class="math inline">\(k\)</span> (40% of relevant docs are in my top <span class="math inline">\(k\)</span>), my precision is 80% (80% of my top <span class="math inline">\(k\)</span> docs are relevant to the user)</li>
+<li>But I also know at 50% recall@<span class="math inline">\(K\)</span> for a larger <span class="math inline">\(K\)</span>, i.e.&nbsp;(50% of relevant docs are in my top <span class="math inline">\(K\)</span>), my precision is 90% (90% of my top <span class="math inline">\(K\)</span> docs are relevant to the user)</li>
+<li>I’d be prepared to scan <span class="math inline">\(K\)</span> documents than just <span class="math inline">\(k\)</span> documents</li>
+</ul>
+</section>
+<section id="map-mean-average-precision" class="level2">
+<h2 class="anchored" data-anchor-id="map-mean-average-precision">MAP (Mean average precision)</h2>
+<p>Let <span class="math inline">\(pos_Q(doc)\)</span> be the position of <span class="math inline">\(doc\)</span> in <span class="math inline">\(Retrieved(Q)\)</span> for any doc in <span class="math inline">\(S(Q)\)</span>. If a doc is not retrieved, set <span class="math inline">\(pos_Q(doc)\)</span> to be NA.</p>
+<p>We define <strong>average precision</strong> as follows:</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Definition
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[
+AveP(Q) = avg_{doc \in Relevant(Q)}(Precision@pos_Q(doc))
+\]</span></p>
+</div>
+</div>
+<p>That is, we look at the average of precisions@K for each relevant doc at the <span class="math inline">\(K\)</span> at which it is retrieved.</p>
+<p>To make the above well-defined, define <span class="math inline">\(Precision@NA = 0\)</span> — for relevant docs which are not retrieved, precision@its “position” is 0</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Area under the PR curve
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math inline">\(AveP(Q)\)</span> is approximately area under the precision-recall graph of <em>Q</em></p>
+</div>
+</div>
+<p>Let’s see why.</p>
+<ul>
+<li>If you assume that as <span class="math inline">\(K\)</span> increases, <span class="math inline">\(Retrieved[ : K]\)</span> at some point contains <span class="math inline">\(Relevant\)</span>, then you see that recall values go from <span class="math inline">\(0/R, 1/R, …, R/R\)</span> where <span class="math inline">\(R = |Relevant|\)</span></li>
+<li>When calculating the average precision, we look at only relevant docs. That is, we average over <span class="math inline">\(Precision@K\)</span>s for all <span class="math inline">\(K\)</span>s where a relevant doc is retrieved at position <span class="math inline">\(K\)</span></li>
+<li>In the precision-recall graph, this means drawing small rectangles with length <span class="math inline">\(Precision@K\)</span> and width <span class="math inline">\(\frac{1}{R}\)</span> and the area of these rectangles is precisely avg precision, which approximates area under the curve.</li>
+</ul>
+<p>If we have multiple queries <span class="math inline">\(Q\in \mathcal{Q}\)</span>, then</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Definition
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[
+mean − avg − precision = MAP = avg_{Q\in\mathcal{Q}}\ AveP(Q)
+\]</span></p>
+</div>
+</div>
+<p>Thus,</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Average of areas under PR curves
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>MAP is approximately the average area under the precision-recall graphs of <span class="math inline">\(Q\in\mathcal{Q}\)</span></p>
+</div>
+</div>
+<p><strong>Discussion points</strong>:</p>
+<ul>
+<li>Each query is equally important for MAP. So MAP may be high just because it has many well performing queries but some poorly performing queries</li>
+<li>MAP assumes user is interested in finding many relevant documents for each query<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></li>
+<li>MAP assumes that either a document is relevant or not (binary relevance) with no in-between state.</li>
+<li>MAP doesn’t care about freshness/diversity of results</li>
+</ul>
+</section>
+<section id="mrr-mean-reciprocal-rank" class="level2">
+<h2 class="anchored" data-anchor-id="mrr-mean-reciprocal-rank">MRR (Mean reciprocal rank)</h2>
+<p>The <em>reciprocal rank score</em> of a query <span class="math inline">\(Q\)</span> is the inverse of the rank of the first relevant doc in <span class="math inline">\(Retrieved(Q)\)</span>, i.e.</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Definition
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[
+RR(Q) = \frac{1}{\min\left([pos_Q(doc)| doc\in Relevant(Q)]\right)}
+\]</span></p>
+</div>
+</div>
+<p>If we have multiple queries <span class="math inline">\(Q \in \mathcal{Q}\)</span>, then</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Definition
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[
+mean − reciprocal − rank = MRR = avg_{Q \in \mathcal{Q}}\ RR(Q)
+\]</span></p>
+</div>
+</div>
+<p><strong>Discussion points</strong>:</p>
+<ul>
+<li>Rank of first relevant fact measures user ease to reach it</li>
+<li>For a perfect ranking, the first result is always relevant, so MRR would be 1.</li>
+<li>If no relevant documents are returned at all, MRR would be 0.</li>
+<li>MRR rewards systems that rank relevant results higher, especially first position.</li>
+<li>It does not account for the ranks of other relevant documents, only the first one.</li>
+<li>Useful for tasks with very few (1-2) relevant results per query, like question-answer.</li>
+<li>For rankings with multiple relevant results, measures like MAP are more informative than MRR.</li>
+</ul>
+</section>
+<section id="dcg-discounted-cumulative-gain" class="level2">
+<h2 class="anchored" data-anchor-id="dcg-discounted-cumulative-gain">DCG (Discounted cumulative gain)</h2>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Definition
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Assume each document has a relevance in <span class="math inline">\(\{0, 1, 2, …, r\}\)</span>. Let relevance of the <span class="math inline">\(k\)</span>-th retrieved document be <span class="math inline">\(r_k\)</span>. Then <span class="math inline">\(DCG\)</span> at rank <span class="math inline">\(n\)</span> is given as <span class="math display">\[
+DCG(n) = \sum_{k=1}^{n}  \frac{r_k}{\log_2(k+1)}
+\]</span></p>
+</div>
+</div>
+<p>i.e.&nbsp;each retrieved fact is weighted by its relevance and a <em>position discount</em></p>
+<p>A different <em>DCG</em> at rank <span class="math inline">\(n\)</span> formula using the relevance more to contribute to the metric is given by</p>
+<p><span class="math display">\[
+DCG(n) = \sum_{k=1}^{n}  \frac{2^{r_k}-1}{\log_2(k+1)}
+\]</span></p>
+<p><strong>Discussion points</strong>:</p>
+<ul>
+<li>DCG evaluates the gain of a document based on its position in the result list and its relevance</li>
+<li>It supports non-binary relevance</li>
+<li>The other idea is that the relevance of a doc is discounted depending on its rank (a user is not going to scroll a while to get to a relevant doc typically)</li>
+</ul>
+</section>
+<section id="ndcg-normalized-discounted-cumulative-gain" class="level2">
+<h2 class="anchored" data-anchor-id="ndcg-normalized-discounted-cumulative-gain">NDCG (Normalized Discounted cumulative gain)</h2>
+<p>The <strong>IDCG (Ideal discounted cumulative gain)</strong> is <span class="math inline">\(DCG(n)\)</span> for an ideal retrieved list which is just <span class="math inline">\(Relevant\)</span> ordered by relevance!</p>
+<p>Define <em><span class="math inline">\(NDCG(n)\)</span></em> as follows:</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Definition
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><span class="math display">\[
+NDCG(n) = \frac{DCG(n)}{IDCG(n)}
+\]</span></p>
+</div>
+</div>
+<p><strong>Discussion points</strong>:</p>
+<ul>
+<li>Normalization allows standardized comparisons across systems and queries.</li>
+<li>Cumulative means a better performing fact in top <span class="math inline">\(n\)</span> set could out shadow other worse performing facts in set and hence make the <span class="math inline">\(NDCG(n)\)</span> still be high</li>
+</ul>
 
 
 </section>
@@ -392,18 +539,18 @@ S^T = \frac{1}{N}\left(\tilde{X}\tilde{X}^T\right)^T = \frac{1}{N} (\tilde{X}^T)
 <div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
 
 <ol>
-<li id="fn1"><p><span class="math display">\[\begin{align*} \tilde{X}\tilde{X^T} &amp;= \sum_{i=1}^{N}  \left(\begin{array}{ccccc} \overline{0} &amp;  \ldots &amp;  \overline{0} &amp; x_i-\mu &amp; \overline{0} \ldots &amp; \overline{0} \\ \end{array}\right)\tilde{X}^T  \\  &amp; = \sum_{i=1}^N \left(\begin{array}{ccccc} \overline{0} &amp;  \ldots &amp;  \overline{0} &amp; x_i-\mu &amp; \overline{0} \ldots &amp; \overline{0} \end{array}\right)\left[\sum_{j=1}^{N} \left(\begin{array}{c} \overline{0} \\  \ldots \\ \overline{0} \\ (x_j-\mu)^T \\ \overline{0}^T \\ \ldots \\ \overline{0}^T \end{array}\right) \right] \\ &amp;= \sum_{i=1}^{N} (x_i-\mu)(x_i-\mu)^T  = NS \end{align*}\]</span><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>MAP for a retrieval list where the first few docs are relevant followed by a large chunk of irrelevant docs will be quite poor. This is not typical of a user facing retrieval system where the initial retrievals are way more important<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-</section><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{bhaskhar2020,
+</section><section class="quarto-appendix-contents" id="quarto-citation"><h2 class="anchored quarto-appendix-heading">Citation</h2><div><div class="quarto-appendix-secondary-label">BibTeX citation:</div><pre class="sourceCode code-with-copy quarto-appendix-bibtex"><code class="sourceCode bibtex">@online{bhaskhar2023,
   author = {Bhaskhar, Nivedita},
-  title = {Mean and {Variance}},
-  date = {2020-08-26},
-  url = {https://nivbhaskhar.github.io/blog/posts/2020-08-26-Mean-Variance.html},
+  title = {Information Retrieval Metrics},
+  date = {2023-08-01},
+  url = {https://nivbhaskhar.github.io/blog/posts/2023-07-26-information-retrieval-metrics.html},
   langid = {en}
 }
-</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-bhaskhar2020" class="csl-entry quarto-appendix-citeas" role="listitem">
-Bhaskhar, Nivedita. 2020. <span>“Mean and Variance.”</span> August 26.
-<a href="https://nivbhaskhar.github.io/blog/posts/2020-08-26-Mean-Variance.html">https://nivbhaskhar.github.io/blog/posts/2020-08-26-Mean-Variance.html</a>.
+</code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre><div class="quarto-appendix-secondary-label">For attribution, please cite this work as:</div><div id="ref-bhaskhar2023" class="csl-entry quarto-appendix-citeas" role="listitem">
+Bhaskhar, Nivedita. 2023. <span>“Information Retrieval Metrics.”</span>
+August 1. <a href="https://nivbhaskhar.github.io/blog/posts/2023-07-26-information-retrieval-metrics.html">https://nivbhaskhar.github.io/blog/posts/2023-07-26-information-retrieval-metrics.html</a>.
 </div></div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
